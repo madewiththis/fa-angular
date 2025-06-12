@@ -24,7 +24,10 @@ export default function MainMenu({
       onMouseEnter={() => setIsCollapsed(false)}
       onMouseLeave={() => setIsCollapsed(true)}
     >
-      <div className="flex flex-col flex-grow justify-between h-full w-full">
+      <div
+        className="flex flex-col h-full w-full"
+        style={{ minHeight: "100vh" }}
+      >
         <div>
           <div className="flex flex-col items-center mb-8">
             <div className="p-2 mb-2 mt-4">
@@ -54,6 +57,7 @@ export default function MainMenu({
             ))}
           </nav>
         </div>
+        <div className="flex-grow" />
         <div className="flex flex-col gap-0 mb-4">
           {bottom.map((item) => (
             <a key={item.label} href="#" className="menu-item relative">

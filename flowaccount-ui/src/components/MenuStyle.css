@@ -7,6 +7,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
+  overflow: hidden;
 }
 .mainmenu.collapsed {
   width: 60px;
@@ -15,25 +16,40 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 10px 0;
+  justify-content: flex-start;
+  margin: 8px 0;
   padding: 4px 0;
-  gap: 4px;
-  transition: gap 0.3s, margin 0.3s, padding 0.3s;
+  gap: 0;
+  height: 64px;
+  min-width: 60px;
+  box-sizing: border-box;
+  transition: background 0.2s;
+}
+.menu-item span:first-child {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
 }
 .menu-text {
-  margin-top: 4px;
+  margin-top: 2px;
   font-size: 12px;
   color: #fff;
   transition: opacity 0.2s, height 0.2s;
-  height: auto;
+  height: 16px;
   opacity: 1;
   min-width: 60px;
   text-align: center;
+  display: block;
 }
 .mainmenu.collapsed .menu-text {
   opacity: 0;
   height: 0;
   overflow: hidden;
+}
+.flex-grow {
+  flex-grow: 1;
 }
 
 .submenu {
