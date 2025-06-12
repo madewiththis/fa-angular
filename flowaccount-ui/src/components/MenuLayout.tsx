@@ -4,16 +4,17 @@ import type { ReactNode } from "react";
 import {
   mainMenu,
   bottomMenu,
-  submenu,
+  submenus,
   MenuItem,
   SubMenuItem,
 } from "./menuData";
+import { useState } from "react";
 
 interface MenuLayoutProps {
   mainMenu?: MenuItem[];
   bottomMenu?: MenuItem[];
   submenu?: SubMenuItem[];
-  submenuTitle: string;
+  submenuTitle?: string;
   children: ReactNode;
 }
 
@@ -26,11 +27,19 @@ export default function MenuLayout({
 }: MenuLayoutProps) {
   const main = mainMenuProp || mainMenu;
   const bottom = bottomMenuProp || bottomMenu;
-  const sub = submenuProp || submenu;
+  const [selectedMenu, setSelectedMenu] = useState<string>(
+    main[0]?.label || ""
+  );
+  const sub = submenuProp || submenus[selectedMenu] || [];
   return (
     <div className="flex min-h-screen">
-      <MainMenu mainMenu={main} bottomMenu={bottom} />
-      <SubMenu submenu={sub} title={submenuTitle} />
+      <MainMenu
+        mainMenu={main}
+        bottomMenu={bottom}
+        selectedMenu={selectedMenu}
+        onSelectMenu={setSelectedMenu}
+      />
+      <SubMenu submenu={sub} title={selectedMenu} />
       <main className="flex-1 p-8">{children}</main>
     </div>
   );

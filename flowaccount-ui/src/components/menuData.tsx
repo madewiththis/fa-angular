@@ -21,6 +21,7 @@ export interface MenuItem {
 export interface SubMenuItem {
   label: string;
   icon: ReactNode;
+  children?: SubMenuItem[];
 }
 
 export const mainMenu: MenuItem[] = [
@@ -118,33 +119,167 @@ export const bottomMenu: MenuItem[] = [
   },
 ];
 
-export const submenu: SubMenuItem[] = [
-  {
-    label: "Quotation",
-    icon: <ReceiptIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
-  },
-  {
-    label: "Billing Note",
-    icon: <ReceiptIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
-  },
-  {
-    label: "Tax Invoice",
-    icon: <ReceiptIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
-  },
-  {
-    label: "Receipt",
-    icon: <ReceiptIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
-  },
-  {
-    label: "Cash Sale",
-    icon: <ReceiptIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
-  },
-  {
-    label: "Credit Note",
-    icon: <ReceiptIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
-  },
-  {
-    label: "Debit Note",
-    icon: <ReceiptIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
-  },
-];
+export const submenus: Record<string, SubMenuItem[]> = {
+  Sell: [
+    {
+      label: "Quotation",
+      icon: <ReceiptIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
+    },
+    {
+      label: "Billing Note",
+      icon: <ReceiptIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
+    },
+    {
+      label: "Tax Invoice",
+      icon: <ReceiptIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
+    },
+    {
+      label: "Receipt",
+      icon: <ReceiptIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
+    },
+    {
+      label: "Cash Sale",
+      icon: <ReceiptIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
+    },
+    {
+      label: "Credit Note",
+      icon: <ReceiptIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
+    },
+    {
+      label: "Debit Note",
+      icon: <ReceiptIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
+    },
+  ],
+  Buy: [
+    {
+      label: "Purchase Order",
+      icon: <ShoppingCartIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
+    },
+    {
+      label: "Receiving Inventory",
+      icon: <ShelvesIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
+    },
+  ],
+  Contacts: [
+    {
+      label: "New Contact",
+      icon: <RecentActorsIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
+    },
+    {
+      label: "Clients",
+      icon: <RecentActorsIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
+    },
+    {
+      label: "Suppliers",
+      icon: <RecentActorsIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
+    },
+    {
+      label: "All",
+      icon: <RecentActorsIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
+    },
+  ],
+  Expenses: [
+    {
+      label: "Expense",
+      icon: <ReceiptIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
+    },
+    {
+      label: "Withholding Tax",
+      icon: <ReceiptIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
+    },
+    {
+      label: "Schedule Payment",
+      icon: <ReceiptIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
+    },
+    {
+      label: "Asset Management",
+      icon: <ServiceToolboxIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
+      children: [
+        {
+          label: "Asset List",
+          icon: (
+            <ServiceToolboxIcon fontSize="medium" sx={{ fontWeight: 400 }} />
+          ),
+        },
+        {
+          label: "Run Depreciation",
+          icon: (
+            <ServiceToolboxIcon fontSize="medium" sx={{ fontWeight: 400 }} />
+          ),
+        },
+        {
+          label: "Asset Category",
+          icon: (
+            <ServiceToolboxIcon fontSize="medium" sx={{ fontWeight: 400 }} />
+          ),
+        },
+      ],
+    },
+  ],
+  Products: [
+    {
+      label: "Products",
+      icon: <ShelvesIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
+    },
+    {
+      label: "Transfers",
+      icon: <ShelvesIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
+    },
+    {
+      label: "Warehouses",
+      icon: <ShelvesIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
+    },
+  ],
+  Reports: [
+    {
+      label: "Sell",
+      icon: <InsertChartIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
+    },
+    {
+      label: "Buy",
+      icon: <InsertChartIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
+    },
+    {
+      label: "Expense",
+      icon: <InsertChartIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
+    },
+    {
+      label: "Projects",
+      icon: <InsertChartIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
+    },
+    {
+      label: "Inventory",
+      icon: <InsertChartIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
+    },
+    {
+      label: "Tax",
+      icon: <InsertChartIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
+    },
+    {
+      label: "Accounting",
+      icon: <InsertChartIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
+    },
+  ],
+  Accounting: [
+    {
+      label: "Journals",
+      icon: <ServiceToolboxIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
+    },
+    {
+      label: "Chart of Accounts",
+      icon: <ServiceToolboxIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
+    },
+    {
+      label: "Closing Entries",
+      icon: <ServiceToolboxIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
+    },
+    {
+      label: "Reports",
+      icon: <ServiceToolboxIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
+    },
+    {
+      label: "VAT Management",
+      icon: <ServiceToolboxIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
+    },
+  ],
+};

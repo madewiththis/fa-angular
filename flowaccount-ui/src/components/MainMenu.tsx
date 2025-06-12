@@ -4,11 +4,15 @@ import { mainMenu, bottomMenu, MenuItem } from "./menuData";
 interface MainMenuProps {
   mainMenu?: MenuItem[];
   bottomMenu?: MenuItem[];
+  selectedMenu?: string;
+  onSelectMenu?: (label: string) => void;
 }
 
 export default function MainMenu({
   mainMenu: mainMenuProp,
   bottomMenu: bottomMenuProp,
+  selectedMenu,
+  onSelectMenu,
 }: MainMenuProps) {
   const main = mainMenuProp || mainMenu;
   const bottom = bottomMenuProp || bottomMenu;
@@ -25,11 +29,15 @@ export default function MainMenu({
             <a
               key={item.label}
               href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                onSelectMenu?.(item.label);
+              }}
               className={`flex items-center gap-4 px-4 py-3 rounded-lg transition-all font-medium text-base ${
-                item.active
-                  ? "bg-white bg-opacity-20"
-                  : "hover:bg-white hover:bg-opacity-10"
-              } ${item.active ? "text-white" : "text-white/90"}`}
+                selectedMenu === item.label
+                  ? "bg-white bg-opacity-20 text-white"
+                  : "hover:bg-white hover:bg-opacity-10 text-white/90"
+              }`}
             >
               <span>{item.icon}</span>
               <span>{item.label}</span>

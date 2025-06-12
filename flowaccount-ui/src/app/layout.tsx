@@ -28,7 +28,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 min-h-screen`}
       >
-        <MenuLayout submenuTitle="Sell">{children}</MenuLayout>
+        <MenuLayout>{children}</MenuLayout>
       </body>
     </html>
   );
