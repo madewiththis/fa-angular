@@ -1,3 +1,4 @@
+"use client";
 import MainMenu from "./MainMenu";
 import SubMenu from "./SubMenu";
 import type { ReactNode } from "react";
@@ -14,7 +15,6 @@ interface MenuLayoutProps {
   mainMenu?: MenuItem[];
   bottomMenu?: MenuItem[];
   submenu?: SubMenuItem[];
-  submenuTitle?: string;
   children: ReactNode;
 }
 
@@ -22,7 +22,6 @@ export default function MenuLayout({
   mainMenu: mainMenuProp,
   bottomMenu: bottomMenuProp,
   submenu: submenuProp,
-  submenuTitle,
   children,
 }: MenuLayoutProps) {
   const main = mainMenuProp || mainMenu;

@@ -1,4 +1,7 @@
+"use client";
+
 import { SubMenuItem } from "./menuData";
+import "./MenuStyle.css";
 
 interface SubMenuProps {
   submenu?: SubMenuItem[];
@@ -7,11 +10,10 @@ interface SubMenuProps {
 
 export default function SubMenu({ submenu: submenuProp, title }: SubMenuProps) {
   const items = submenuProp || [];
+
   return (
-    <aside className="w-64 bg-white border-r border-gray-200 flex flex-col p-8">
-      <div className="font-bold text-2xl text-gray-700 mb-8 flex items-center gap-2">
-        {title}
-      </div>
+    <div className="submenu">
+      <div className="submenu-text flex items-center gap-2">{title}</div>
       <nav className="flex flex-col gap-2">
         {items.map((item: SubMenuItem) => (
           <div key={item.label} className="submenu-item-wrapper">
@@ -23,6 +25,7 @@ export default function SubMenu({ submenu: submenuProp, title }: SubMenuProps) {
             >
               <span className="text-blue-400">{item.icon}</span>
               <span>{item.label}</span>
+              <span className="submenu-symbol">›</span>
             </a>
             {item.children && (
               <div className="ml-8 flex flex-col gap-1">
@@ -36,6 +39,7 @@ export default function SubMenu({ submenu: submenuProp, title }: SubMenuProps) {
                   >
                     <span className="text-blue-300">{child.icon}</span>
                     <span>{child.label}</span>
+                    <span className="submenu-symbol">›</span>
                   </a>
                 ))}
               </div>
@@ -43,6 +47,6 @@ export default function SubMenu({ submenu: submenuProp, title }: SubMenuProps) {
           </div>
         ))}
       </nav>
-    </aside>
+    </div>
   );
 }

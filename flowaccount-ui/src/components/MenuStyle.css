@@ -1,0 +1,66 @@
+.mainmenu {
+  background: linear-gradient(to bottom, #6db3f2, #1e69de);
+  transition: width 0.3s;
+  width: 100px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+.mainmenu.collapsed {
+  width: 60px;
+}
+.menu-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px 0;
+  padding: 4px 0;
+  gap: 4px;
+  transition: gap 0.3s, margin 0.3s, padding 0.3s;
+}
+.menu-text {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #fff;
+  transition: opacity 0.2s, height 0.2s;
+  height: auto;
+  opacity: 1;
+  min-width: 60px;
+  text-align: center;
+}
+.mainmenu.collapsed .menu-text {
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.submenu {
+  width: 235px;
+  min-height: 100vh;
+  background: #f5f6fa; /* Light gray background */
+  display: flex;
+  flex-direction: column;
+  /* Add your submenu styles here */
+}
+
+.submenu-text {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin-left: 32px;
+  margin-bottom: 32px;
+  margin-top: 24px;
+  background: none;
+}
+
+.submenu-symbol {
+  margin-left: 0.5rem;
+  color: #2563eb;
+  font-size: 1.1rem;
+  opacity: 0.7;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
