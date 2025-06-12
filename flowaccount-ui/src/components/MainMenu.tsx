@@ -1,5 +1,4 @@
 import InsertChartIcon from "@mui/icons-material/InsertChart";
-import type { ReactNode } from "react";
 import { mainMenu, bottomMenu, MenuItem } from "./menuData";
 
 interface MainMenuProps {

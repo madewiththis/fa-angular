@@ -1,4 +1,3 @@
-import type { ReactNode } from "react";
 import { submenu, SubMenuItem } from "./menuData";
 
 interface SubMenuProps {
