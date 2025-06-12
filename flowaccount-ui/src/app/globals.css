@@ -62,41 +62,4 @@ body {
   animation: subtle-pulse 3s infinite ease-in-out;
 }
 
-/* Submenu specific styles */
-.submenu-item {
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  transition: all 0.2s ease;
-}
-.submenu-item-sub {
-  font-size: 0.8125rem;
-  line-height: 1.125rem;
-}
-
-/* Submenu item wrapper - controls spacing between items */
-.submenu-item-wrapper {
-  padding: 5px 0;
-}
-
-/* Submenu subitem styling */
-.submenu-subitem {
-  padding-left: 16px;
-}
-
-/* Submenu item styling with proper gaps on both sides */
-.sidebar-submenu-item {
-  position: relative;
-  transition: all 0.2s ease;
-  border-radius: 8px;
-  margin: 0 12px;
-  padding: 8px 12px;
-  border: 1px solid transparent;
-}
-.sidebar-submenu-item:hover {
-  background-color: #f5f5f5;
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-}
-.sidebar-submenu-item.active {
-  background-color: rgba(255, 255, 255, 0.6);
-}
+/* Removed submenu styles, now in MenuStyle.css */
