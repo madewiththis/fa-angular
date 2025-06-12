@@ -24,3 +24,79 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Sidebar gradient background */
+.sidebar-gradient {
+  background: linear-gradient(
+    180deg,
+    #5dade2 0%,
+    #3498db 25%,
+    #3498db 50%,
+    #3498db 75%,
+    #3498db 100%
+  );
+}
+
+/* Logo glow and hover effects */
+.logo-glow {
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease-in-out;
+}
+.logo-glow:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
+/* Pulse animation for the logo */
+@keyframes subtle-pulse {
+  0% {
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+  }
+}
+.logo-pulse {
+  animation: subtle-pulse 3s infinite ease-in-out;
+}
+
+/* Submenu specific styles */
+.submenu-item {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  transition: all 0.2s ease;
+}
+.submenu-item-sub {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+}
+
+/* Submenu item wrapper - controls spacing between items */
+.submenu-item-wrapper {
+  padding: 5px 0;
+}
+
+/* Submenu subitem styling */
+.submenu-subitem {
+  padding-left: 16px;
+}
+
+/* Submenu item styling with proper gaps on both sides */
+.sidebar-submenu-item {
+  position: relative;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+  margin: 0 12px;
+  padding: 8px 12px;
+  border: 1px solid transparent;
+}
+.sidebar-submenu-item:hover {
+  background-color: #f5f5f5;
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+}
+.sidebar-submenu-item.active {
+  background-color: rgba(255, 255, 255, 0.6);
+}

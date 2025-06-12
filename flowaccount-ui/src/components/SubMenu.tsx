@@ -14,10 +14,12 @@ export default function SubMenu({ submenu: submenuProp, title }: SubMenuProps) {
       </div>
       <nav className="flex flex-col gap-2">
         {items.map((item: SubMenuItem) => (
-          <div key={item.label}>
+          <div key={item.label} className="submenu-item-wrapper">
             <a
               href="#"
-              className="flex items-center gap-4 px-2 py-3 rounded-lg transition-all text-gray-600 hover:bg-gray-100 hover:text-blue-600 text-lg"
+              className={
+                "sidebar-submenu-item submenu-item flex items-center gap-4"
+              }
             >
               <span className="text-blue-400">{item.icon}</span>
               <span>{item.label}</span>
@@ -28,7 +30,9 @@ export default function SubMenu({ submenu: submenuProp, title }: SubMenuProps) {
                   <a
                     key={child.label}
                     href="#"
-                    className="flex items-center gap-3 px-2 py-2 rounded-lg transition-all text-gray-500 hover:bg-gray-100 hover:text-blue-500 text-base"
+                    className={
+                      "sidebar-submenu-item submenu-item submenu-item-sub submenu-subitem flex items-center gap-3 text-gray-500"
+                    }
                   >
                     <span className="text-blue-300">{child.icon}</span>
                     <span>{child.label}</span>

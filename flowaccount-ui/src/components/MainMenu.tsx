@@ -1,4 +1,4 @@
-import InsertChartIcon from "@mui/icons-material/InsertChart";
+import Image from "next/image";
 import { mainMenu, bottomMenu, MenuItem } from "./menuData";
 
 interface MainMenuProps {
@@ -17,11 +17,17 @@ export default function MainMenu({
   const main = mainMenuProp || mainMenu;
   const bottom = bottomMenuProp || bottomMenu;
   return (
-    <aside className="w-56 flex flex-col justify-between py-8 px-0 bg-gradient-to-b from-blue-500 to-blue-400 text-white shadow-lg">
+    <aside className="w-56 flex flex-col justify-between py-8 px-0 sidebar-gradient text-white shadow-lg">
       <div>
         <div className="flex flex-col items-center mb-8">
-          <div className="bg-white bg-opacity-20 rounded-full p-4 mb-6">
-            <InsertChartIcon fontSize="large" sx={{ fill: "white" }} />
+          <div className="logo-glow logo-pulse rounded-full p-4 mb-6 bg-white bg-opacity-10">
+            <Image
+              src="/fa_logo.png"
+              alt="FlowAccount Logo"
+              width={56}
+              height={56}
+              priority
+            />
           </div>
         </div>
         <nav className="flex flex-col gap-2">
