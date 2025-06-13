@@ -11,11 +11,25 @@ import {
 
 const settingsItems = [
   {
+    icon: <LayoutGrid size={20} className="text-gray-500" />,
+    title: "MyPlatform",
+    subtitle: "Manage Integrations",
+    external: true,
+    separator: false,
+  },
+  {
+    icon: <Building size={20} className="text-gray-500" />,
+    title: "My Company",
+    subtitle: "Billing, Plan, Users, Banking",
+    external: true,
+    separator: false,
+  },
+  {
     icon: <FileText size={20} className="text-gray-500" />,
     title: "Document",
     subtitle: "Templates, Numbering, Customization",
     external: false,
-    separator: false,
+    separator: true,
   },
   {
     icon: <BarChart2 size={20} className="text-gray-500" />,
@@ -36,20 +50,6 @@ const settingsItems = [
     title: "Products Setting",
     subtitle: "Warehouses, Categories, Units",
     external: false,
-    separator: false,
-  },
-  {
-    icon: <LayoutGrid size={20} className="text-gray-500" />,
-    title: "MyPlatform",
-    subtitle: "Manage Integrations",
-    external: true,
-    separator: true,
-  },
-  {
-    icon: <Building size={20} className="text-gray-500" />,
-    title: "My Company",
-    subtitle: "Billing, Plan, Users, Banking",
-    external: true,
     separator: false,
   },
 ];

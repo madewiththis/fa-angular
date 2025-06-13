@@ -124,6 +124,19 @@ export default function MenuLayout({
   // Determine if submenu should be shown
   const shouldShowSubmenu = isDashboard ? hoveredMenu !== null : true; // Always show for non-dashboard pages
 
+  // Calculate content margin based on menu states
+  const getContentMargin = () => {
+    if (isDashboard) {
+      // Dashboard: use full width, content extends behind fixed menus
+      return 0;
+    } else {
+      // Non-dashboard: submenu always visible, respect menu space
+      const mainMenuWidth = isCollapsed ? 60 : 100;
+      const submenuWidth = isSubMenuCollapsed ? 60 : 235;
+      return mainMenuWidth + submenuWidth;
+    }
+  };
+
   return (
     <div className="flex min-h-screen">
       <div
@@ -146,7 +159,7 @@ export default function MenuLayout({
           onMouseEnter={handleSubMenuEnter}
           className={`submenu-wrapper ${shouldShowSubmenu ? "visible" : ""} ${
             isDashboard ? "dashboard-overlay" : ""
-          }`}
+          } ${isCollapsed ? "main-menu-collapsed" : ""}`}
         >
           <SubMenu
             submenu={currentSubmenu}
@@ -159,9 +172,10 @@ export default function MenuLayout({
         </div>
       </div>
       <main
-        className={`flex-1 p-8 w-full max-w-none ${
-          isDashboard ? "dashboard-content-pusher" : ""
-        }`}
+        className="flex-1 p-8 w-full max-w-none transition-all duration-500 ease-in-out"
+        style={{
+          marginLeft: `${getContentMargin()}px`,
+        }}
       >
         {children}
       </main>

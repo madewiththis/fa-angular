@@ -4,6 +4,9 @@
 }
 
 .mainmenu {
+  position: fixed;
+  top: 0;
+  left: 0;
   background: linear-gradient(to bottom, #6db3f2, #1e69de);
   transition: width 0.5s cubic-bezier(0.23, 1, 0.32, 1);
   width: 100px;
@@ -70,12 +73,21 @@
 
 /* ---- SubMenu Styles ---- */
 .submenu {
+  position: fixed;
+  top: 0;
+  left: 100px; /* Position next to main menu when expanded */
   width: 235px;
   height: 100vh;
   background: #f5f6fa; /* Light gray background */
   display: flex;
   flex-direction: column;
-  transition: width 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  transition: width 0.5s cubic-bezier(0.23, 1, 0.32, 1),
+    left 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Adjust submenu position when main menu is collapsed */
+.submenu-wrapper.main-menu-collapsed .submenu {
+  left: 60px; /* Position next to collapsed main menu */
 }
 
 .submenu.dashboard-glass {
@@ -191,24 +203,21 @@
 .submenu-wrapper.dashboard-overlay {
   position: absolute;
   top: 0;
-  left: 100px; /* Main menu width */
+  left: 100px; /* Main menu width when expanded */
   height: 100%;
   margin-left: 0;
-  transform: translateX(-100%);
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Adjust dashboard overlay position when main menu is collapsed */
+.submenu-wrapper.main-menu-collapsed.dashboard-overlay {
+  left: 60px; /* Main menu width when collapsed */
 }
 
 .submenu-wrapper.dashboard-overlay.visible {
-  transform: translateX(0);
-}
-
-.dashboard-content-pusher {
-  margin-left: -235px; /* Pull content under the submenu space */
-}
-
-.submenu-wrapper.dashboard-overlay.visible {
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s;
-  margin-left: 0;
   opacity: 1;
   pointer-events: auto;
 }

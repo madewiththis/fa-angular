@@ -8,19 +8,36 @@ import TranslateIcon from "@mui/icons-material/Translate";
 import BusinessIcon from "@mui/icons-material/Business";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ChatIcon from "@mui/icons-material/Chat";
-import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import PhoneCallbackIcon from "@mui/icons-material/PhoneCallback";
-import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 // UserDetails Component
+import EditIcon from "@mui/icons-material/Edit";
+
 const UserDetails = () => {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
-    <div className="bg-blue-50 rounded-lg">
-      <div className="p-4 relative">
-        <button className="absolute top-4 right-4 w-8 h-8 bg-white hover:bg-gray-100 hover:shadow-md border border-gray-200 rounded-full flex items-center justify-center transition-all duration-200">
-          <ManageAccountsIcon style={{ fontSize: 18 }} />
-        </button>
+    <button
+      type="button"
+      className="bg-blue-50 rounded-lg w-full text-left relative group focus:outline-none"
+      style={{ cursor: "pointer" }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      tabIndex={0}
+    >
+      <div className="p-4">
+        {/* Edit pill appears on hover */}
+        <div
+          className={`absolute top-4 right-4 transition-opacity duration-200 ${
+            isHovered ? "opacity-100" : "opacity-0 pointer-events-none"
+          }`}
+        >
+          <span className="flex items-center bg-white border border-gray-200 shadow px-3 py-1 rounded-full text-sm font-medium text-gray-700 transition-colors duration-150 group-hover:bg-blue-100 group-hover:text-blue-700">
+            <EditIcon className="mr-1" style={{ fontSize: 18 }} />
+            Edit
+          </span>
+        </div>
         <p className="font-semibold pr-12">Firstname Lastname</p>
         <p className="text-sm text-gray-600 flex items-center">
           <MailIcon
@@ -37,7 +54,7 @@ const UserDetails = () => {
           012-345-6789
         </p>
       </div>
-    </div>
+    </button>
   );
 };
 
@@ -63,22 +80,33 @@ const Support = () => {
 
   return (
     <div className="p-2">
-      <div className="flex mt-2 space-x-2">
-        <button className="flex-1 p-2 bg-white hover:bg-blue-50 rounded-md relative flex flex-col items-center justify-center transition-colors border border-gray-200 min-h-[80px]">
-          <ChatIcon />
-          <span className="text-xs text-gray-500 mt-1 text-center">
-            Mon-Sat
-            <br />
-            08:00-22:00
+      <div className="mb-0 mt-2 flex items-center justify-between">
+        <h3 className="text-xs font-medium text-gray-500 mb-0">
+          Support Available: Mon-Sat 08:00-22:00
+        </h3>
+        <span className="flex items-center ml-2">
+          <span className="inline-block w-2 h-2 rounded-full bg-green-500 mr-1"></span>
+          <span className="text-xs text-green-600 bg-green-100 px-2 py-0.5 rounded-full font-medium">
+            Online
           </span>
-          <span className="absolute top-1 right-1 block h-2 w-2 rounded-full bg-green-400 ring-2 ring-white"></span>
+        </span>
+      </div>
+      <div className="flex mt-2 space-x-2">
+        <button className="flex-1 p-3 bg-white hover:bg-blue-50 rounded-md relative flex flex-col items-center justify-center transition-colors border border-gray-200 min-h-[80px]">
+          <div className="flex items-center">
+            <ChatIcon style={{ fontSize: 24 }} />
+            <span className="text-base font-medium ml-2">Chat</span>
+          </div>
         </button>
         <button
           onClick={() => handleCopy(phoneNumber, setPhoneNumberCopied)}
-          className="flex-1 p-2 bg-white hover:bg-blue-50 rounded-md flex flex-col items-center justify-center transition-colors border border-gray-200 min-h-[80px]"
+          className="flex-1 p-3 bg-white hover:bg-blue-50 rounded-md relative flex flex-col items-center justify-center transition-colors border border-gray-200 min-h-[80px]"
         >
-          <SupportAgentIcon />
-          <div className="flex items-center text-xs text-gray-800 mt-1">
+          <div className="flex items-center mb-2">
+            <CallIcon style={{ fontSize: 24 }} />
+            <span className="text-base font-medium ml-2">Call</span>
+          </div>
+          <div className="flex items-center justify-center text-xs text-gray-800">
             <span>{phoneNumber}</span>
             {phoneNumberCopied ? (
               <CheckCircleIcon
@@ -95,7 +123,7 @@ const Support = () => {
         </button>
       </div>
       <div className="mt-2">
-        <button className="w-full p-2 bg-gray-50 hover:bg-gray-100 rounded-md flex items-center justify-center transition-colors border border-gray-200 min-h-[40px]">
+        <button className="w-full p-2 bg-white hover:bg-blue-50 rounded-md flex items-center justify-center transition-colors border border-gray-200 min-h-[40px]">
           <PhoneCallbackIcon className="mr-2" />
           Request Callback
         </button>
@@ -103,7 +131,7 @@ const Support = () => {
       <div className="mt-2">
         <button
           onClick={() => handleCopy(customerNumber, setCustomerNumberCopied)}
-          className="flex items-center justify-between w-full text-sm p-2 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+          className="flex items-center justify-between w-full text-sm p-2 bg-white hover:bg-gray-200 rounded-md transition-colors border border-gray-200"
           style={{ textAlign: "left" }}
         >
           <span className="flex items-center">
@@ -136,7 +164,7 @@ const Support = () => {
 
 // LanguageSelector Component
 const LanguageSelector = () => (
-  <div className="p-4 flex justify-between items-center">
+  <div className="pl-2 pr-2 pb-1 pt-4 flex justify-between items-center">
     <p className="text-sm flex items-center">
       <TranslateIcon
         className="mr-1"
@@ -157,7 +185,7 @@ const LanguageSelector = () => (
 
 // ChooseCompanyButton Component
 const ChooseCompanyButton = () => (
-  <div className="p-2">
+  <div className="pl-2 pr-2 pb-1 pt-4">
     <button className="w-full p-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-md flex items-center justify-between">
       <div className="flex items-center">
         <BusinessIcon
@@ -193,9 +221,9 @@ const Profile = () => {
       className="flex flex-col bg-white rounded-lg text-gray-800"
     >
       <UserDetails />
+      <LanguageSelector />
       <Support />
       <ChooseCompanyButton />
-      <LanguageSelector />
       <LogoutButton />
     </div>
   );
