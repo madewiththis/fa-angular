@@ -39,7 +39,24 @@ export default function MainMenu({
   const [hoveredUtilityIndex, setHoveredUtilityIndex] = useState<number | null>(
     null
   );
-  const [isUtilityMenuOpen, setUtilityMenuOpen] = useState(false);
+  const [utilityMenuContent, setUtilityMenuContent] = useState<
+    "Apps" | "Settings" | null
+  >(null);
+  const hideMenuTimer = useRef<NodeJS.Timeout | null>(null);
+
+  const handleUtilityMenuEnter = (label: "Apps" | "Settings") => {
+    if (hideMenuTimer.current) {
+      clearTimeout(hideMenuTimer.current);
+      hideMenuTimer.current = null;
+    }
+    setUtilityMenuContent(label);
+  };
+
+  const handleUtilityMenuLeave = () => {
+    hideMenuTimer.current = setTimeout(() => {
+      setUtilityMenuContent(null);
+    }, 1500);
+  };
 
   // You can adjust these values to fine-tune the background position
   const expandedVerticalOffset = 3; // Nudge down on expand (positive value)
@@ -171,17 +188,19 @@ export default function MainMenu({
               }}
               href="#"
               className="menu-item relative"
-              onClick={(e) => {
-                e.preventDefault();
-                if (item.label === "Apps" || item.label === "Settings") {
-                  setUtilityMenuOpen(!isUtilityMenuOpen);
-                }
-              }}
               onMouseEnter={() => {
                 onUtilityMenuHover?.();
                 setHoveredUtilityIndex(index);
+                if (item.label === "Apps" || item.label === "Settings") {
+                  handleUtilityMenuEnter(item.label);
+                }
               }}
-              onMouseLeave={() => setHoveredUtilityIndex(null)}
+              onMouseLeave={() => {
+                setHoveredUtilityIndex(null);
+                if (item.label === "Apps" || item.label === "Settings") {
+                  handleUtilityMenuLeave();
+                }
+              }}
             >
               <span>{item.icon}</span>
               <span className="menu-text">{item.label}</span>
@@ -192,10 +211,11 @@ export default function MainMenu({
           ))}
         </div>
       </div>
-      {isUtilityMenuOpen && (
+      {utilityMenuContent && (
         <UtilityMenu
-          isMainMenuExpanded={!isCollapsed}
-          onClose={() => setUtilityMenuOpen(false)}
+          content={utilityMenuContent}
+          onMouseEnter={() => handleUtilityMenuEnter(utilityMenuContent)}
+          onMouseLeave={handleUtilityMenuLeave}
         />
       )}
     </aside>
