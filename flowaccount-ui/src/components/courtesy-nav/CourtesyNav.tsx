@@ -12,7 +12,10 @@ interface CourtesyNavProps {
 export default function CourtesyNav({ className = "" }: CourtesyNavProps) {
   return (
     <div
-      className={`fixed top-4 right-4 z-40 flex items-center gap-3 ${className}`}
+      className={`fixed right-4 z-40 flex items-center gap-3 ${className}`}
+      style={{
+        top: `calc(var(--banner-height, 0px) + 1rem)`, // 1rem = 16px spacing
+      }}
     >
       <CompanyChanger />
       <LanguageChanger />

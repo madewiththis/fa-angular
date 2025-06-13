@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { TestTube, Settings } from "lucide-react";
+import ProfilesIcon from "@mui/icons-material/ManageAccounts";
 import {
   isTestingEnabled,
   getUserProfileTestCriteria,
@@ -21,8 +21,8 @@ const UserProfileTestButton: React.FC<UserProfileTestButtonProps> = ({
     const criteria = getUserProfileTestCriteria();
     const activeCriteria: string[] = [];
 
-    if (criteria.userRole !== "Any") activeCriteria.push(criteria.userRole);
-    if (criteria.package !== "Any") activeCriteria.push(criteria.package);
+    if (criteria.userRole !== "any") activeCriteria.push(criteria.userRole);
+    if (criteria.package !== "any") activeCriteria.push(criteria.package);
     if (criteria.packageStatus !== "any")
       activeCriteria.push(criteria.packageStatus);
     if (criteria.paymentFrequency !== "any")
@@ -70,17 +70,14 @@ const UserProfileTestButton: React.FC<UserProfileTestButtonProps> = ({
       >
         {hasActiveTests ? (
           <>
-            <Settings className="w-5 h-5" />
+            <ProfilesIcon className="w-5 h-5" />
             <span className="hidden sm:inline text-sm font-medium">
               Testing Active
             </span>
           </>
         ) : (
           <>
-            <TestTube className="w-5 h-5" />
-            <span className="hidden sm:inline text-sm font-medium">
-              Test Profiles
-            </span>
+            <ProfilesIcon className="w-5 h-5" />
           </>
         )}
 

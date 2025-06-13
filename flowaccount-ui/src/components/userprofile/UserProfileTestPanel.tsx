@@ -1,7 +1,46 @@
+// ------------------------------------------------------------
+// User Profile Test Criteria and Their Value Options:
+//
+// 1. userRole:
+//    - "any"
+//    - "owner"
+//    - "staff"
+//    - "accounting"
+//    - "firm"
+//    - "freelance"
+//    - "accountant"
+//    - "student"
+//
+// 2. package:
+//    - "any"
+//    - "free_trial"
+//    - "standard"
+//    - "pro"
+//    - "pro_business"
+//
+// 3. packageStatus:
+//    - "any"
+//    - "active"
+//    - "expired"
+//    - "expiring"
+//
+// 4. paymentFrequency:
+//    - "any"
+//    - "monthly"
+//    - "annual"
+//
+// 5. paymentMethod:
+//    - "any"
+//    - "credit_card"
+//    - "bank_transfer"
+//    - "qr_code"
+// ------------------------------------------------------------
+
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { X, TestTube, RotateCcw } from "lucide-react";
+import { X, RotateCcw, Trash2 } from "lucide-react";
+import ProfilesIcon from "@mui/icons-material/ManageAccounts";
 import {
   UserProfileTestCriteria,
   saveUserProfileTestCriteria,
@@ -19,8 +58,8 @@ const UserProfileTestPanel: React.FC<UserProfileTestPanelProps> = ({
   onClose,
 }) => {
   const [criteria, setCriteria] = useState<UserProfileTestCriteria>({
-    userRole: "Any",
-    package: "Any",
+    userRole: "any",
+    package: "any",
     packageStatus: "any",
     paymentFrequency: "any",
     paymentMethod: "any",
@@ -40,12 +79,20 @@ const UserProfileTestPanel: React.FC<UserProfileTestPanelProps> = ({
   const handleReset = () => {
     resetUserProfileTestCriteria();
     setCriteria({
-      userRole: "Any",
-      package: "Any",
+      userRole: "any",
+      package: "any",
       packageStatus: "any",
       paymentFrequency: "any",
       paymentMethod: "any",
     });
+  };
+
+  const handleClearCookies = () => {
+    // Clear banner-related localStorage items
+    localStorage.removeItem("freeTrialBannerDismissed");
+
+    // Show confirmation
+    alert("Cookies cleared! Banner dismissal state has been reset.");
   };
 
   const updateCriteria = (
@@ -63,7 +110,7 @@ const UserProfileTestPanel: React.FC<UserProfileTestPanelProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div className="flex items-center gap-3">
-            <TestTube className="w-6 h-6 text-blue-600" />
+            <ProfilesIcon className="w-6 h-6 text-blue-600" />
             <h2 className="text-xl font-semibold text-gray-900">
               User Profile Testing
             </h2>
@@ -93,14 +140,14 @@ const UserProfileTestPanel: React.FC<UserProfileTestPanelProps> = ({
               }
               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
-              <option value="Any">Any</option>
-              <option value="Owner">Owner</option>
-              <option value="Staff">Staff</option>
-              <option value="Accounting">Accounting</option>
-              <option value="Firm">Firm</option>
-              <option value="Freelance">Freelance</option>
-              <option value="Accountant">Accountant</option>
-              <option value="Student">Student</option>
+              <option value="any">Any</option>
+              <option value="owner">Owner</option>
+              <option value="staff">Staff</option>
+              <option value="accounting">Accounting</option>
+              <option value="firm">Firm</option>
+              <option value="freelance">Freelance</option>
+              <option value="accountant">Accountant</option>
+              <option value="student">Student</option>
             </select>
           </div>
 
@@ -119,11 +166,11 @@ const UserProfileTestPanel: React.FC<UserProfileTestPanelProps> = ({
               }
               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
-              <option value="Any">Any</option>
-              <option value="Free Trial">Free Trial</option>
-              <option value="Standard">Standard</option>
-              <option value="Pro">Pro</option>
-              <option value="Pro Business">Pro Business</option>
+              <option value="any">Any</option>
+              <option value="free_trial">Free Trial</option>
+              <option value="standard">Standard</option>
+              <option value="pro">Pro</option>
+              <option value="pro_business">Pro Business</option>
             </select>
           </div>
 
@@ -186,22 +233,31 @@ const UserProfileTestPanel: React.FC<UserProfileTestPanelProps> = ({
               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="any">Any</option>
-              <option value="credit card">Credit Card</option>
-              <option value="bank transfer">Bank Transfer</option>
-              <option value="qr code">QR Code</option>
+              <option value="credit_card">Credit Card</option>
+              <option value="bank_transfer">Bank Transfer</option>
+              <option value="qr_code">QR Code</option>
             </select>
           </div>
         </div>
 
         {/* Footer */}
         <div className="flex items-center justify-between p-6 bg-gray-50 border-t border-gray-200">
-          <button
-            onClick={handleReset}
-            className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
-          >
-            <RotateCcw className="w-4 h-4" />
-            Reset to Defaults
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleReset}
+              className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              <RotateCcw className="w-4 h-4" />
+              Reset to Defaults
+            </button>
+            <button
+              onClick={handleClearCookies}
+              className="flex items-center gap-2 px-4 py-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-colors"
+            >
+              <Trash2 className="w-4 h-4" />
+              Clear Cookies
+            </button>
+          </div>
 
           <div className="flex items-center gap-3">
             <button

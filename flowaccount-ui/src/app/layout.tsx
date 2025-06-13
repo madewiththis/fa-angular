@@ -5,6 +5,7 @@ import MenuLayout from "../components/navigation/MenuLayout";
 import CourtesyNav from "@/components/courtesy-nav/CourtesyNav";
 import { UserProfileTester } from "@/components/userprofile";
 import { PasswordProtection } from "@/components/auth";
+import { FreeTrialBanner } from "@/components/notices";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,6 +42,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 min-h-screen`}
       >
         <PasswordProtection>
+          <FreeTrialBanner />
           <MenuLayout>{children}</MenuLayout>
           <CourtesyNav />
           <UserProfileTester />

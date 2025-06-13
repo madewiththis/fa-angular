@@ -18,11 +18,64 @@ The component is already integrated into the app layout (`src/app/layout.tsx`). 
 
 ### Available Test Criteria
 
-1. **User Role**: Owner, Staff, Accounting, Firm, Freelance, Accountant, Student, Any
-2. **Package**: Free Trial, Standard, Pro, Pro Business, Any
-3. **Package Status**: active, expired, expiring, any
-4. **Payment Frequency**: monthly, annual, any
-5. **Payment Method**: credit card, bank transfer, qr code, any
+#### 1. User Role
+
+- `"any"` - No specific role restriction
+- `"owner"` - Business owner
+- `"staff"` - Staff member
+- `"accounting"` - Accounting role
+- `"firm"` - Accounting firm
+- `"freelance"` - Freelancer
+- `"accountant"` - Professional accountant
+- `"student"` - Student user
+
+#### 2. Package
+
+- `"any"` - No package restriction
+- `"free_trial"` - Free trial package
+- `"standard"` - Standard package
+- `"pro"` - Pro package
+- `"pro_business"` - Pro Business package
+
+#### 3. Package Status
+
+- `"any"` - No status restriction
+- `"active"` - Active subscription
+- `"expired"` - Expired subscription
+- `"expiring"` - Subscription expiring soon
+
+#### 4. Payment Frequency
+
+- `"any"` - No frequency restriction
+- `"monthly"` - Monthly billing
+- `"annual"` - Annual billing
+
+#### 5. Payment Method
+
+- `"any"` - No method restriction
+- `"credit_card"` - Credit card payment
+- `"bank_transfer"` - Bank transfer payment
+- `"qr_code"` - QR code payment
+
+### TypeScript Interface
+
+```typescript
+interface UserProfileTestCriteria {
+  userRole:
+    | "owner"
+    | "staff"
+    | "accounting"
+    | "firm"
+    | "freelance"
+    | "accountant"
+    | "student"
+    | "any";
+  package: "free_trial" | "standard" | "pro" | "pro_business" | "any";
+  packageStatus: "active" | "expired" | "expiring" | "any";
+  paymentFrequency: "monthly" | "annual" | "any";
+  paymentMethod: "credit_card" | "bank_transfer" | "qr_code" | "any";
+}
+```
 
 ### Using Test Criteria in Your Components
 
@@ -31,26 +84,41 @@ import {
   getUserProfileTestCriteria,
   getTestUserRole,
   getTestPackage,
+  getTestPackageStatus,
+  getTestPaymentFrequency,
+  getTestPaymentMethod,
   isTestingEnabled,
-} from "@/components/userprofile";
+  UserProfileTestCriteria,
+} from "../../lib/userProfileTest";
 
 // Get all criteria
-const testCriteria = getUserProfileTestCriteria();
+const testCriteria: UserProfileTestCriteria = getUserProfileTestCriteria();
 
 // Get specific criteria
 const userRole = getTestUserRole();
 const packageType = getTestPackage();
+const packageStatus = getTestPackageStatus();
+const paymentFrequency = getTestPaymentFrequency();
+const paymentMethod = getTestPaymentMethod();
 
 // Check if testing is active
 const isActive = isTestingEnabled();
 
 // Example: Conditional rendering based on test criteria
-if (isTestingEnabled() && getTestUserRole() === "Owner") {
+if (isTestingEnabled() && getTestUserRole() === "owner") {
   // Show owner-specific features
 }
 
-if (getTestPackage() === "Free Trial") {
+if (getTestPackage() === "free_trial") {
   // Show free trial limitations
+}
+
+if (getTestPackageStatus() === "expired") {
+  // Show renewal prompts
+}
+
+if (getTestPaymentMethod() === "qr_code") {
+  // Show QR code specific UI
 }
 ```
 
@@ -64,15 +132,30 @@ if (getTestPackage() === "Free Trial") {
 
 ### Utility Functions
 
-- `saveUserProfileTestCriteria(criteria)` - Save test criteria to cookies
-- `getUserProfileTestCriteria()` - Get current test criteria
-- `resetUserProfileTestCriteria()` - Reset to default values
-- `isTestingEnabled()` - Check if any testing is active
-- `getTestUserRole()` - Get current test user role
-- `getTestPackage()` - Get current test package
-- `getTestPackageStatus()` - Get current test package status
-- `getTestPaymentFrequency()` - Get current test payment frequency
-- `getTestPaymentMethod()` - Get current test payment method
+#### Core Functions
+
+- `saveUserProfileTestCriteria(criteria: UserProfileTestCriteria): void` - Save test criteria to cookies (30-day expiration)
+- `getUserProfileTestCriteria(): UserProfileTestCriteria` - Get current test criteria from cookies or defaults
+- `resetUserProfileTestCriteria(): void` - Reset all criteria to "any" (default values)
+- `isTestingEnabled(): boolean` - Check if any testing is active (any value is not "any")
+
+#### Getter Functions
+
+- `getTestUserRole(): string` - Get current test user role
+- `getTestPackage(): string` - Get current test package
+- `getTestPackageStatus(): string` - Get current test package status
+- `getTestPaymentFrequency(): string` - Get current test payment frequency
+- `getTestPaymentMethod(): string` - Get current test payment method
+
+#### Cookie Management (Internal)
+
+- `setCookie(name: string, value: string, days?: number): void` - Set browser cookie
+- `getCookie(name: string): string | null` - Get browser cookie value
+
+#### Constants
+
+- `DEFAULT_CRITERIA: UserProfileTestCriteria` - Default criteria object (all "any")
+- `COOKIE_NAME: string` - Cookie name used for storage ("flowaccount-test-profile")
 
 ### Visual States
 

@@ -1,22 +1,22 @@
 export interface UserProfileTestCriteria {
   userRole:
-    | "Owner"
-    | "Staff"
-    | "Accounting"
-    | "Firm"
-    | "Freelance"
-    | "Accountant"
-    | "Student"
-    | "Any";
-  package: "Free Trial" | "Standard" | "Pro" | "Pro Business" | "Any";
+    | "owner"
+    | "staff"
+    | "accounting"
+    | "firm"
+    | "freelance"
+    | "accountant"
+    | "student"
+    | "any";
+  package: "free_trial" | "standard" | "pro" | "pro_business" | "any";
   packageStatus: "active" | "expired" | "expiring" | "any";
   paymentFrequency: "monthly" | "annual" | "any";
-  paymentMethod: "credit card" | "bank transfer" | "qr code" | "any";
+  paymentMethod: "credit_card" | "bank_transfer" | "qr_code" | "any";
 }
 
 const DEFAULT_CRITERIA: UserProfileTestCriteria = {
-  userRole: "Any",
-  package: "Any",
+  userRole: "any",
+  package: "any",
   packageStatus: "any",
   paymentFrequency: "any",
   paymentMethod: "any",
