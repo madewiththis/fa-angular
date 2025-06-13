@@ -4,6 +4,7 @@ import "./globals.css";
 import MenuLayout from "../components/navigation/MenuLayout";
 import CourtesyNav from "@/components/courtesy-nav/CourtesyNav";
 import { UserProfileTester } from "@/components/userprofile";
+import { PasswordProtection } from "@/components/auth";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,9 +31,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 min-h-screen`}
       >
-        <MenuLayout>{children}</MenuLayout>
-        <CourtesyNav />
-        <UserProfileTester />
+        <PasswordProtection>
+          <MenuLayout>{children}</MenuLayout>
+          <CourtesyNav />
+          <UserProfileTester />
+        </PasswordProtection>
       </body>
     </html>
   );
