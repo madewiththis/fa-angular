@@ -33,7 +33,7 @@ const UserDetails = () => {
             isHovered ? "opacity-100" : "opacity-0 pointer-events-none"
           }`}
         >
-          <span className="flex items-center bg-white border border-gray-200 shadow px-3 py-1 rounded-full text-sm font-medium text-gray-700 transition-colors duration-150 group-hover:bg-blue-100 group-hover:text-blue-700">
+          <span className="flex items-center bg-white border border-gray-200 shadow px-3 py-1 rounded-full text-sm font-medium text-gray-700 transition-colors duration-150 group-hover:bg-[#226CDF] group-hover:text-white">
             <EditIcon className="mr-1" style={{ fontSize: 18 }} />
             Edit
           </span>
@@ -80,17 +80,6 @@ const Support = () => {
 
   return (
     <div className="p-2">
-      <div className="mb-0 mt-2 flex items-center justify-between">
-        <h3 className="text-xs font-medium text-gray-500 mb-0">
-          Support Available: Mon-Sat 08:00-22:00
-        </h3>
-        <span className="flex items-center ml-2">
-          <span className="inline-block w-2 h-2 rounded-full bg-green-500 mr-1"></span>
-          <span className="text-xs text-green-600 bg-green-100 px-2 py-0.5 rounded-full font-medium">
-            Online
-          </span>
-        </span>
-      </div>
       <div className="flex mt-2 space-x-2">
         <button className="flex-1 p-3 bg-white hover:bg-blue-50 rounded-md relative flex flex-col items-center justify-center transition-colors border border-gray-200 min-h-[80px]">
           <div className="flex items-center">
