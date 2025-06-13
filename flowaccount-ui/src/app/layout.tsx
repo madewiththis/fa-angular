@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "FlowAccount Cloud Accounting App",
+  title: "FlowAccount X",
   description: "A modern cloud accounting app UI",
   icons: {
     icon: [

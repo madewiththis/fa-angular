@@ -1,5 +1,5 @@
 const SESSION_KEY = "flowaccount-auth-session";
-const PASSWORD = "flowaccount2024"; // You can change this password
+const PASSWORD = "liquidflow"; // You can change this password
 
 export function isLocalhost(): boolean {
   if (typeof window === "undefined") return false;
