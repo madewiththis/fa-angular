@@ -1,53 +1,86 @@
 import React from "react";
+import {
+  FileText,
+  BarChart2,
+  Users,
+  Box,
+  LayoutGrid,
+  Building,
+  ExternalLink,
+} from "lucide-react";
 
-const settingsGroups = [
+const settingsItems = [
   {
+    icon: <FileText size={20} className="text-gray-500" />,
     title: "Document",
-    items: ["Templates", "Numbering", "Customization"],
+    subtitle: "Templates, Numbering, Customization",
+    external: false,
+    separator: false,
   },
   {
+    icon: <BarChart2 size={20} className="text-gray-500" />,
     title: "Accounting",
-    items: ["Methods", "Periods", "Opening Balance"],
+    subtitle: "Methods, Periods, Opening Balance",
+    external: false,
+    separator: false,
   },
   {
+    icon: <Users size={20} className="text-gray-500" />,
     title: "User Settings",
-    items: ["Profile", "Preferences", "Manage Users"],
+    subtitle: "Profile, Preferences, Manage Users",
+    external: true,
+    separator: false,
   },
   {
+    icon: <Box size={20} className="text-gray-500" />,
     title: "Products Setting",
-    items: ["Warehouses", "Categories", "Units"],
+    subtitle: "Warehouses, Categories, Units",
+    external: false,
+    separator: false,
   },
   {
+    icon: <LayoutGrid size={20} className="text-gray-500" />,
     title: "MyPlatform",
-    items: ["Manage Integrations"],
+    subtitle: "Manage Integrations",
+    external: true,
+    separator: true,
   },
   {
+    icon: <Building size={20} className="text-gray-500" />,
     title: "My Company",
-    items: ["Billing", "Plan", "Users", "Banking"],
+    subtitle: "Billing, Plan, Users, Banking",
+    external: true,
+    separator: false,
   },
 ];
 
+const titleStyle = "font-semibold text-sm text-gray-800";
+const subtitleStyle = "text-xs text-gray-500";
+
 const Settings = () => {
   return (
-    <div className="p-4">
-      <h2 className="text-lg font-semibold mb-4">Settings</h2>
-      <div className="grid grid-cols-2 gap-x-8 gap-y-4">
-        {settingsGroups.map((group) => (
-          <div key={group.title}>
-            <h3 className="font-semibold text-gray-800 mb-2">{group.title}</h3>
-            <ul>
-              {group.items.map((item) => (
-                <li
-                  key={item}
-                  className="text-sm text-gray-600 hover:text-black cursor-pointer mb-1"
-                >
-                  {item}
-                </li>
-              ))}
-            </ul>
+    <div className="flex flex-col gap-1" style={{ width: "320px" }}>
+      {settingsItems.map((item) => (
+        <div
+          key={item.title}
+          className={`flex items-center p-2 rounded-xl cursor-pointer hover:bg-gray-100 ${
+            item.separator ? "border-t border-gray-200 mt-1 pt-3" : ""
+          }`}
+        >
+          <div className="w-8 h-8 flex items-center justify-center mr-3">
+            {item.icon}
           </div>
-        ))}
-      </div>
+          <div className="flex-grow">
+            <div className="flex items-center">
+              <p className={titleStyle}>{item.title}</p>
+              {item.external && (
+                <ExternalLink size={14} className="ml-2 text-gray-400" />
+              )}
+            </div>
+            <p className={subtitleStyle}>{item.subtitle}</p>
+          </div>
+        </div>
+      ))}
     </div>
   );
 };

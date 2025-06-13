@@ -40,11 +40,11 @@ export default function MainMenu({
     null
   );
   const [utilityMenuContent, setUtilityMenuContent] = useState<
-    "Apps" | "Settings" | null
+    "Apps" | "Settings" | "Profile" | null
   >(null);
   const hideMenuTimer = useRef<NodeJS.Timeout | null>(null);
 
-  const handleUtilityMenuEnter = (label: "Apps" | "Settings") => {
+  const handleUtilityMenuEnter = (label: "Apps" | "Settings" | "Profile") => {
     if (hideMenuTimer.current) {
       clearTimeout(hideMenuTimer.current);
       hideMenuTimer.current = null;
@@ -55,7 +55,7 @@ export default function MainMenu({
   const handleUtilityMenuLeave = () => {
     hideMenuTimer.current = setTimeout(() => {
       setUtilityMenuContent(null);
-    }, 1500);
+    }, 300);
   };
 
   // You can adjust these values to fine-tune the background position
@@ -144,7 +144,7 @@ export default function MainMenu({
               }}
             />
             <div
-              className="menu-background"
+              className="menu-background active-background"
               style={{ ...activeBgStyle, backgroundColor: "rgba(0,0,0,0.15)" }}
             />
             {main.map((item, index) => (
@@ -191,13 +191,21 @@ export default function MainMenu({
               onMouseEnter={() => {
                 onUtilityMenuHover?.();
                 setHoveredUtilityIndex(index);
-                if (item.label === "Apps" || item.label === "Settings") {
+                if (
+                  item.label === "Apps" ||
+                  item.label === "Settings" ||
+                  item.label === "Profile"
+                ) {
                   handleUtilityMenuEnter(item.label);
                 }
               }}
               onMouseLeave={() => {
                 setHoveredUtilityIndex(null);
-                if (item.label === "Apps" || item.label === "Settings") {
+                if (
+                  item.label === "Apps" ||
+                  item.label === "Settings" ||
+                  item.label === "Profile"
+                ) {
                   handleUtilityMenuLeave();
                 }
               }}

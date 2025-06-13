@@ -70,9 +70,12 @@ export default function MenuLayout({
     }
   };
 
-  const startHideSubmenuTimeout = () => {
+  const startHideSubmenuTimeout = (collapseParent = false) => {
     hideTimeout.current = setTimeout(() => {
       setHoveredMenu(null);
+      if (collapseParent && !isDashboard) {
+        setIsCollapsed(true);
+      }
     }, 300);
   };
 
@@ -93,10 +96,7 @@ export default function MenuLayout({
   };
 
   const handleMenuAreaLeave = () => {
-    startHideSubmenuTimeout();
-    if (!isDashboard) {
-      setIsCollapsed(true);
-    }
+    startHideSubmenuTimeout(true);
   };
 
   // The container for both menus handles mouse enter/leave
