@@ -1,33 +1,26 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import {
-  HelpCircle,
-  X,
-  BookOpen,
-  Video,
-  MessageCircle,
-  FileText,
-} from "lucide-react";
+import { useEffect } from "react";
+import { X, BookOpen, Video, MessageCircle, FileText } from "lucide-react";
 
 interface HelpCenterProps {
+  isOpen: boolean;
+  onClose: () => void;
   className?: string;
 }
 
-export default function HelpCenter({ className = "" }: HelpCenterProps) {
-  const [isOpen, setIsOpen] = useState(false);
-
+export default function HelpCenter({ isOpen, onClose }: HelpCenterProps) {
   // Close panel on escape key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) {
-        setIsOpen(false);
+        onClose();
       }
     };
 
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
-  }, [isOpen]);
+  }, [isOpen, onClose]);
 
   // Prevent scroll when panel is open
   useEffect(() => {
@@ -42,42 +35,21 @@ export default function HelpCenter({ className = "" }: HelpCenterProps) {
     };
   }, [isOpen]);
 
-  const togglePanel = () => {
-    setIsOpen(!isOpen);
-  };
-
   return (
     <>
-      {/* Help Button - Fixed position in top right */}
-      <button
-        onClick={togglePanel}
-        className={`fixed top-4 right-4 z-50 bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${className}`}
-        aria-label="Open help center"
-      >
-        <HelpCircle size={24} />
-      </button>
-
-      {/* Overlay */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300"
-          onClick={() => setIsOpen(false)}
-        />
-      )}
-
       {/* Help Panel */}
       <div
-        className={`fixed top-0 right-0 h-full w-96 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${
-          isOpen ? "translate-x-0" : "translate-x-full"
+        className={`fixed top-5 right-5 h-[calc(100vh-40px)] w-96 bg-white shadow-lg z-50 transform transition-transform duration-300 ease-in-out rounded-3xl ${
+          isOpen ? "translate-x-0" : "translate-x-[calc(100%+20px)]"
         }`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gray-50">
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gray-50 rounded-t-3xl">
           <h2 className="text-xl font-semibold text-gray-800">
             Learning Center
           </h2>
           <button
-            onClick={() => setIsOpen(false)}
+            onClick={onClose}
             className="p-1 hover:bg-gray-200 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400"
             aria-label="Close help center"
           >
@@ -174,7 +146,7 @@ export default function HelpCenter({ className = "" }: HelpCenterProps) {
                 >
                   <div className="font-medium text-gray-800">Email Support</div>
                   <div className="text-sm text-gray-600 mt-1">
-                    Send us a message and we'll respond within 24 hours
+                    Send us a message and we&apos;ll respond within 24 hours
                   </div>
                 </a>
               </div>
@@ -215,10 +187,10 @@ export default function HelpCenter({ className = "" }: HelpCenterProps) {
         </div>
 
         {/* Footer */}
-        <div className="p-6 border-t border-gray-200 bg-gray-50">
+        <div className="p-6 border-t border-gray-200 bg-gray-50 rounded-b-3xl">
           <div className="text-center">
             <p className="text-sm text-gray-600 mb-2">
-              Can't find what you're looking for?
+              Can&apos;t find what you&apos;re looking for?
             </p>
             <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
               Contact Support

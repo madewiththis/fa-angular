@@ -60,26 +60,26 @@ const subtitleStyle = "text-xs text-gray-500";
 const Settings = () => {
   return (
     <div className="flex flex-col gap-1" style={{ width: "320px" }}>
-      {settingsItems.map((item) => (
-        <div
-          key={item.title}
-          className={`flex items-center p-2 rounded-xl cursor-pointer hover:bg-gray-100 ${
-            item.separator ? "border-t border-gray-200 mt-1 pt-3" : ""
-          }`}
-        >
-          <div className="w-8 h-8 flex items-center justify-center mr-3">
-            {item.icon}
-          </div>
-          <div className="flex-grow">
-            <div className="flex items-center">
-              <p className={titleStyle}>{item.title}</p>
-              {item.external && (
-                <ExternalLink size={14} className="ml-2 text-gray-400" />
-              )}
+      {settingsItems.map((item, idx) => (
+        <React.Fragment key={item.title}>
+          {idx > 0 && settingsItems[idx].separator && (
+            <div className="border-t border-gray-200 my-1" />
+          )}
+          <div className="flex items-center p-2 rounded-xl cursor-pointer hover:bg-gray-100">
+            <div className="w-8 h-8 flex items-center justify-center mr-3">
+              {item.icon}
             </div>
-            <p className={subtitleStyle}>{item.subtitle}</p>
+            <div className="flex-grow">
+              <div className="flex items-center">
+                <p className={titleStyle}>{item.title}</p>
+                {item.external && (
+                  <ExternalLink size={14} className="ml-2 text-gray-400" />
+                )}
+              </div>
+              <p className={subtitleStyle}>{item.subtitle}</p>
+            </div>
           </div>
-        </div>
+        </React.Fragment>
       ))}
     </div>
   );
