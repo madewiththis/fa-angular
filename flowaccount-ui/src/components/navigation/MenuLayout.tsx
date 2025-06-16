@@ -11,6 +11,7 @@ import {
 } from "./menuData";
 import { useState, useRef, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import { useMenuStore } from "@/stores/useMenuStore";
 
 interface MenuLayoutProps {
   mainMenu?: MenuItem[];
@@ -30,7 +31,8 @@ export default function MenuLayout({
   const [selectedMenu, setSelectedMenu] = useState<string>(
     main[0]?.label || ""
   );
-  const [isCollapsed, setIsCollapsed] = useState(true);
+  const isCollapsed = useMenuStore((state) => state.isMenuCollapsed);
+  const setIsCollapsed = useMenuStore((state) => state.setIsMenuCollapsed);
   const [isSubMenuCollapsed, setIsSubMenuCollapsed] = useState(false);
   const [hoveredMenu, setHoveredMenu] = useState<string | null>(null);
   const hideTimeout = useRef<NodeJS.Timeout | null>(null);
@@ -61,7 +63,7 @@ export default function MenuLayout({
     } else {
       setSelectedMenu(""); // No active section on dashboard
     }
-  }, [isDashboard, pathname, main]);
+  }, [isDashboard, pathname, main, setIsCollapsed]);
 
   const clearHideTimeout = () => {
     if (hideTimeout.current) {

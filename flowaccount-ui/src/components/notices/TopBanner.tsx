@@ -18,14 +18,18 @@ export default function TopBanner({
   className = "",
 }: TopBannerProps) {
   useEffect(() => {
-    // Set CSS custom property for banner height
-    document.documentElement.style.setProperty("--banner-height", "80px");
+    // Extract height value from Tailwind class and set CSS custom property
+    const heightValue = height.includes("h-[")
+      ? height.match(/h-\[(\d+)px\]/)?.[1] + "px"
+      : "80px";
+
+    document.documentElement.style.setProperty("--banner-height", heightValue);
 
     return () => {
       // Clean up when component unmounts
       document.documentElement.style.setProperty("--banner-height", "0px");
     };
-  }, []);
+  }, [height]);
 
   return (
     <div className={`w-full ${height} ${bgColor} ${textColor} ${className}`}>

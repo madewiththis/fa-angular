@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import LiveHelpIcon from "@mui/icons-material/LiveHelp";
 import HelpCenter from "../helpcenter/HelpCenter";
+import Backdrop from "../common/Backdrop";
 
 export default function HelpCenterButton() {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,6 +21,7 @@ export default function HelpCenterButton() {
         <LiveHelpIcon className="text-gray-600" style={{ fontSize: 20 }} />
         <span className="text-sm font-medium text-gray-700">Help</span>
       </button>
+      <Backdrop isOpen={isOpen} onClick={handleClose} />
       <HelpCenter isOpen={isOpen} onClose={handleClose} />
     </>
   );

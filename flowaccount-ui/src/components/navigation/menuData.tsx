@@ -21,6 +21,7 @@ export interface MenuItem {
 export interface SubMenuItem {
   label: string;
   icon: ReactNode;
+  path?: string;
   children?: SubMenuItem[];
 }
 
@@ -124,6 +125,7 @@ export const submenus: Record<string, SubMenuItem[]> = {
     {
       label: "Quotation",
       icon: <ReceiptIcon fontSize="medium" sx={{ fontWeight: 400 }} />,
+      path: "/sell/quotation",
     },
     {
       label: "Billing Note",

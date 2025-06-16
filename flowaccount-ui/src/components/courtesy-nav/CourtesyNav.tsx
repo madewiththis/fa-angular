@@ -1,25 +1,30 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CompanyChanger from "./CompanyChanger";
 import LanguageChanger from "./LanguageChanger";
 import HelpCenterButton from "./HelpCenterButton";
+import { useBannerStore } from "@/stores/useBannerStore";
 
-interface CourtesyNavProps {
-  className?: string;
-}
+export default function CourtesyNav() {
+  const isBannerVisible = useBannerStore((state) => state.isBannerVisible);
+  const [isClient, setIsClient] = useState(false);
 
-export default function CourtesyNav({ className = "" }: CourtesyNavProps) {
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   return (
     <div
-      className={`fixed right-4 z-40 flex items-center gap-3 ${className}`}
-      style={{
-        top: `calc(var(--banner-height, 0px) + 1rem)`, // 1rem = 16px spacing
-      }}
+      className={`fixed top-4 right-4 z-50 transition-all duration-300 ease-in-out ${
+        isClient && isBannerVisible ? "top-[66px]" : "top-4"
+      }`}
     >
-      <CompanyChanger />
-      <LanguageChanger />
-      <HelpCenterButton />
+      <div className="flex items-center space-x-2">
+        <CompanyChanger />
+        <LanguageChanger />
+        <HelpCenterButton />
+      </div>
     </div>
   );
 }

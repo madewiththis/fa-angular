@@ -36,9 +36,6 @@
   z-index: 1;
   transition: height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.mainmenu.collapsed .menu-item {
-  /* No longer needed */
-}
 .menu-item:hover {
   cursor: pointer;
 }

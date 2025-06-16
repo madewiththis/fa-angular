@@ -39,7 +39,7 @@ export default function HelpCenter({ isOpen, onClose }: HelpCenterProps) {
     <>
       {/* Help Panel */}
       <div
-        className={`fixed top-5 right-5 h-[calc(100vh-40px)] w-96 bg-white shadow-lg z-50 transform transition-transform duration-300 ease-in-out rounded-3xl ${
+        className={`fixed top-5 right-5 h-[calc(100vh-40px)] w-1/2 bg-white shadow-lg z-50 transform transition-transform duration-300 ease-in-out rounded-3xl ${
           isOpen ? "translate-x-0" : "translate-x-[calc(100%+20px)]"
         }`}
       >
