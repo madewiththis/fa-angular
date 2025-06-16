@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import {
   FormControl,
   Select,
@@ -11,35 +11,58 @@ import {
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import TrafficIcon from "@mui/icons-material/Traffic";
 
-const statusOptions = [
-  { label: "All", count: 42 },
-  { label: "Awaiting", count: 8 },
-  { label: "Approved", count: 15 },
-  { label: "Issued", count: 12 },
-  { label: "Rejected", count: 3 },
-  { label: "Partials", count: 2 },
-  { label: "Deposited", count: 1 },
-  { label: "Deleted", count: 1 },
-];
+interface StatusCounts {
+  [key: string]: number;
+}
 
-export default function StatusFilter() {
-  const [selectedStatus, setSelectedStatus] = useState<string>("All");
+interface StatusFilterProps {
+  value: string;
+  onChange: (value: string) => void;
+  counts?: StatusCounts;
+}
+
+export default function StatusFilter({
+  value,
+  onChange,
+  counts,
+}: StatusFilterProps) {
+  const defaultCounts = {
+    All: 42,
+    Awaiting: 8,
+    Approved: 15,
+    Issued: 12,
+    Rejected: 3,
+    Partials: 2,
+    Deposited: 1,
+    Deleted: 1,
+  };
+
+  const statusCounts = counts || defaultCounts;
+
+  const statusOptions = [
+    { label: "All", count: statusCounts["All"] || 0 },
+    { label: "Awaiting", count: statusCounts["Awaiting"] || 0 },
+    { label: "Approved", count: statusCounts["Approved"] || 0 },
+    { label: "Issued", count: statusCounts["Issued"] || 0 },
+    { label: "Rejected", count: statusCounts["Rejected"] || 0 },
+    { label: "Partials", count: statusCounts["Partials"] || 0 },
+    { label: "Deposited", count: statusCounts["Deposited"] || 0 },
+    { label: "Deleted", count: statusCounts["Deleted"] || 0 },
+  ];
 
   const handleChange = (event: SelectChangeEvent) => {
-    setSelectedStatus(event.target.value);
+    onChange(event.target.value);
   };
 
   const getSelectedCount = () => {
-    const selected = statusOptions.find(
-      (option) => option.label === selectedStatus
-    );
+    const selected = statusOptions.find((option) => option.label === value);
     return selected ? selected.count : 0;
   };
 
   return (
     <FormControl size="small">
       <Select
-        value={selectedStatus}
+        value={value}
         onChange={handleChange}
         displayEmpty
         IconComponent={KeyboardArrowDownIcon}

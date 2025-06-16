@@ -1,12 +1,12 @@
 "use client";
 
+import { useState, useRef, useMemo } from "react";
 import DataTable, { Column } from "../../common/DataTable";
 import QuotationStatusBadge, { QuotationStatus } from "./QuotationStatusBadge";
 import QuotationActionMenu, {
   DocumentType,
   QuotationActionMenuRef,
 } from "./QuotationActionMenu";
-import { useState, useRef } from "react";
 
 interface Quotation {
   id: string;
@@ -17,6 +17,12 @@ interface Quotation {
   customer: string;
 }
 
+interface QuotationTableProps {
+  searchValue: string;
+  statusFilter: string;
+  dateFilter: string;
+}
+
 const initialQuotations: Quotation[] = [
   {
     id: "QT202506090001",
@@ -24,7 +30,7 @@ const initialQuotations: Quotation[] = [
     status: "Awaiting",
     totalAmount: "250.00",
     docDate: "2024-07-22",
-    customer: "Customer Name",
+    customer: "Acme Corporation",
   },
   {
     id: "QT202506090002",
@@ -32,7 +38,7 @@ const initialQuotations: Quotation[] = [
     status: "Approved",
     totalAmount: "150.00",
     docDate: "2024-07-22",
-    customer: "Customer Name",
+    customer: "Tech Solutions Ltd",
   },
   {
     id: "QT202506090003",
@@ -40,7 +46,7 @@ const initialQuotations: Quotation[] = [
     status: "Issued",
     totalAmount: "350.00",
     docDate: "2024-07-22",
-    customer: "Customer Name",
+    customer: "Global Industries",
   },
   {
     id: "QT202506090004",
@@ -48,7 +54,7 @@ const initialQuotations: Quotation[] = [
     status: "Partials",
     totalAmount: "450.00",
     docDate: "2024-07-22",
-    customer: "Customer Name",
+    customer: "Digital Ventures",
   },
   {
     id: "QT202506090005",
@@ -56,7 +62,7 @@ const initialQuotations: Quotation[] = [
     status: "Deposited",
     totalAmount: "550.00",
     docDate: "2024-07-22",
-    customer: "Customer Name",
+    customer: "Innovation Inc",
   },
   {
     id: "QT202506090006",
@@ -64,7 +70,7 @@ const initialQuotations: Quotation[] = [
     status: "Rejected",
     totalAmount: "200.00",
     docDate: "2024-07-22",
-    customer: "Customer Name",
+    customer: "Startup Company",
   },
   {
     id: "QT202506090007",
@@ -72,7 +78,7 @@ const initialQuotations: Quotation[] = [
     status: "Awaiting",
     totalAmount: "300.00",
     docDate: "2024-07-22",
-    customer: "Customer Name",
+    customer: "Enterprise Solutions",
   },
 ];
 
@@ -84,11 +90,76 @@ const formatDate = (dateString: string) => {
   return `${day}-${month}-${year}`;
 };
 
-export default function QuotationTable() {
+export default function QuotationTable({
+  searchValue,
+  statusFilter,
+  dateFilter,
+}: QuotationTableProps) {
   const [quotations, setQuotations] = useState<Quotation[]>(initialQuotations);
   const actionMenuRefs = useRef<Record<string, QuotationActionMenuRef | null>>(
     {}
   );
+
+  // Filter the quotations based on search and status filter
+  const filteredQuotations = useMemo(() => {
+    return quotations.filter((quotation) => {
+      // Status filter
+      const matchesStatus =
+        statusFilter === "All" || quotation.status === statusFilter;
+
+      // Search filter
+      const searchTerm = searchValue.toLowerCase();
+      const matchesSearch =
+        searchValue === "" ||
+        quotation.customer.toLowerCase().includes(searchTerm) ||
+        quotation.quotation.toLowerCase().includes(searchTerm) ||
+        quotation.id.toLowerCase().includes(searchTerm) ||
+        quotation.totalAmount.toLowerCase().includes(searchTerm);
+
+      // Date filter (basic implementation for now)
+      const matchesDate =
+        dateFilter === "All" ||
+        (dateFilter === "Current Month" && isCurrentMonth(quotation.docDate)) ||
+        (dateFilter === "Previous Month" &&
+          isPreviousMonth(quotation.docDate)) ||
+        (dateFilter === "Current Year" && isCurrentYear(quotation.docDate)) ||
+        (dateFilter === "Previous Year" && isPreviousYear(quotation.docDate));
+
+      return matchesStatus && matchesSearch && matchesDate;
+    });
+  }, [quotations, searchValue, statusFilter, dateFilter]);
+
+  // Helper functions for date filtering
+  const isCurrentMonth = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    return (
+      date.getMonth() === now.getMonth() &&
+      date.getFullYear() === now.getFullYear()
+    );
+  };
+
+  const isPreviousMonth = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const prevMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    return (
+      date.getMonth() === prevMonth.getMonth() &&
+      date.getFullYear() === prevMonth.getFullYear()
+    );
+  };
+
+  const isCurrentYear = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    return date.getFullYear() === now.getFullYear();
+  };
+
+  const isPreviousYear = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    return date.getFullYear() === now.getFullYear() - 1;
+  };
 
   const handleStatusChange = (
     quotationId: string,
@@ -193,7 +264,7 @@ export default function QuotationTable() {
   return (
     <DataTable
       columns={columns}
-      data={quotations}
+      data={filteredQuotations}
       onRowClick={handleRowClick}
     />
   );

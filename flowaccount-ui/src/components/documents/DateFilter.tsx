@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import {
   FormControl,
   Select,
@@ -12,28 +12,31 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
 const dateOptions = [
-  { label: "All", description: "All" },
+  { label: "All", description: "All dates" },
   { label: "Current Month", description: "This month" },
   { label: "Previous Month", description: "Last month" },
   { label: "Date Range", description: "Custom range" },
   { label: "Current Year", description: "This year" },
   { label: "Previous Year", description: "Last year" },
-  { label: "As At", description: "As at date" },
+  { label: "AsAt", description: "As at date" },
   { label: "Fiscal Year", description: "Financial year" },
   { label: "Quarter", description: "Quarterly" },
 ];
 
-export default function DateFilter() {
-  const [selectedDate, setSelectedDate] = useState<string>("All");
+interface DateFilterProps {
+  value: string;
+  onChange: (value: string) => void;
+}
 
+export default function DateFilter({ value, onChange }: DateFilterProps) {
   const handleChange = (event: SelectChangeEvent) => {
-    setSelectedDate(event.target.value);
+    onChange(event.target.value);
   };
 
   return (
     <FormControl size="small">
       <Select
-        value={selectedDate}
+        value={value}
         onChange={handleChange}
         displayEmpty
         IconComponent={KeyboardArrowDownIcon}

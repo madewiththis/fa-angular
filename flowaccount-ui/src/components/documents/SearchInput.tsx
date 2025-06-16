@@ -1,19 +1,22 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { TextField, InputAdornment } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
-export default function SearchInput() {
-  const [searchValue, setSearchValue] = useState<string>("");
+interface SearchInputProps {
+  value: string;
+  onChange: (value: string) => void;
+}
 
+export default function SearchInput({ value, onChange }: SearchInputProps) {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(event.target.value);
+    onChange(event.target.value);
   };
 
   return (
     <TextField
-      value={searchValue}
+      value={value}
       onChange={handleChange}
       placeholder="Customer/Supplier name, Doc No., Project, Detail"
       size="small"
