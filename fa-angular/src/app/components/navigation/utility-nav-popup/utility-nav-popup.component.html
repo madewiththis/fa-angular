@@ -1,0 +1,7 @@
+<div class="utility-nav-container">
+  <div class="popup-content" [ngSwitch]="menuService.activeUtilityPopup()">
+    <app-profile-content *ngSwitchCase="'profile'" />
+    <app-settings-content *ngSwitchCase="'settings'" />
+    <app-apps-content *ngSwitchCase="'apps'" />
+  </div>
+</div> 

@@ -2,102 +2,82 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MenuItem } from '../../../models/menu.models';
+import { MenuService } from '../../../services/menu.service';
 
 @Component({
   selector: 'app-main-menu',
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
-    <div
-      class="h-full text-white z-50 transition-all duration-300 overflow-hidden bg-primary flex flex-col"
-      [class.w-15]="isCollapsed"
-      [class.w-25]="!isCollapsed"
+    <div 
+      class="main-menu-container"
+      [class.collapsed]="isCollapsed"
+      [class.expanded]="!isCollapsed"
     >
       <!-- Logo section -->
-      <div
-        class="p-3 border-b border-primary-dark flex items-center justify-center transition-all duration-300 flex-shrink-0"
-        [class.p-2]="isCollapsed"
-      >
-        <div
-          class="bg-white rounded-full flex items-center justify-center transition-all duration-300"
-          [class.w-8]="isCollapsed"
-          [class.h-8]="isCollapsed"
-          [class.w-10]="!isCollapsed"
-          [class.h-10]="!isCollapsed"
-        >
-          <span
-            class="text-primary font-bold transition-all duration-300"
-            [class.text-sm]="isCollapsed"
-            [class.text-lg]="!isCollapsed"
-            >FA</span
-          >
+      <div class="logo-section" [class.collapsed]="isCollapsed">
+        <div class="logo-wrapper" [class.collapsed]="isCollapsed">
+          <a routerLink="/dashboard">
+            <img 
+              src="assets/fa_logo_dark.png" 
+              alt="FlowAccount Logo" 
+              class="logo-image"
+            />
+          </a>
         </div>
       </div>
 
       <!-- Main menu items -->
-      <nav class="mt-4 flex-1 overflow-y-auto">
-        <div
-          class="space-y-2 px-2 transition-all duration-300"
-          [class.px-1]="isCollapsed"
-        >
-          <button
-            *ngFor="let item of mainMenu"
-            (click)="onSelectMenu(item.label)"
-            (mouseenter)="onMainMenuHover(item.label)"
-            (mouseleave)="onMainMenuHover(undefined)"
-            [class]="getMenuItemClasses(item.label)"
-            class="w-full flex flex-col items-center justify-center text-xs font-medium rounded-xl transition-all duration-200 hover:bg-primary-light group"
-            [class.px-2]="isCollapsed"
-            [class.py-3]="isCollapsed"
-            [class.px-3]="!isCollapsed"
-            [class.py-4]="!isCollapsed"
-            [title]="item.label"
-          >
-            <i
-              class="material-icons transition-all duration-300"
-              [class.text-lg]="isCollapsed"
-              [class.text-xl]="!isCollapsed"
-              [class.mb-0]="isCollapsed"
-              [class.mb-2]="!isCollapsed"
-              >{{ item.icon }}</i
-            >
-            <span
-              class="text-center leading-tight whitespace-nowrap text-xs menu-label"
+      <div class="menu-content">
+        <nav class="main-nav">
+          <div class="menu-items-container" [class.collapsed]="isCollapsed">
+            <button
+              *ngFor="let item of mainMenu"
+              (click)="onSelectMenu(item.label)"
+              (mouseenter)="onMainMenuHover(item.label)"
+              (mouseleave)="onMainMenuHover(undefined)"
+              [class]="getMenuItemClasses(item.label)"
+              class="menu-button"
               [class.collapsed]="isCollapsed"
-              [class.expanded]="!isCollapsed"
-              >{{ item.label }}</span
+              [title]="item.label"
             >
-          </button>
-        </div>
-      </nav>
+              <i
+                class="material-icons button-icon"
+                [class.collapsed]="isCollapsed"
+                >{{ item.icon }}</i
+              >
+              <span
+                class="menu-label"
+                [class.collapsed]="isCollapsed"
+                [class.expanded]="!isCollapsed"
+                >{{ item.label }}</span
+              >
+            </button>
+          </div>
+        </nav>
+        
+        <!-- Spacer to push utility section to bottom -->
+        <div class="spacer"></div>
+      </div>
 
-      <!-- Bottom menu items -->
-      <div
-        class="border-t border-primary-dark transition-all duration-300 flex-shrink-0"
-        [class.p-2]="isCollapsed"
-        [class.p-3]="!isCollapsed"
-      >
-        <div class="space-y-2">
+      <!-- Utility Menu Section (Bottom) -->
+      <div class="utility-section" [class.collapsed]="isCollapsed">
+        <div class="utility-items-container" [class.collapsed]="isCollapsed">
           <button
             *ngFor="let item of bottomMenu"
+            (click)="onUtilityMenuClick(item.label, $event)"
             (mouseenter)="onUtilityMenuHover()"
-            class="w-full flex flex-col items-center justify-center text-xs font-medium text-primary-light rounded-xl hover:bg-primary-light hover:text-white transition-all duration-200"
-            [class.px-2]="isCollapsed"
-            [class.py-2]="isCollapsed"
-            [class.px-3]="!isCollapsed"
-            [class.py-3]="!isCollapsed"
+            class="menu-button"
+            [class.collapsed]="isCollapsed"
             [title]="item.label"
           >
             <i
-              class="material-icons transition-all duration-300"
-              [class.text-sm]="isCollapsed"
-              [class.text-lg]="!isCollapsed"
-              [class.mb-0]="isCollapsed"
-              [class.mb-1]="!isCollapsed"
+              class="material-icons button-icon"
+              [class.collapsed]="isCollapsed"
               >{{ item.icon }}</i
             >
             <span
-              class="text-center leading-tight whitespace-nowrap text-xs menu-label"
+              class="menu-label"
               [class.collapsed]="isCollapsed"
               [class.expanded]="!isCollapsed"
               >{{ item.label }}</span
@@ -120,6 +100,8 @@ export class MainMenuComponent {
   @Output() mainMenuHover = new EventEmitter<string | undefined>();
   @Output() utilityMenuHover = new EventEmitter<void>();
 
+  constructor(private menuService: MenuService) {}
+
   onSelectMenu(label: string) {
     this.selectMenu.emit(label);
   }
@@ -132,20 +114,24 @@ export class MainMenuComponent {
     this.utilityMenuHover.emit();
   }
 
+  onUtilityMenuClick(label: string, event: MouseEvent) {
+    const popupType = label.toLowerCase() as 'profile' | 'settings' | 'apps';
+    if (['profile', 'settings', 'apps'].includes(popupType)) {
+      this.menuService.toggleUtilityPopup(popupType);
+      event.stopPropagation();
+    }
+  }
+
   getMenuItemClasses(label: string): string {
     const isSelected = this.selectedMenu === label;
     const isHovered = this.hoveredMenu === label;
 
-    let classes = '';
-
     if (isSelected) {
-      classes += 'bg-primary-light text-white shadow-lg scale-105';
+      return 'selected';
     } else if (isHovered) {
-      classes += 'bg-primary-light text-white scale-105';
-    } else {
-      classes += 'text-primary-light hover:text-white hover:scale-105';
+      return 'hovered';
     }
-
-    return classes;
+    
+    return '';
   }
 }

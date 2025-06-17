@@ -1,5 +1,5 @@
 // Component-specific styles for menu layout
-// Using flexbox layout - no fixed positioning needed
+// Using fixed positioning for floating menu
 
 /* Custom scrollbar for better UX */
 ::-webkit-scrollbar {
@@ -17,4 +17,62 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+}
+
+.menu-layout-root {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+app-main-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 1000;
+  flex-shrink: 0;
+  display: block;
+}
+
+// Submenu positioning to account for floating main menu
+.submenu-container {
+  position: fixed;
+  top: 0;
+  left: var(--main-menu-width, 60px);
+  width: 230px;
+  height: 100vh;
+  z-index: 998; // Slightly lower than main menu but above content
+  transition: left 0.3s ease;
+  
+  app-sub-menu {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  // Add overlay behavior for pages without submenu items
+  &.overlay-mode {
+    z-index: 1001; // Higher than main menu for overlay effect
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+  }
+}
+
+main.flex-1 {
+  margin-left: var(--content-margin-left, var(--main-menu-width, 60px));
+  min-width: 0;
+  height: 100vh;
+  overflow: auto;
+  flex: 1 1 0%;
+  transition: margin-left 0.3s ease;
+}
+
+// CSS custom properties for dynamic menu width
+:host {
+  --main-menu-width: 60px; // Default collapsed width
+}
+
+:host.menu-expanded {
+  --main-menu-width: 100px; // Expanded width
 }

@@ -1,21 +1,29 @@
-import { Component, OnInit, signal, computed, effect } from '@angular/core';
+import { Component, OnInit, signal, computed, effect, HostBinding } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { MenuService } from '../../../services/menu.service';
 import { MainMenuComponent } from '../../navigation/main-menu/main-menu.component';
 import { SubMenuComponent } from '../../navigation/sub-menu/sub-menu.component';
+import { CourtesyNavComponent } from '../../courtesy-nav/courtesy-nav.component';
+import { UtilityNavPopupComponent } from '../../navigation/utility-nav-popup/utility-nav-popup.component';
 
 @Component({
   selector: 'app-menu-layout',
   standalone: true,
-  imports: [CommonModule, MainMenuComponent, SubMenuComponent],
+  imports: [
+    CommonModule,
+    MainMenuComponent,
+    SubMenuComponent,
+    CourtesyNavComponent,
+    UtilityNavPopupComponent,
+  ],
   template: `
-    <div class="h-screen flex overflow-hidden">
-      <!-- Main Menu (Always Visible) -->
+    <div class="menu-layout-root">
+      <!-- Main Menu (Always Visible - Now Floating) -->
       <app-main-menu
-        [mainMenu]="menuService.mainMenu"
-        [bottomMenu]="menuService.bottomMenu"
+        [mainMenu]="menuService.mainMenu()"
+        [bottomMenu]="menuService.bottomMenu()"
         [selectedMenu]="menuService.selectedMenu()"
         [isCollapsed]="menuService.isMenuCollapsed()"
         [hoveredMenu]="menuService.hoveredMenu()"
@@ -26,11 +34,13 @@ import { SubMenuComponent } from '../../navigation/sub-menu/sub-menu.component';
         (mouseleave)="handleMenuAreaLeave()"
       />
 
-      <!-- Submenu (Conditional) -->
+      <!-- Submenu (Conditional - Now Fixed Positioned) -->
       <div
         *ngIf="shouldShowSubmenu()"
+        class="submenu-container transition-all duration-300"
+        [class.overlay-mode]="isDashboard() || !hasSubmenuItems()"
         (mouseenter)="handleSubMenuEnter()"
-        class="h-screen transition-all duration-300"
+        (mouseleave)="handleSubMenuLeave()"
       >
         <app-sub-menu
           [submenu]="currentSubmenu()"
@@ -43,9 +53,18 @@ import { SubMenuComponent } from '../../navigation/sub-menu/sub-menu.component';
       </div>
 
       <!-- Main Content Area -->
-      <main class="flex-1 h-screen overflow-auto bg-gray-50 p-4">
+      <main 
+        class="flex-1 h-screen overflow-auto bg-gray-50 p-4"
+        (mouseenter)="handleContentAreaEnter()"
+      >
         <ng-content></ng-content>
       </main>
+
+      <!-- Courtesy Navigation (Floating Overlay) -->
+      <app-courtesy-nav />
+
+      <!-- Utility Navigation -->
+      <app-utility-nav-popup [isMenuCollapsed]="menuService.isMenuCollapsed()" />
     </div>
   `,
   styleUrls: ['./menu-layout.component.scss'],
@@ -53,24 +72,54 @@ import { SubMenuComponent } from '../../navigation/sub-menu/sub-menu.component';
 export class MenuLayoutComponent implements OnInit {
   public isSubMenuCollapsed = signal(false);
   private hideTimeoutId: any = null;
+  private isMouseOverMenuArea = signal(false);
+  private isMouseOverSubMenuArea = signal(false);
+
+  @HostBinding('class.menu-expanded') 
+  get isMenuExpanded() {
+    return !this.menuService.isMenuCollapsed();
+  }
+
+  @HostBinding('style.--main-menu-width')
+  get mainMenuWidth() {
+    return this.menuService.isMenuCollapsed() ? '60px' : '100px';
+  }
+
+  @HostBinding('style.--content-margin-left')
+  get contentMarginLeft() {
+    const mainMenuWidth = this.menuService.isMenuCollapsed() ? 60 : 100;
+    const gap = 16; // 16px gap between main menu and content
+    const hasSubmenuItems = this.hasSubmenuItems();
+    const submenuWidth = (this.shouldShowSubmenu() && hasSubmenuItems && !this.isDashboard()) ? 230 : 0;
+    return `${mainMenuWidth + gap + submenuWidth}px`;
+  }
 
   constructor(public menuService: MenuService, private router: Router) {
     // React to route changes
     effect(() => {
       const isDashboard = this.isDashboard();
-      if (isDashboard) {
+      const hasSubmenuItems = this.hasSubmenuItems();
+      
+      // For pages without submenu items (like dashboard), keep main menu expanded
+      if (!hasSubmenuItems) {
         this.menuService.setMenuCollapsed(false);
+      } else if (isDashboard) {
+        // Only auto-expand on dashboard if mouse is over menu area
+        if (this.isMouseOverMenuArea() || this.isMouseOverSubMenuArea()) {
+          this.menuService.setMenuCollapsed(false);
+        }
       }
 
       const currentPath = this.router.url.split('/')[1];
       if (currentPath) {
-        const newSelectedMenu = this.menuService.mainMenu.find(
+        const newSelectedMenu = this.menuService.mainMenu().find(
           (item) => item.label.toLowerCase() === currentPath
         );
         if (newSelectedMenu) {
           this.menuService.setSelectedMenu(newSelectedMenu.label);
         }
       } else {
+        // Clear selected menu when at dashboard (root path)
         this.menuService.setSelectedMenu('');
       }
     });
@@ -87,6 +136,15 @@ export class MenuLayoutComponent implements OnInit {
   isDashboard = computed(
     () => this.router.url === '/' || this.router.url === '/dashboard'
   );
+
+  hasSubmenuItems = computed(() => {
+    const selectedMenu = this.menuService.selectedMenu();
+    if (selectedMenu) {
+      const submenuItems = this.menuService.getSubmenuForMenu(selectedMenu);
+      return submenuItems.length > 0;
+    }
+    return false;
+  });
 
   currentSubmenu = computed(() => {
     const isDashboard = this.isDashboard();
@@ -113,8 +171,25 @@ export class MenuLayoutComponent implements OnInit {
   shouldShowSubmenu = computed(() => {
     const isDashboard = this.isDashboard();
     const hoveredMenu = this.menuService.hoveredMenu();
-
-    return isDashboard ? hoveredMenu !== null : true;
+    const selectedMenu = this.menuService.selectedMenu();
+    const hasSubmenuItems = this.hasSubmenuItems();
+    
+    if (isDashboard || !hasSubmenuItems) {
+      // On dashboard or pages without submenu items, only show submenu on hover AND if hovered menu has items
+      if (hoveredMenu) {
+        const submenuItems = this.menuService.getSubmenuForMenu(hoveredMenu);
+        return submenuItems.length > 0;
+      }
+      return false;
+    } else {
+      // On other pages with submenu items, show if there are submenu items for current or hovered menu
+      const menuToCheck = hoveredMenu || selectedMenu;
+      if (menuToCheck) {
+        const submenuItems = this.menuService.getSubmenuForMenu(menuToCheck);
+        return submenuItems.length > 0;
+      }
+      return false;
+    }
   });
 
   clearHideTimeout() {
@@ -125,12 +200,15 @@ export class MenuLayoutComponent implements OnInit {
   }
 
   startHideSubmenuTimeout(collapseParent = false) {
+    this.clearHideTimeout();
     this.hideTimeoutId = setTimeout(() => {
-      this.menuService.setHoveredMenu(null);
-      if (collapseParent && !this.isDashboard()) {
-        this.menuService.setMenuCollapsed(true);
+      if (!this.isMouseOverMenuArea() && !this.isMouseOverSubMenuArea()) {
+        this.menuService.setHoveredMenu(null);
+        if (collapseParent && this.isDashboard()) {
+          this.menuService.setMenuCollapsed(true);
+        }
       }
-    }, 300);
+    }, 500);
   }
 
   handleMainMenuHover(label: string | undefined) {
@@ -139,26 +217,60 @@ export class MenuLayoutComponent implements OnInit {
       this.menuService.setMenuCollapsed(false);
       this.menuService.setHoveredMenu(label);
     } else {
-      this.startHideSubmenuTimeout();
+      // Only start hide timeout if not hovering over submenu
+      if (!this.isMouseOverSubMenuArea()) {
+        this.startHideSubmenuTimeout();
+      }
     }
   }
 
   handleUtilityMenuHover() {
     this.clearHideTimeout();
-    this.startHideSubmenuTimeout();
+    this.menuService.setHoveredMenu(null);
     this.menuService.setMenuCollapsed(false);
-  }
-
-  handleMenuAreaLeave() {
-    this.startHideSubmenuTimeout(true);
   }
 
   handleMenuAreaEnter() {
     this.clearHideTimeout();
+    this.isMouseOverMenuArea.set(true);
+    this.menuService.setMenuCollapsed(false);
+  }
+
+  handleMenuAreaLeave() {
+    this.isMouseOverMenuArea.set(false);
+    // Only start collapse timeout if not over submenu area
+    if (!this.isMouseOverSubMenuArea()) {
+      this.startHideSubmenuTimeout(true);
+    }
   }
 
   handleSubMenuEnter() {
     this.clearHideTimeout();
+    this.isMouseOverSubMenuArea.set(true);
+    // Keep menu expanded when hovering over submenu
+    this.menuService.setMenuCollapsed(false);
+  }
+
+  handleSubMenuLeave() {
+    this.isMouseOverSubMenuArea.set(false);
+    // Only start collapse timeout if not over main menu area
+    if (!this.isMouseOverMenuArea()) {
+      this.startHideSubmenuTimeout(true);
+    }
+  }
+
+  handleContentAreaEnter() {
+    // When mouse enters content area, start collapse sequence
+    this.clearHideTimeout();
+    this.isMouseOverMenuArea.set(false);
+    this.isMouseOverSubMenuArea.set(false);
+    // Use a shorter timeout for content area to collapse faster
+    setTimeout(() => {
+      if (!this.isMouseOverMenuArea() && !this.isMouseOverSubMenuArea()) {
+        this.menuService.setMenuCollapsed(true);
+        this.menuService.setHoveredMenu(null);
+      }
+    }, 200);
   }
 
   handleSelectMenu(menu: string) {

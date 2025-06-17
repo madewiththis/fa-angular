@@ -9,24 +9,26 @@ export class MenuService {
   isMenuCollapsed = signal(false);
   selectedMenu = signal('');
   hoveredMenu = signal<string | null>(null);
+  activeUtilityPopup = signal<'profile' | 'settings' | 'apps' | null>(null);
 
   // Menu data with Material Icons
-  mainMenu: MenuItem[] = [
+  mainMenu = signal<MenuItem[]>([
     { label: 'Sell', icon: 'attach_money', path: '/sell' },
     { label: 'Buy', icon: 'shopping_cart', path: '/buy' },
     { label: 'Expenses', icon: 'receipt', path: '/expenses' },
     { label: 'Products', icon: 'shelves', path: '/products' },
     { label: 'Contacts', icon: 'recent_actors', path: '/contacts' },
     { label: 'Reports', icon: 'insert_chart', path: '/reports' },
-    { label: 'Accounting', icon: 'build', path: '/accounting' },
-  ];
+    { label: 'Accounting', icon: 'business_center', path: '/accounting' },
+    { label: 'Profile', icon: 'account_circle' },
+  ]);
 
-  bottomMenu: MenuItem[] = [
-    { label: 'Notifications', icon: 'notifications', path: '/notifications' },
-    { label: 'Apps', icon: 'apps', path: '/apps' },
-    { label: 'Settings', icon: 'settings', path: '/settings' },
-    { label: 'Profile', icon: 'account_circle', path: '/profile' },
-  ];
+  bottomMenu = signal<MenuItem[]>([
+    { label: 'Notifications', icon: 'notifications' },
+    { label: 'Apps', icon: 'apps' },
+    { label: 'Settings', icon: 'settings' },
+    { label: 'Profile', icon: 'account_circle' },
+  ]);
 
   submenus: MenuData = {
     Sell: [
@@ -89,6 +91,14 @@ export class MenuService {
 
   setHoveredMenu(menu: string | null) {
     this.hoveredMenu.set(menu);
+  }
+
+  toggleUtilityPopup(popup: 'profile' | 'settings' | 'apps') {
+    if (this.activeUtilityPopup() === popup) {
+      this.activeUtilityPopup.set(null); // Close if same icon is clicked
+    } else {
+      this.activeUtilityPopup.set(popup);
+    }
   }
 
   getSubmenuForMenu(menuLabel: string): SubMenuItem[] {

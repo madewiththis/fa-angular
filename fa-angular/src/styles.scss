@@ -1,18 +1,76 @@
 /* You can add global styles to this file, and also import other style files */
 
-/* Import Google Fonts - Geist */
+/* Import Google Fonts - Geist and Lexend */
 @import url("https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap");
+
+/* CSS Variables for fonts */
+:root {
+  --font-body: "Geist", ui-sans-serif, system-ui;
+  --font-heading: "Lexend", ui-sans-serif, system-ui;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+}
 
 /* Global styles to match the FlowAccount design */
-body {
-  font-family: "Geist", ui-sans-serif, system-ui;
-  background-color: #f9fafb;
+html, body {
+  height: 100%;
   margin: 0;
   padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: #f9fafb;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Apply Lexend font to all heading elements */
+h1, h2, h3, h4, h5, h6,
+.heading,
+.title,
+.subtitle {
+  font-family: var(--font-heading);
+  font-weight: 500; /* Default weight for headings */
+}
+
+/* Specific heading styles */
+h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+h4 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+h5 {
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+h6 {
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.5;
 }
 
 * {
@@ -36,3 +94,6 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
