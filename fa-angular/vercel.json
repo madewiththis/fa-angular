@@ -7,7 +7,7 @@
       "config": {
         "installCommand": "npm install",
         "buildCommand": "npm run build",
-        "distDir": "dist/fa-angular/browser"
+        "distDir": "dist/browser"
       }
     }
   ],
