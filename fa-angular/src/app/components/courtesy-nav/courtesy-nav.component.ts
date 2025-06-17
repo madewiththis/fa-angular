@@ -31,15 +31,15 @@ import { HelpCentreComponent } from './help-centre/help-centre.component';
     .courtesy-nav {
       position: fixed;
       top: 0;
-      left: 0;
+      left: 100px; /* Start after the main menu */
       right: 0;
-      width: 100%;
       height: 60px;
       z-index: 1000;
       display: flex;
       align-items: center;
       justify-content: flex-end;
       padding: 0 20px;
+      pointer-events: none; /* Allow clicks to pass through except for nav items */
     }
     
     .courtesy-nav-container {

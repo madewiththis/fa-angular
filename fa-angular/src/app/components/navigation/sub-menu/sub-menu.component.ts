@@ -1,33 +1,41 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
 import { SubMenuItem } from '../../../models/menu.models';
 
 @Component({
   selector: 'app-sub-menu',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, MatIconModule],
   template: `
     <div
       class="submenu-wrapper"
       [class.visible]="submenu.length > 0"
+      [class.collapsed]="isCollapsed"
     >
-      <div
+      
+    <div
         class="submenu-header"
-        *ngIf="title && !isCollapsed"
+        *ngIf="title || submenu.length > 0"
       >
-        <h2 class="submenu-title">
+        <h2
+          class="submenu-title"
+          *ngIf="title && !isCollapsed"
+        >
           {{ title }}
         </h2>
-        <button
-          (click)="onToggle()"
-          class="toggle-button"
-          *ngIf="!isDashboard"
-        >
-          <span class="toggle-icon">
-            {{ isCollapsed ? '→' : '←' }}
-          </span>
-        </button>
+        <div class="header-buttons">
+          <button
+            *ngIf="!isDashboard"
+            type="button"
+            (click)="onMenuToggle()"
+            class="menu-toggle-button"
+            title="Toggle submenu visibility"
+          >
+            <mat-icon>menu</mat-icon>
+          </button>
+        </div>
       </div>
 
       <nav
@@ -47,8 +55,14 @@ import { SubMenuItem } from '../../../models/menu.models';
       </nav>
 
       <!-- Collapsed state indicators -->
-      <div class="submenu-collapsed-indicators" *ngIf="isCollapsed && submenu.length > 0">
-        <div class="collapsed-indicator" *ngFor="let item of submenu.slice(0, 6)"></div>
+      <div
+        class="submenu-collapsed-indicators"
+        *ngIf="isCollapsed && submenu.length > 0"
+      >
+        <div
+          class="collapsed-indicator"
+          *ngFor="let item of submenu.slice(0, 6)"
+        ></div>
       </div>
     </div>
   `,
@@ -61,13 +75,13 @@ export class SubMenuComponent {
   @Input() isDashboard = false;
 
   @Output() subMenuClick = new EventEmitter<string>();
-  @Output() toggle = new EventEmitter<void>();
+  @Output() menuToggle = new EventEmitter<void>();
 
   onSubMenuClick(path: string) {
     this.subMenuClick.emit(path);
   }
 
-  onToggle() {
-    this.toggle.emit();
+  onMenuToggle() {
+    this.menuToggle.emit();
   }
 }

@@ -7,6 +7,7 @@ import { MainMenuComponent } from '../../navigation/main-menu/main-menu.componen
 import { SubMenuComponent } from '../../navigation/sub-menu/sub-menu.component';
 import { CourtesyNavComponent } from '../../courtesy-nav/courtesy-nav.component';
 import { UtilityNavPopupComponent } from '../../navigation/utility-nav-popup/utility-nav-popup.component';
+import { UserProfileTestingComponent } from '../../user-profile-testing/user-profile-testing.component';
 
 @Component({
   selector: 'app-menu-layout',
@@ -17,6 +18,7 @@ import { UtilityNavPopupComponent } from '../../navigation/utility-nav-popup/uti
     SubMenuComponent,
     CourtesyNavComponent,
     UtilityNavPopupComponent,
+    UserProfileTestingComponent,
   ],
   template: `
     <div class="menu-layout-root">
@@ -45,10 +47,10 @@ import { UtilityNavPopupComponent } from '../../navigation/utility-nav-popup/uti
         <app-sub-menu
           [submenu]="currentSubmenu()"
           [title]="submenuTitle()"
-          [isCollapsed]="isSubMenuCollapsed() && !menuService.hoveredMenu()"
+          [isCollapsed]="isSubMenuCollapsed()"
           [isDashboard]="isDashboard()"
           (subMenuClick)="handleSubMenuClick($event)"
-          (toggle)="handleSubMenuToggle()"
+          (menuToggle)="handleSubMenuToggle()"
         />
       </div>
 
@@ -65,6 +67,9 @@ import { UtilityNavPopupComponent } from '../../navigation/utility-nav-popup/uti
 
       <!-- Utility Navigation -->
       <app-utility-nav-popup [isMenuCollapsed]="menuService.isMenuCollapsed()" />
+
+      <!-- User Profile Testing -->
+      <app-user-profile-testing />
     </div>
   `,
   styleUrls: ['./menu-layout.component.scss'],
@@ -100,14 +105,12 @@ export class MenuLayoutComponent implements OnInit {
       const isDashboard = this.isDashboard();
       const hasSubmenuItems = this.hasSubmenuItems();
       
-      // For pages without submenu items (like dashboard), keep main menu expanded
-      if (!hasSubmenuItems) {
+      // Always keep main menu expanded on dashboard page
+      if (isDashboard) {
         this.menuService.setMenuCollapsed(false);
-      } else if (isDashboard) {
-        // Only auto-expand on dashboard if mouse is over menu area
-        if (this.isMouseOverMenuArea() || this.isMouseOverSubMenuArea()) {
-          this.menuService.setMenuCollapsed(false);
-        }
+      } else if (!hasSubmenuItems) {
+        // For other pages without submenu items, keep main menu expanded
+        this.menuService.setMenuCollapsed(false);
       }
 
       const currentPath = this.router.url.split('/')[1];
@@ -216,12 +219,7 @@ export class MenuLayoutComponent implements OnInit {
     if (label) {
       this.menuService.setMenuCollapsed(false);
       this.menuService.setHoveredMenu(label);
-    } else {
-      // Only start hide timeout if not hovering over submenu
-      if (!this.isMouseOverSubMenuArea()) {
-        this.startHideSubmenuTimeout();
-      }
-    }
+    } 
   }
 
   handleUtilityMenuHover() {
@@ -239,9 +237,9 @@ export class MenuLayoutComponent implements OnInit {
   handleMenuAreaLeave() {
     this.isMouseOverMenuArea.set(false);
     // Only start collapse timeout if not over submenu area
-    if (!this.isMouseOverSubMenuArea()) {
-      this.startHideSubmenuTimeout(true);
-    }
+    // if (!this.isMouseOverSubMenuArea()) {
+    //   this.startHideSubmenuTimeout(true);
+    // }
   }
 
   handleSubMenuEnter() {
@@ -254,9 +252,9 @@ export class MenuLayoutComponent implements OnInit {
   handleSubMenuLeave() {
     this.isMouseOverSubMenuArea.set(false);
     // Only start collapse timeout if not over main menu area
-    if (!this.isMouseOverMenuArea()) {
-      this.startHideSubmenuTimeout(true);
-    }
+    // if (!this.isMouseOverMenuArea()) {
+    //   this.startHideSubmenuTimeout(true);
+    // }
   }
 
   handleContentAreaEnter() {
@@ -264,13 +262,16 @@ export class MenuLayoutComponent implements OnInit {
     this.clearHideTimeout();
     this.isMouseOverMenuArea.set(false);
     this.isMouseOverSubMenuArea.set(false);
-    // Use a shorter timeout for content area to collapse faster
-    setTimeout(() => {
-      if (!this.isMouseOverMenuArea() && !this.isMouseOverSubMenuArea()) {
-        this.menuService.setMenuCollapsed(true);
-        this.menuService.setHoveredMenu(null);
-      }
-    }, 200);
+    
+    // Don't collapse menu on dashboard page
+    if (!this.isDashboard()) {
+      // Use a shorter timeout for content area to collapse faster
+      setTimeout(() => {
+        if (!this.isMouseOverMenuArea() && !this.isMouseOverSubMenuArea()) {
+          this.menuService.setMenuCollapsed(true);
+        }
+      }, 200);
+    }
   }
 
   handleSelectMenu(menu: string) {

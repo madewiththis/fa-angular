@@ -39,7 +39,7 @@
       <mat-icon>chat</mat-icon>
       <span>Chat</span>
     </button>
-    <button class="action-button" (click)="copyToClipboard('02-026-8989')">
+    <button class="action-button" (click)="copyToClipboard('02-026-8989', 'phone')">
       <div class="call-content">
         <div class="call-main">
           <mat-icon>call</mat-icon>
@@ -47,7 +47,7 @@
         </div>
         <div class="call-number">
           02-026-8989
-          <mat-icon class="copy-icon">content_copy</mat-icon>
+          <mat-icon class="copy-icon">{{ isPhoneCopied ? 'check' : 'content_copy' }}</mat-icon>
         </div>
       </div>
     </button>
@@ -58,12 +58,12 @@
     <span>Request Callback</span>
   </button>
 
-  <div class="id-section" (click)="copyToClipboard(user.id)">
+  <div class="id-section" (click)="copyToClipboard(user.id, 'id')">
     <div class="id-content">
       <mat-icon>label</mat-icon>
       <span>{{ user.id }}</span>
     </div>
-    <mat-icon class="copy-icon">content_copy</mat-icon>
+    <mat-icon class="copy-icon">{{ isIdCopied ? 'check' : 'content_copy' }}</mat-icon>
   </div>
 
   <button class="action-button full-width change-company">

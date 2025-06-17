@@ -19,13 +19,26 @@ export class ProfileContentComponent {
     id: 'N12353353',
   };
   selectedLanguage = 'EN';
+  isPhoneCopied = false;
+  isIdCopied = false;
 
   constructor(private authService: AuthService) {}
 
-  copyToClipboard(text: string) {
-    navigator.clipboard.writeText(text).catch((err) => {
-      console.error('Failed to copy text: ', err);
-    });
+  copyToClipboard(text: string, type: 'phone' | 'id') {
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        if (type === 'phone') {
+          this.isPhoneCopied = true;
+          setTimeout(() => (this.isPhoneCopied = false), 2000);
+        } else if (type === 'id') {
+          this.isIdCopied = true;
+          setTimeout(() => (this.isIdCopied = false), 2000);
+        }
+      })
+      .catch((err) => {
+        console.error('Failed to copy text: ', err);
+      });
   }
 
   logout() {

@@ -19,7 +19,8 @@
   flex-direction: column;
   background-color: var(--primary);
   color: white;
-  z-index: 50;
+  z-index: 1100; // Ensure it's above courtesy nav
+  position: relative;
   transition: all 0.3s ease;
   overflow: hidden;
   
@@ -58,24 +59,53 @@
   overflow: visible;
   width: 40px;
   height: auto;
+  position: relative;
+  z-index: 20;
   
   &.collapsed {
     width: 100%;
     padding: 0;
   }
-}
 
-.logo-image {
-  width: 40px;
-  height: 40px;
-  object-fit: contain;
-  transition: all 0.3s ease;
+  // Logo link styling - Circular button with logo background
+  .logo-link {
+    display: block;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 50%;
+    text-decoration: none;
+    width: 40px;
+    height: 40px;
+    //background-color: white;
+    background-image: url('/assets/fa_logo_dark.png');
+    background-size: 100%; // Logo takes up 70% of the circle
+    background-position: center;
+    background-repeat: no-repeat;
+    border: none;
+    
+    &:hover {
+      //transform: scale(1.05);
+      //background-color: #f8f9fa;
+    }
+    
+    &:active {
+      //transform: scale(0.95);
+    }
+    
+    &:focus {
+      outline: 2px solid rgba(255, 255, 255, 0.8);
+      outline-offset: 2px;
+      border-radius: 50%;
+    }
+  }
   
-  .collapsed & {
+  .collapsed .logo-link {
     width: 32px;
     height: 32px;
   }
 }
+
+
 
 // Menu content area
 .menu-content {

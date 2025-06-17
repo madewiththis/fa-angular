@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { MenuItem } from '../../../models/menu.models';
 import { MenuService } from '../../../services/menu.service';
 
@@ -17,12 +17,8 @@ import { MenuService } from '../../../services/menu.service';
       <!-- Logo section -->
       <div class="logo-section" [class.collapsed]="isCollapsed">
         <div class="logo-wrapper" [class.collapsed]="isCollapsed">
-          <a routerLink="/dashboard">
-            <img 
-              src="assets/fa_logo_dark.png" 
-              alt="FlowAccount Logo" 
-              class="logo-image"
-            />
+          <a routerLink="/dashboard" class="logo-link">
+            <!-- White circular button -->
           </a>
         </div>
       </div>
@@ -100,7 +96,7 @@ export class MainMenuComponent {
   @Output() mainMenuHover = new EventEmitter<string | undefined>();
   @Output() utilityMenuHover = new EventEmitter<void>();
 
-  constructor(private menuService: MenuService) {}
+  constructor(private menuService: MenuService, private router: Router) {}
 
   onSelectMenu(label: string) {
     this.selectMenu.emit(label);
@@ -121,6 +117,8 @@ export class MainMenuComponent {
       event.stopPropagation();
     }
   }
+
+
 
   getMenuItemClasses(label: string): string {
     const isSelected = this.selectedMenu === label;

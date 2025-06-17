@@ -20,7 +20,6 @@ export class MenuService {
     { label: 'Contacts', icon: 'recent_actors', path: '/contacts' },
     { label: 'Reports', icon: 'insert_chart', path: '/reports' },
     { label: 'Accounting', icon: 'business_center', path: '/accounting' },
-    { label: 'Profile', icon: 'account_circle' },
   ]);
 
   bottomMenu = signal<MenuItem[]>([
@@ -32,11 +31,13 @@ export class MenuService {
 
   submenus: MenuData = {
     Sell: [
-      { label: 'Invoice', path: '/sell/invoice' },
+      { label: 'Quotation', path: '/sell/quotation' },
+      { label: 'Billing Note', path: '/sell/billing-note' },
+      { label: 'Tax Invoice', path: '/sell/tax-invoice' },
       { label: 'Receipt', path: '/sell/receipt' },
-      { label: 'Delivery Order', path: '/sell/delivery' },
+      { label: 'Cash Sale', path: '/sell/cash-sale' },
       { label: 'Credit Note', path: '/sell/credit-note' },
-      { label: 'Sales Report', path: '/sell/report' },
+      { label: 'Debit Note', path: '/sell/debit-note' },
     ],
     Buy: [
       { label: 'Purchase Order', path: '/buy/purchase-order' },
