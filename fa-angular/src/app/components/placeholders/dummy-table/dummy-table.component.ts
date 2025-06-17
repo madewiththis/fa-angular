@@ -15,12 +15,12 @@ import { CommonModule } from '@angular/common';
               <th
                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
-                Name
+                ID
               </th>
               <th
                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
-                Amount
+                Name
               </th>
               <th
                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -30,20 +30,28 @@ import { CommonModule } from '@angular/common';
               <th
                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
+                Amount
+              </th>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Status
               </th>
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
-            <tr *ngFor="let row of tableData">
+            <tr *ngFor="let row of tableData; let i = index">
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                #{{ (i + 1).toString().padStart(3, '0') }}
+              </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                 {{ row.name }}
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                {{ row.amount | currency }}
-              </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 {{ row.date }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                {{ row.amount | currency }}
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
                 <span
@@ -65,39 +73,71 @@ export class DummyTableComponent {
 
   tableData = [
     {
-      name: 'Invoice #001',
-      amount: 1250.0,
-      date: '2024-01-15',
-      status: 'Paid',
+      name: 'Lorem Ipsum',
+      amount: 271.61,
+      date: '2023-10-21',
+      status: 'Completed',
     },
     {
-      name: 'Invoice #002',
-      amount: 850.5,
-      date: '2024-01-14',
-      status: 'Pending',
+      name: 'Lorem Ipsum',
+      amount: 72.64,
+      date: '2023-10-22',
+      status: 'Completed',
     },
     {
-      name: 'Invoice #003',
-      amount: 2100.0,
-      date: '2024-01-13',
-      status: 'Paid',
+      name: 'Lorem Ipsum',
+      amount: 431.41,
+      date: '2023-10-23',
+      status: 'Completed',
     },
     {
-      name: 'Invoice #004',
-      amount: 450.75,
-      date: '2024-01-12',
-      status: 'Overdue',
+      name: 'Lorem Ipsum',
+      amount: 641.34,
+      date: '2023-10-24',
+      status: 'Completed',
     },
     {
-      name: 'Invoice #005',
-      amount: 1800.0,
-      date: '2024-01-11',
-      status: 'Paid',
+      name: 'Lorem Ipsum',
+      amount: 363.43,
+      date: '2023-10-25',
+      status: 'Completed',
+    },
+    {
+      name: 'Lorem Ipsum',
+      amount: 178.88,
+      date: '2023-10-26',
+      status: 'Completed',
+    },
+    {
+      name: 'Lorem Ipsum',
+      amount: 344.01,
+      date: '2023-10-27',
+      status: 'Completed',
+    },
+    {
+      name: 'Lorem Ipsum',
+      amount: 356.56,
+      date: '2023-10-28',
+      status: 'Completed',
+    },
+    {
+      name: 'Lorem Ipsum',
+      amount: 6.64,
+      date: '2023-10-29',
+      status: 'Completed',
+    },
+    {
+      name: 'Lorem Ipsum',
+      amount: 175.89,
+      date: '2023-10-210',
+      status: 'Completed',
     },
   ];
 
   getStatusClass(status: string): string {
     switch (status) {
+      case 'Completed':
+        return 'bg-green-100 text-green-800';
       case 'Paid':
         return 'bg-green-100 text-green-800';
       case 'Pending':

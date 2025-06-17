@@ -10,20 +10,22 @@ export class MenuService {
   selectedMenu = signal('');
   hoveredMenu = signal<string | null>(null);
 
-  // Menu data
+  // Menu data with Material Icons
   mainMenu: MenuItem[] = [
-    { label: 'Sell', icon: '📊', path: '/sell' },
-    { label: 'Buy', icon: '🛒', path: '/buy' },
-    { label: 'Accounting', icon: '📋', path: '/accounting' },
-    { label: 'Reports', icon: '📈', path: '/reports' },
-    { label: 'Products', icon: '📦', path: '/products' },
-    { label: 'Contacts', icon: '👥', path: '/contacts' },
-    { label: 'Expenses', icon: '💰', path: '/expenses' },
+    { label: 'Sell', icon: 'attach_money', path: '/sell' },
+    { label: 'Buy', icon: 'shopping_cart', path: '/buy' },
+    { label: 'Expenses', icon: 'receipt', path: '/expenses' },
+    { label: 'Products', icon: 'shelves', path: '/products' },
+    { label: 'Contacts', icon: 'recent_actors', path: '/contacts' },
+    { label: 'Reports', icon: 'insert_chart', path: '/reports' },
+    { label: 'Accounting', icon: 'build', path: '/accounting' },
   ];
 
   bottomMenu: MenuItem[] = [
-    { label: 'Help', icon: '❓', path: '/help' },
-    { label: 'Settings', icon: '⚙️', path: '/settings' },
+    { label: 'Notifications', icon: 'notifications', path: '/notifications' },
+    { label: 'Apps', icon: 'apps', path: '/apps' },
+    { label: 'Settings', icon: 'settings', path: '/settings' },
+    { label: 'Profile', icon: 'account_circle', path: '/profile' },
   ];
 
   submenus: MenuData = {
@@ -41,19 +43,11 @@ export class MenuService {
       { label: 'Debit Note', path: '/buy/debit-note' },
       { label: 'Purchase Report', path: '/buy/report' },
     ],
-    Accounting: [
-      { label: 'Journal Entry', path: '/accounting/journal' },
-      { label: 'Chart of Accounts', path: '/accounting/chart' },
-      { label: 'Bank Reconciliation', path: '/accounting/bank' },
-      { label: 'Asset Management', path: '/accounting/assets' },
-      { label: 'Closing Period', path: '/accounting/closing' },
-    ],
-    Reports: [
-      { label: 'Profit & Loss', path: '/reports/profit-loss' },
-      { label: 'Balance Sheet', path: '/reports/balance-sheet' },
-      { label: 'Cash Flow', path: '/reports/cash-flow' },
-      { label: 'Trial Balance', path: '/reports/trial-balance' },
-      { label: 'Aged Receivable', path: '/reports/aged-receivable' },
+    Expenses: [
+      { label: 'Expense Claims', path: '/expenses/claims' },
+      { label: 'Reimbursements', path: '/expenses/reimbursements' },
+      { label: 'Expense Categories', path: '/expenses/categories' },
+      { label: 'Expense Reports', path: '/expenses/reports' },
     ],
     Products: [
       { label: 'Product List', path: '/products/list' },
@@ -68,11 +62,19 @@ export class MenuService {
       { label: 'Employees', path: '/contacts/employees' },
       { label: 'Contact Groups', path: '/contacts/groups' },
     ],
-    Expenses: [
-      { label: 'Expense Claims', path: '/expenses/claims' },
-      { label: 'Reimbursements', path: '/expenses/reimbursements' },
-      { label: 'Expense Categories', path: '/expenses/categories' },
-      { label: 'Expense Reports', path: '/expenses/reports' },
+    Reports: [
+      { label: 'Profit & Loss', path: '/reports/profit-loss' },
+      { label: 'Balance Sheet', path: '/reports/balance-sheet' },
+      { label: 'Cash Flow', path: '/reports/cash-flow' },
+      { label: 'Trial Balance', path: '/reports/trial-balance' },
+      { label: 'Aged Receivable', path: '/reports/aged-receivable' },
+    ],
+    Accounting: [
+      { label: 'Journal Entry', path: '/accounting/journal' },
+      { label: 'Chart of Accounts', path: '/accounting/chart' },
+      { label: 'Bank Reconciliation', path: '/accounting/bank' },
+      { label: 'Asset Management', path: '/accounting/assets' },
+      { label: 'Closing Period', path: '/accounting/closing' },
     ],
   };
 

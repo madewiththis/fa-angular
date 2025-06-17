@@ -1,8 +1,67 @@
 // Custom width classes for menu
 .w-25 {
-  width: 6.25rem; /* 100px */
+  width: 6.25rem; /* 100px - expanded */
+}
+
+.w-15 {
+  width: 3.75rem; /* 60px - collapsed */
 }
 
 .w-16 {
-  width: 4rem; /* 64px */
+  width: 4rem; /* 64px - legacy */
+}
+
+// Primary color scheme based on #138DCE
+:host {
+  --primary: #138dce;
+  --primary-light: rgba(19, 141, 206, 0.8);
+  --primary-dark: rgba(19, 141, 206, 0.3);
+}
+
+.bg-primary {
+  background-color: var(--primary);
+}
+
+.bg-primary-light {
+  background-color: var(--primary-light);
+}
+
+.text-primary {
+  color: var(--primary);
+}
+
+.text-primary-light {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.border-primary-dark {
+  border-color: var(--primary-dark);
+}
+
+// Hover effects
+.hover\:bg-primary-light:hover {
+  background-color: var(--primary-light);
+}
+
+.hover\:scale-105:hover {
+  transform: scale(1.05);
+}
+
+.scale-105 {
+  transform: scale(1.05);
+}
+
+// Text transition for collapse/expand
+.menu-label {
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.menu-label.collapsed {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.menu-label.expanded {
+  opacity: 1;
+  transform: scale(1);
 }

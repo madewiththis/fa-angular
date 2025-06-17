@@ -4,10 +4,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&display=swap");
 
-/* Global styles to match the original React app */
+/* Global styles to match the FlowAccount design */
 body {
   font-family: "Geist", ui-sans-serif, system-ui;
-  background-color: #f9fafb; /* bg-gray-50 */
+  background-color: #f9fafb;
   margin: 0;
   padding: 0;
   min-height: 100vh;
@@ -19,32 +19,20 @@ body {
   box-sizing: border-box;
 }
 
-/* Custom CSS classes that might be needed */
-.submenu-wrapper {
-  position: fixed;
-  left: 100px;
-  top: 0;
-  height: 100vh;
-  width: 235px;
-  background: white;
-  border-right: 1px solid #e5e7eb;
-  transition: all 0.3s ease-in-out;
-  z-index: 40;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateX(-100%);
+/* Custom scrollbar for better UX */
+::-webkit-scrollbar {
+  width: 6px;
 }
 
-.submenu-wrapper.visible {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(0);
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
 }
 
-.submenu-wrapper.main-menu-collapsed {
-  left: 60px;
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
 }
 
-.submenu-wrapper.dashboard-overlay {
-  z-index: 50;
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }

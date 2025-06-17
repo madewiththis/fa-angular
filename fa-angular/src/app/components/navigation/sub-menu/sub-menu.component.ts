@@ -9,12 +9,13 @@ import { SubMenuItem } from '../../../models/menu.models';
   imports: [CommonModule, RouterModule],
   template: `
     <div
-      class="bg-white border-r border-gray-200 h-full transition-all duration-300"
+      class="bg-white border-r border-gray-200 h-full transition-all duration-300 shadow-sm flex flex-col"
       [class.w-60]="!isCollapsed"
       [class.w-16]="isCollapsed"
     >
       <div
-        class="p-4 border-b border-gray-200 flex items-center justify-between"
+        class="p-4 border-b border-gray-200 flex items-center justify-between flex-shrink-0"
+        *ngIf="!isDashboard"
       >
         <h2
           class="text-lg font-semibold text-gray-900 truncate"
@@ -25,7 +26,6 @@ import { SubMenuItem } from '../../../models/menu.models';
         <button
           (click)="onToggle()"
           class="p-1 rounded-md hover:bg-gray-100 transition-colors duration-200"
-          *ngIf="!isDashboard"
         >
           <span class="text-gray-500">
             {{ isCollapsed ? '→' : '←' }}
@@ -33,25 +33,38 @@ import { SubMenuItem } from '../../../models/menu.models';
         </button>
       </div>
 
-      <nav class="mt-2" *ngIf="submenu.length > 0">
-        <div class="space-y-1 px-2">
+      <!-- Dashboard state - show title without toggle -->
+      <div
+        class="p-4 border-b border-gray-200 flex-shrink-0"
+        *ngIf="isDashboard && title && !isCollapsed"
+      >
+        <h2 class="text-lg font-semibold text-gray-900 truncate">
+          {{ title }}
+        </h2>
+      </div>
+
+      <nav
+        class="mt-2 flex-1 overflow-y-auto"
+        *ngIf="submenu.length > 0 && !isCollapsed"
+      >
+        <div class="space-y-1 px-3">
           <button
             *ngFor="let item of submenu"
             (click)="onSubMenuClick(item.path)"
-            class="w-full flex items-center px-3 py-2 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 hover:text-gray-900 transition-colors duration-200"
-            [class.hidden]="isCollapsed"
+            class="w-full flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 hover:text-gray-900 transition-colors duration-200 text-left"
           >
-            <span class="text-sm mr-2" *ngIf="item.icon">{{ item.icon }}</span>
+            <span class="text-sm mr-3" *ngIf="item.icon">{{ item.icon }}</span>
             <span class="truncate">{{ item.label }}</span>
           </button>
         </div>
       </nav>
 
-      <div class="mt-2 px-2" *ngIf="isCollapsed && submenu.length > 0">
-        <div class="space-y-1">
+      <!-- Collapsed state indicators -->
+      <div class="mt-4 px-2 flex-1" *ngIf="isCollapsed && submenu.length > 0">
+        <div class="space-y-2">
           <div
-            *ngFor="let item of submenu.slice(0, 5)"
-            class="w-full h-2 bg-gray-200 rounded"
+            *ngFor="let item of submenu.slice(0, 6)"
+            class="w-full h-1.5 bg-gray-300 rounded-sm"
           ></div>
         </div>
       </div>

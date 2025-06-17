@@ -11,38 +11,39 @@ import { SubMenuComponent } from '../../navigation/sub-menu/sub-menu.component';
   standalone: true,
   imports: [CommonModule, MainMenuComponent, SubMenuComponent],
   template: `
-    <div class="flex min-h-screen">
-      <div
+    <div class="h-screen flex overflow-hidden">
+      <!-- Main Menu (Always Visible) -->
+      <app-main-menu
+        [mainMenu]="menuService.mainMenu"
+        [bottomMenu]="menuService.bottomMenu"
+        [selectedMenu]="menuService.selectedMenu()"
+        [isCollapsed]="menuService.isMenuCollapsed()"
+        [hoveredMenu]="menuService.hoveredMenu()"
+        (selectMenu)="handleSelectMenu($event)"
+        (mainMenuHover)="handleMainMenuHover($event)"
+        (utilityMenuHover)="handleUtilityMenuHover()"
         (mouseenter)="handleMenuAreaEnter()"
         (mouseleave)="handleMenuAreaLeave()"
-        class="flex"
-        style="position: relative"
+      />
+
+      <!-- Submenu (Conditional) -->
+      <div
+        *ngIf="shouldShowSubmenu()"
+        (mouseenter)="handleSubMenuEnter()"
+        class="h-screen transition-all duration-300"
       >
-        <app-main-menu
-          [mainMenu]="menuService.mainMenu"
-          [bottomMenu]="menuService.bottomMenu"
-          [selectedMenu]="menuService.selectedMenu()"
-          [isCollapsed]="menuService.isMenuCollapsed()"
-          [hoveredMenu]="menuService.hoveredMenu()"
-          (selectMenu)="handleSelectMenu($event)"
-          (mainMenuHover)="handleMainMenuHover($event)"
-          (utilityMenuHover)="handleUtilityMenuHover()"
+        <app-sub-menu
+          [submenu]="currentSubmenu()"
+          [title]="submenuTitle()"
+          [isCollapsed]="isSubMenuCollapsed() && !menuService.hoveredMenu()"
+          [isDashboard]="isDashboard()"
+          (subMenuClick)="handleSubMenuClick($event)"
+          (toggle)="handleSubMenuToggle()"
         />
-        <div (mouseenter)="handleSubMenuEnter()" [class]="submenuClasses()">
-          <app-sub-menu
-            [submenu]="currentSubmenu()"
-            [title]="submenuTitle()"
-            [isCollapsed]="isSubMenuCollapsed() && !menuService.hoveredMenu()"
-            [isDashboard]="isDashboard()"
-            (subMenuClick)="handleSubMenuClick($event)"
-            (toggle)="handleSubMenuToggle()"
-          />
-        </div>
       </div>
-      <main
-        class="flex-1 p-8 w-full max-w-none transition-all duration-500 ease-in-out"
-        [style.margin-left.px]="getContentMargin()"
-      >
+
+      <!-- Main Content Area -->
+      <main class="flex-1 h-screen overflow-auto bg-gray-50 p-4">
         <ng-content></ng-content>
       </main>
     </div>
@@ -115,31 +116,6 @@ export class MenuLayoutComponent implements OnInit {
 
     return isDashboard ? hoveredMenu !== null : true;
   });
-
-  submenuClasses = computed(() => {
-    const shouldShow = this.shouldShowSubmenu();
-    const isDashboard = this.isDashboard();
-    const isCollapsed = this.menuService.isMenuCollapsed();
-
-    let classes = 'submenu-wrapper';
-    if (shouldShow) classes += ' visible';
-    if (isDashboard) classes += ' dashboard-overlay';
-    if (isCollapsed) classes += ' main-menu-collapsed';
-
-    return classes;
-  });
-
-  getContentMargin(): number {
-    const isDashboard = this.isDashboard();
-
-    if (isDashboard) {
-      return 0;
-    } else {
-      const mainMenuWidth = this.menuService.isMenuCollapsed() ? 60 : 100;
-      const submenuWidth = this.isSubMenuCollapsed() ? 60 : 235;
-      return mainMenuWidth + submenuWidth;
-    }
-  }
 
   clearHideTimeout() {
     if (this.hideTimeoutId) {

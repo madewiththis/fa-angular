@@ -9,55 +9,99 @@ import { MenuItem } from '../../../models/menu.models';
   imports: [CommonModule, RouterModule],
   template: `
     <div
-      class="fixed left-0 top-0 h-screen bg-white border-r border-gray-200 z-50 transition-all duration-300"
-      [class.w-16]="isCollapsed"
+      class="h-full text-white z-50 transition-all duration-300 overflow-hidden bg-primary flex flex-col"
+      [class.w-15]="isCollapsed"
       [class.w-25]="!isCollapsed"
     >
       <!-- Logo section -->
-      <div class="p-4 border-b border-gray-200">
-        <div class="flex items-center justify-center">
-          <span class="text-xl font-bold text-blue-600" *ngIf="!isCollapsed"
+      <div
+        class="p-3 border-b border-primary-dark flex items-center justify-center transition-all duration-300 flex-shrink-0"
+        [class.p-2]="isCollapsed"
+      >
+        <div
+          class="bg-white rounded-full flex items-center justify-center transition-all duration-300"
+          [class.w-8]="isCollapsed"
+          [class.h-8]="isCollapsed"
+          [class.w-10]="!isCollapsed"
+          [class.h-10]="!isCollapsed"
+        >
+          <span
+            class="text-primary font-bold transition-all duration-300"
+            [class.text-sm]="isCollapsed"
+            [class.text-lg]="!isCollapsed"
             >FA</span
-          >
-          <span class="text-sm font-bold text-blue-600" *ngIf="isCollapsed"
-            >F</span
           >
         </div>
       </div>
 
       <!-- Main menu items -->
-      <nav class="mt-6 flex-1">
-        <div class="space-y-1 px-2">
+      <nav class="mt-4 flex-1 overflow-y-auto">
+        <div
+          class="space-y-2 px-2 transition-all duration-300"
+          [class.px-1]="isCollapsed"
+        >
           <button
             *ngFor="let item of mainMenu"
             (click)="onSelectMenu(item.label)"
             (mouseenter)="onMainMenuHover(item.label)"
             (mouseleave)="onMainMenuHover(undefined)"
             [class]="getMenuItemClasses(item.label)"
-            class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200"
+            class="w-full flex flex-col items-center justify-center text-xs font-medium rounded-xl transition-all duration-200 hover:bg-primary-light group"
+            [class.px-2]="isCollapsed"
+            [class.py-3]="isCollapsed"
+            [class.px-3]="!isCollapsed"
+            [class.py-4]="!isCollapsed"
+            [title]="item.label"
           >
-            <span class="text-base mr-3" *ngIf="item.icon">{{
-              item.icon
-            }}</span>
-            <span *ngIf="!isCollapsed">{{ item.label }}</span>
+            <i
+              class="material-icons transition-all duration-300"
+              [class.text-lg]="isCollapsed"
+              [class.text-xl]="!isCollapsed"
+              [class.mb-0]="isCollapsed"
+              [class.mb-2]="!isCollapsed"
+              >{{ item.icon }}</i
+            >
+            <span
+              class="text-center leading-tight whitespace-nowrap text-xs menu-label"
+              [class.collapsed]="isCollapsed"
+              [class.expanded]="!isCollapsed"
+              >{{ item.label }}</span
+            >
           </button>
         </div>
       </nav>
 
       <!-- Bottom menu items -->
       <div
-        class="absolute bottom-0 left-0 right-0 p-2 border-t border-gray-200"
+        class="border-t border-primary-dark transition-all duration-300 flex-shrink-0"
+        [class.p-2]="isCollapsed"
+        [class.p-3]="!isCollapsed"
       >
-        <div class="space-y-1">
+        <div class="space-y-2">
           <button
             *ngFor="let item of bottomMenu"
             (mouseenter)="onUtilityMenuHover()"
-            class="w-full flex items-center px-3 py-2 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 hover:text-gray-900 transition-colors duration-200"
+            class="w-full flex flex-col items-center justify-center text-xs font-medium text-primary-light rounded-xl hover:bg-primary-light hover:text-white transition-all duration-200"
+            [class.px-2]="isCollapsed"
+            [class.py-2]="isCollapsed"
+            [class.px-3]="!isCollapsed"
+            [class.py-3]="!isCollapsed"
+            [title]="item.label"
           >
-            <span class="text-base mr-3" *ngIf="item.icon">{{
-              item.icon
-            }}</span>
-            <span *ngIf="!isCollapsed">{{ item.label }}</span>
+            <i
+              class="material-icons transition-all duration-300"
+              [class.text-sm]="isCollapsed"
+              [class.text-lg]="!isCollapsed"
+              [class.mb-0]="isCollapsed"
+              [class.mb-1]="!isCollapsed"
+              >{{ item.icon }}</i
+            >
+            <span
+              class="text-center leading-tight whitespace-nowrap text-xs menu-label"
+              [class.collapsed]="isCollapsed"
+              [class.expanded]="!isCollapsed"
+              >{{ item.label }}</span
+            >
           </button>
         </div>
       </div>
@@ -95,11 +139,11 @@ export class MainMenuComponent {
     let classes = '';
 
     if (isSelected) {
-      classes += 'bg-blue-100 text-blue-900 border-blue-300';
+      classes += 'bg-primary-light text-white shadow-lg scale-105';
     } else if (isHovered) {
-      classes += 'bg-gray-100 text-gray-900';
+      classes += 'bg-primary-light text-white scale-105';
     } else {
-      classes += 'text-gray-600 hover:bg-gray-100 hover:text-gray-900';
+      classes += 'text-primary-light hover:text-white hover:scale-105';
     }
 
     return classes;
