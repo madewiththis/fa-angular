@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { AuthService } from '../../../../services/auth.service';
 
 @Component({
   selector: 'app-profile-content',
@@ -19,9 +20,15 @@ export class ProfileContentComponent {
   };
   selectedLanguage = 'EN';
 
+  constructor(private authService: AuthService) {}
+
   copyToClipboard(text: string) {
     navigator.clipboard.writeText(text).catch((err) => {
       console.error('Failed to copy text: ', err);
     });
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }
