@@ -1,16 +1,27 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-password-protection',
   standalone: true,
-  imports: [CommonModule],
-  template: `
-    <div>
-      <!-- For now, we'll just pass through the content -->
-      <!-- In a real app, this would check authentication -->
-      <ng-content></ng-content>
-    </div>
-  `,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './password-protection.component.html',
+  styleUrls: ['./password-protection.component.scss']
 })
-export class PasswordProtectionComponent {}
+export class PasswordProtectionComponent {
+  password = '';
+  error = '';
+
+  constructor(private authService: AuthService, private router: Router) {}
+
+  login() {
+    if (this.authService.login(this.password)) {
+      this.router.navigate(['/']);
+    } else {
+      this.error = 'Incorrect password';
+    }
+  }
+}
