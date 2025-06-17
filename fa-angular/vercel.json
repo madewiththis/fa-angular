@@ -10,15 +10,5 @@
         "distDir": "dist/browser"
       }
     }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "handle": "filesystem"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
   ]
 } 
