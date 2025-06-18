@@ -77,7 +77,7 @@ import { CommonModule } from '@angular/common';
       }
       h3 {
         font-weight: bold;
-        margin-bottom: 0.5rem;
+        margin-bottom: 1rem;
         color: #fff;
         font-size: 0.9rem;
       }
@@ -87,11 +87,11 @@ import { CommonModule } from '@angular/common';
         margin: 0;
       }
       li {
-        margin-bottom: 0.2rem;
+        margin-bottom: 0.5rem;
       }
       a {
         text-decoration: none;
-        color: #fff;
+        color: rgba(255, 255, 255, 0.8);
         font-size: 0.8rem;
       }
       a:hover {

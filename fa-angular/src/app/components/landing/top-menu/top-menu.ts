@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostBinding, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
@@ -10,6 +10,22 @@ import { RouterModule } from '@angular/router';
   styleUrl: './top-menu.scss'
 })
 export class TopMenuComponent {
+  @HostBinding('class.menu-hidden') isMenuHidden = false;
+  private lastScrollY = 0;
+
+  @HostListener('window:scroll')
+  onScroll(): void {
+    const currentScrollY = window.scrollY;
+    // Hide header
+    if (currentScrollY > this.lastScrollY && currentScrollY > 100) {
+      this.isMenuHidden = true;
+    // Show header
+    } else {
+      this.isMenuHidden = false;
+    }
+    this.lastScrollY = currentScrollY;
+  }
+
   menu = [
     {
       title: 'Products',

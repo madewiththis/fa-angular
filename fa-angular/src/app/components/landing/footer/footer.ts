@@ -13,9 +13,9 @@ import { LocationComponent } from './location/location.component';
       <div class="footer-content">
         <app-landing-footer-links></app-landing-footer-links>
         <app-landing-footer-support></app-landing-footer-support>
-        <app-landing-footer-location></app-landing-footer-location>
+        <app-landing-footer-location class="footer-location"></app-landing-footer-location>
         <div class="footer-copyright">
-          <p>&copy; 2024 FlowAccount. All rights reserved.</p>
+          <p>Copyright &copy; 2025 FlowAccount Co., Ltd. All rights reserved.</p>
         </div>
       </div>
     </footer>
@@ -36,13 +36,18 @@ import { LocationComponent } from './location/location.component';
         gap: 2rem;
       }
 
+      .footer-location {
+        align-self: flex-end;
+      }
+
       .footer-copyright {
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
         padding: 1rem 0;
-        border-top: 1px solid #e5e7eb;
+        border: 0px solid #e5e7eb;
         margin-top: 2rem;
+        font-size: 0.8rem;
       }
 
       .awards {

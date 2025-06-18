@@ -1,0 +1,26 @@
+<section class="features-section">
+  <div class="container">
+    <div class="headings">
+      <div class="main-heading">
+        <h2>Make your business flow.</h2>
+      </div>
+    </div>
+    <div class="content-wrapper">
+      <div class="buttons-column">
+        <button
+          *ngFor="let feature of features"
+          (click)="selectFeature(feature)"
+          [class.active]="feature === selectedFeature"
+          class="feature-button"
+        >
+          {{ feature.title }}
+        </button>
+        <button class="feature-button">More</button>
+      </div>
+      <div class="text-column" *ngIf="selectedFeature">
+        <h3>{{ selectedFeature.title }}</h3>
+        <p>{{ selectedFeature.description }}</p>
+      </div>
+    </div>
+  </div>
+</section>
