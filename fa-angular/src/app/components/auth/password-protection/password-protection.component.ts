@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 
 @Component({
@@ -19,7 +19,11 @@ export class PasswordProtectionComponent implements OnInit, OnDestroy {
   private intervalId: any;
   private matrixChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789日木人月金大土水中火本年一二三四五六七八九十';
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit() {
     this.startMatrixRain();
@@ -31,7 +35,9 @@ export class PasswordProtectionComponent implements OnInit, OnDestroy {
 
   login() {
     if (this.authService.login(this.password)) {
-      this.router.navigate(['/']);
+      const returnUrl =
+        this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
+      this.router.navigateByUrl(returnUrl);
     } else {
       this.error = 'Incorrect password';
     }
