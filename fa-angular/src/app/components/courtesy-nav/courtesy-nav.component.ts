@@ -1,8 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CompanyChooserComponent } from './company-chooser/company-chooser.component';
-import { LanguageChooserComponent } from './language-chooser/language-chooser.component';
-import { HelpCentreComponent } from './help-centre/help-centre.component';
+import { CompanyChooserComponent } from './company-chooser';
+import { HelpCentreComponent } from './help-centre';
+import { LanguageChooserComponent } from './language-chooser';
+import { PopupComponent } from './popup';
+import { UserProfileService } from '../../services/user-profile.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-courtesy-nav',
@@ -10,54 +13,46 @@ import { HelpCentreComponent } from './help-centre/help-centre.component';
   imports: [
     CommonModule,
     CompanyChooserComponent,
+    HelpCentreComponent,
     LanguageChooserComponent,
-    HelpCentreComponent
+    PopupComponent,
   ],
   template: `
-    <nav class="courtesy-nav">
-      <div class="courtesy-nav-container">
-        <!-- Company Dropdown -->
-        <app-company-chooser />
-        
-        <!-- Language Dropdown -->
-        <app-language-chooser />
-        
-        <!-- Help Centre Button -->
-        <app-help-centre />  
+    <div class="courtesy-nav">
+      <div class="trial-status" *ngIf="trialEndDate$ | async as trialEndDate">
+        <span>Trial ends on: {{ trialEndDate | date : 'mediumDate' }}</span>
       </div>
-    </nav>
+      <app-company-chooser></app-company-chooser>
+      <app-language-chooser></app-language-chooser>
+      <app-help-centre></app-help-centre>
+      <app-popup></app-popup>
+    </div>
   `,
-  styles: [`
-    .courtesy-nav {
-      position: fixed;
-      top: 0;
-      left: 100px; /* Start after the main menu */
-      right: 0;
-      height: 60px;
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      padding: 0 20px;
-      pointer-events: none; /* Allow clicks to pass through except for nav items */
-    }
-    
-    .courtesy-nav-container {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      height: 100%;
-    }
-    
-    /* Ensure the nav doesn't interfere with pointer events on the main content */
-    .courtesy-nav {
-      pointer-events: auto;
-    }
-    
-    /* Make sure dropdowns and buttons work properly */
-    .courtesy-nav-container > * {
-      pointer-events: auto;
-    }
-  `]
+  styles: [
+    `
+      .courtesy-nav {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .trial-status {
+        background-color: #eef2ff;
+        color: #4338ca;
+        padding: 6px 12px;
+        border-radius: 9999px;
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+    `,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CourtesyNavComponent {}
+export class CourtesyNavComponent implements OnInit {
+  private userProfileService = inject(UserProfileService);
+  trialEndDate$!: Observable<Date>;
+
+  ngOnInit() {
+    this.trialEndDate$ = this.userProfileService.trialEndDate$;
+  }
+}

@@ -8,6 +8,16 @@ export const routes: Routes = [
     path: 'login',
     component: PasswordProtectionComponent,
   },
+  {
+    path: 'landing/home',
+    loadComponent: () =>
+      import('./pages/landing/home/home').then((m) => m.HomeComponent),
+  },
+  {
+    path: 'landing/signup',
+    loadComponent: () =>
+      import('./pages/landing/signup/signup').then((m) => m.Signup),
+  },
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   {
     path: 'dashboard',

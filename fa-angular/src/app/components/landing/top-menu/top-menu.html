@@ -1,0 +1,28 @@
+<nav class="top-menu">
+  <div class="container">
+    <div class="logo">
+      <div class="logo-background">
+        <img src="assets/fa_logo_full_stencil.png" alt="FlowAccount Logo">
+      </div>
+    </div>
+    <ul>
+      <li *ngFor="let menuItem of menu" class="menu-item">
+        <a *ngIf="menuItem.isLink" [href]="menuItem.link">{{ menuItem.title }}</a>
+        <span *ngIf="!menuItem.isLink">{{ menuItem.title }}</span>
+        <div *ngIf="menuItem.items" class="submenu">
+          <ul>
+            <li *ngFor="let subItem of menuItem.items">
+              <a href="#">
+                <strong>{{ subItem.name }}</strong>
+                <p *ngIf="subItem.description">{{ subItem.description }}</p>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+    <div class="menu-actions">
+      <a [routerLink]="['/dashboard']" class="login-button">Login</a>
+    </div>
+  </div>
+</nav>

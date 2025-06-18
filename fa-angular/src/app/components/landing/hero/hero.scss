@@ -1,0 +1,80 @@
+:host {
+  display: flex;
+  justify-content: center;
+  padding: 3rem 2rem;
+  background-color: #f9fafb;
+}
+
+.hero-container {
+  width: 64rem;
+  max-width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.left-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 0;
+    color: #111827;
+  }
+
+  .description {
+    font-size: 1.125rem;
+    color: #4b5563;
+    line-height: 1.75;
+  }
+
+  .cta-container {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+
+    input {
+      flex-grow: 1;
+      padding: 0.75rem 1rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.375rem;
+      font-size: 1rem;
+    }
+
+    .cta-button {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      background-color: #16a34a; 
+      color: white;
+      border-radius: 0.375rem;
+      font-size: 1rem;
+      cursor: pointer;
+      font-weight: 600;
+
+      &:hover {
+        background-color: #15803d;
+      }
+    }
+  }
+
+  .social-proof {
+    margin-top: 1.5rem;
+    color: #4b5563;
+  }
+}
+
+.right-column {
+  background-color: #e5e7eb;
+  height: 100%;
+  min-height: 300px;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+}
