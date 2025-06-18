@@ -21,7 +21,7 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem('sessionExpiry');
-    this.router.navigate(['/login']);
+    this.router.navigate(['/landing/home']);
   }
 
   isAuthenticated(): boolean {
