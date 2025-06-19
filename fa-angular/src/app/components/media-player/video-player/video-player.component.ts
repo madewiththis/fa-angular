@@ -12,7 +12,7 @@ declare var YT: any;
   template: `
     <div #playerHost style="height: 100%; width: 100%;">
       <div [ngSwitch]="videoType" style="height: 100%; width: 100%;">
-        <video *ngSwitchCase="'html5'" #videoElement width="100%" height="100%" (canplay)="onLoaded()" (timeupdate)="onTimeUpdate($event)" (durationchange)="onDurationChange($event)"></video>
+        <video *ngSwitchCase="'html5'" #videoElement width="100%" height="100%" (canplay)="onLoaded()" (timeupdate)="onTimeUpdate($event)" (durationchange)="onDurationChange($event)" (seeked)="onSeeked()"></video>
         <div *ngSwitchCase="'youtube'" #youtubePlayerContainer style="height: 100%; width: 100%;"></div>
       </div>
     </div>
@@ -28,6 +28,7 @@ export class VideoPlayerComponent implements OnInit, OnChanges, AfterViewInit, O
   @Output() timeUpdate = new EventEmitter<number>();
   @Output() durationChange = new EventEmitter<number>();
   @Output() loaded = new EventEmitter<void>();
+  @Output() seeked = new EventEmitter<void>();
 
   @ViewChild('videoElement') videoElement!: ElementRef<HTMLVideoElement>;
   @ViewChild('youtubePlayerContainer') youtubePlayerContainer!: ElementRef<HTMLDivElement>;
@@ -38,6 +39,7 @@ export class VideoPlayerComponent implements OnInit, OnChanges, AfterViewInit, O
   private youtubeVideoId: string | null = null;
   private timeUpdateInterval: any;
   private resizeObserver!: ResizeObserver;
+  private playAfterSeek = false;
 
   ngOnInit(): void {
     this.determineVideoType();
@@ -47,12 +49,18 @@ export class VideoPlayerComponent implements OnInit, OnChanges, AfterViewInit, O
     if (changes['src']) {
       this.determineVideoType();
       this.loadVideo();
+      return;
     }
-    if (changes['isPlaying']) {
-      this.togglePlayback();
-    }
+    
+    // If a seek is requested, store the intent to play and then seek.
+    // The actual playing will be triggered by the 'onSeeked' event for HTML5.
     if (changes['seekTime'] && this.seekTime !== null) {
+      this.playAfterSeek = this.isPlaying;
       this.seek();
+    } 
+    // If ONLY the playing state changes (no seek), toggle playback directly.
+    else if (changes['isPlaying']) {
+      this.togglePlayback();
     }
   }
 
@@ -119,13 +127,25 @@ export class VideoPlayerComponent implements OnInit, OnChanges, AfterViewInit, O
       this.videoElement.nativeElement.currentTime = this.seekTime;
     } else if (this.videoType === 'youtube' && this.youtubePlayer && typeof this.youtubePlayer.seekTo === 'function' && this.seekTime !== null) {
       this.youtubePlayer.seekTo(this.seekTime, true);
+      // For YouTube, we don't have a reliable seeked event, so we handle it here.
+      if (this.playAfterSeek) {
+        this.youtubePlayer.playVideo();
+      }
+      this.onSeeked(); // Still notify the parent that the seek command was sent
     }
   }
   
   onLoaded(): void {
     this.loaded.emit();
     this.onDurationChange();
-    this.togglePlayback();
+    
+    // Handle initial seek time if provided (important for restored minimized videos)
+    if (this.seekTime !== null) {
+      this.playAfterSeek = this.isPlaying;
+      this.seek();
+    } else {
+      this.togglePlayback();
+    }
   }
 
   onTimeUpdate(event: Event): void {
@@ -134,6 +154,17 @@ export class VideoPlayerComponent implements OnInit, OnChanges, AfterViewInit, O
 
   onDurationChange(event?: Event): void {
     this.durationChange.emit(this.videoElement?.nativeElement.duration);
+  }
+
+  onSeeked(): void {
+    // For HTML5, the seek operation has completed. If we intended to play, play now.
+    if (this.videoType === 'html5' && this.playAfterSeek) {
+      this.videoElement.nativeElement.play();
+    }
+    // Reset the flag
+    this.playAfterSeek = false;
+    // Notify the parent component
+    this.seeked.emit();
   }
 
   private loadYouTubeAPI(): Promise<void> {
@@ -176,9 +207,11 @@ export class VideoPlayerComponent implements OnInit, OnChanges, AfterViewInit, O
     this.loaded.emit();
     this.durationChange.emit(this.youtubePlayer.getDuration());
     if (this.seekTime) {
+      // Set the flag before seeking
+      this.playAfterSeek = this.isPlaying;
       this.seek();
     }
-    if (this.isPlaying) {
+    else if (this.isPlaying) {
       this.youtubePlayer.playVideo();
     }
     this.setupResizeObserver();
@@ -195,6 +228,15 @@ export class VideoPlayerComponent implements OnInit, OnChanges, AfterViewInit, O
         }
       }, 250);
     }
+  }
+
+  public getCurrentTime(): number {
+    if (this.videoType === 'html5' && this.videoElement?.nativeElement) {
+      return this.videoElement.nativeElement.currentTime;
+    } else if (this.videoType === 'youtube' && this.youtubePlayer && typeof this.youtubePlayer.getCurrentTime === 'function') {
+      return this.youtubePlayer.getCurrentTime();
+    }
+    return 0;
   }
 
   private setupResizeObserver(): void {

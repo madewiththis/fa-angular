@@ -15,10 +15,12 @@ export interface PlayerState {
   volume: number;
   // Custom PiP properties
   pipPosition: 'bottom-right' | 'top-right' | 'bottom-left' | 'top-left' | 'center';
+  pipPositionBeforeMinimize: PlayerState['pipPosition'] | null;
   pipSize: 'full' | 'half';
   isFloating: boolean;
   isMinimized: boolean;
   wasPlayingBeforeMinimize: boolean;
+  timeBeforeMinimize: number | null;
   isFakeFullscreen: boolean;
   // for seeking
   seekTo: number | null;
@@ -49,10 +51,12 @@ export class MediaPlayerService {
     isInitialized: false,
     volume: 1,
     pipPosition: 'center',
+    pipPositionBeforeMinimize: null,
     pipSize: 'half',
     isFloating: false,
     isMinimized: false,
     wasPlayingBeforeMinimize: false,
+    timeBeforeMinimize: null,
     isFakeFullscreen: false,
     seekTo: null,
   };
@@ -211,15 +215,26 @@ export class MediaPlayerService {
     }
   }
 
-  minimizeVideo(): void {
+  minimizeVideo(currentTime: number): void {
     if(this.currentState.isFloating) {
-      this.updateState({ isMinimized: true, isPlaying: false });
+      this.updateState({ 
+        wasPlayingBeforeMinimize: this.currentState.isPlaying,
+        pipPositionBeforeMinimize: this.currentState.pipPosition,
+        timeBeforeMinimize: currentTime,
+        isMinimized: true, 
+        isPlaying: false
+      });
     }
   }
 
   restoreVideo(): void {
     if(this.currentState.isFloating) {
-      this.updateState({ isMinimized: false, isPlaying: true });
+      this.updateState({ 
+        isMinimized: false, 
+        isPlaying: this.currentState.wasPlayingBeforeMinimize,
+        pipPosition: this.currentState.pipPositionBeforeMinimize || 'center',
+        seekTo: this.currentState.timeBeforeMinimize
+      });
     }
   }
 

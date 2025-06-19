@@ -46,19 +46,13 @@ export class FloatingPlayerComponent implements OnInit, OnDestroy {
   
   state!: PlayerState;
   showPositionSelector = false;
+  isHovering = false;
   
   constructor() {
     this.mediaPlayerService.state$.pipe(
       takeUntil(this.destroy$)
     ).subscribe(state => {
       this.state = state;
-      
-      if(this.state.seekTo !== null) {
-        // We need to inform the service that the seek has been handled 
-        // to avoid getting into a loop.
-        // Use setTimeout to ensure the child component's ngOnChanges has time to fire.
-        setTimeout(() => this.mediaPlayerService.seekHandled(), 0);
-      }
       this.cdr.detectChanges();
     });
   }
@@ -70,6 +64,17 @@ export class FloatingPlayerComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
   
+  onMouseLeavePlayer(): void {
+    this.isHovering = false;
+    if (this.showPositionSelector) {
+      this.togglePositionSelector(false);
+    }
+  }
+
+  onMouseEnterPlayer(): void {
+    this.isHovering = true;
+  }
+
   // Methods called from template
   onTimeUpdate(time: number): void {
     this.mediaPlayerService.updateCurrentTime(time);
@@ -77,6 +82,12 @@ export class FloatingPlayerComponent implements OnInit, OnDestroy {
 
   onDurationChange(duration: number): void {
     this.mediaPlayerService.updateDuration(duration);
+  }
+
+  onSeeked(): void {
+    if (this.state.seekTo !== null) {
+      this.mediaPlayerService.seekHandled();
+    }
   }
 
   onLoaded(): void {
@@ -88,7 +99,8 @@ export class FloatingPlayerComponent implements OnInit, OnDestroy {
   }
 
   minimize(): void {
-    this.mediaPlayerService.minimizeVideo();
+    const currentTime = this.videoPlayer?.getCurrentTime() || this.state.currentTime;
+    this.mediaPlayerService.minimizeVideo(currentTime);
   }
 
   restore(): void {

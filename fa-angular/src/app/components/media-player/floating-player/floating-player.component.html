@@ -15,7 +15,9 @@
     *ngIf="!state.isMinimized"
     #playerContainer 
     [ngClass]="playerClasses"
-    [@playerAnimation]>
+    [@playerAnimation]
+    (mouseenter)="onMouseEnterPlayer()"
+    (mouseleave)="onMouseLeavePlayer()">
     <div class="video-wrapper">
       <app-video-player 
         *ngIf="state.videoUrl"
@@ -25,12 +27,13 @@
         (timeUpdate)="onTimeUpdate($event)"
         (durationChange)="onDurationChange($event)"
         (loaded)="onLoaded()"
+        (seeked)="onSeeked()"
       >
       </app-video-player>
     </div>
 
     <!-- Hover Controls Overlay -->
-    <div class="controls-overlay">
+    <div class="controls-overlay" [class.show-controls]="isHovering && !showPositionSelector">
       <!-- Top-right Close Button -->
       <button class="control-button close-button" (click)="close()">
         <mat-icon>close</mat-icon>
@@ -68,11 +71,41 @@
     <!-- Position Selector Overlay -->
     <div *ngIf="showPositionSelector" class="position-selector-overlay" (click)="togglePositionSelector(false)">
       <div class="position-grid">
-        <button class="position-button" (click)="setPosition('top-left'); $event.stopPropagation()"><mat-icon>north_west</mat-icon></button>
-        <button class="position-button" (click)="setPosition('top-right'); $event.stopPropagation()"><mat-icon>north_east</mat-icon></button>
-        <button class="position-button center" (click)="setPosition('center'); $event.stopPropagation()"><mat-icon>center_focus_strong</mat-icon></button>
-        <button class="position-button" (click)="setPosition('bottom-left'); $event.stopPropagation()"><mat-icon>south_west</mat-icon></button>
-        <button class="position-button" (click)="setPosition('bottom-right'); $event.stopPropagation()"><mat-icon>south_east</mat-icon></button>
+        <button 
+          class="position-button" 
+          [class.active]="state.pipPosition === 'top-left'"
+          [disabled]="state.pipPosition === 'top-left'"
+          (click)="setPosition('top-left'); $event.stopPropagation()">
+          <mat-icon>north_west</mat-icon>
+        </button>
+        <button 
+          class="position-button" 
+          [class.active]="state.pipPosition === 'top-right'"
+          [disabled]="state.pipPosition === 'top-right'"
+          (click)="setPosition('top-right'); $event.stopPropagation()">
+          <mat-icon>north_east</mat-icon>
+        </button>
+        <button 
+          class="position-button center" 
+          [class.active]="state.pipPosition === 'center'"
+          [disabled]="state.pipPosition === 'center'"
+          (click)="setPosition('center'); $event.stopPropagation()">
+          <mat-icon>center_focus_strong</mat-icon>
+        </button>
+        <button 
+          class="position-button" 
+          [class.active]="state.pipPosition === 'bottom-left'"
+          [disabled]="state.pipPosition === 'bottom-left'"
+          (click)="setPosition('bottom-left'); $event.stopPropagation()">
+          <mat-icon>south_west</mat-icon>
+        </button>
+        <button 
+          class="position-button" 
+          [class.active]="state.pipPosition === 'bottom-right'"
+          [disabled]="state.pipPosition === 'bottom-right'"
+          (click)="setPosition('bottom-right'); $event.stopPropagation()">
+          <mat-icon>south_east</mat-icon>
+        </button>
       </div>
     </div>
   </div>
