@@ -1,6 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { UserProfileService } from '../../services/user-profile.service';
+import { VideoTutorialComponent } from '../tutorial/video-tutorial/video-tutorial.component';
+import { TutorialFabComponent } from '../tutorial/tutorial-fab/tutorial-fab.component';
+import { VideoTutorialService, VideoConfig } from '../tutorial/services/video-tutorial.service';
 
 interface SurveyQuestion {
   key: string;
@@ -28,7 +31,7 @@ interface Todo {
 @Component({
   selector: 'app-get-started-survey',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, VideoTutorialComponent, TutorialFabComponent],
   template: `
     <div class="survey-container">
       <ng-container *ngIf="!surveyCompleted">
@@ -146,10 +149,27 @@ interface Todo {
               <h3>{{ selectedTodo.details.title }}</h3>
               <p>{{ selectedTodo.details.description }}</p>
               <div class="actions">
-                <div class="video-placeholder">
-                  <div class="play-button"></div>
+                <div class="video-container">
+                  <!-- Video placeholder - shows when no video is loaded -->
+                  <div 
+                    class="video-placeholder" 
+                    *ngIf="!currentVideoConfig"
+                    (click)="playTutorialVideo(selectedTodo)"
+                  >
+                    <div class="play-button"></div>
+                  </div>
+                  
+                  <!-- Inline video player - shows when video is loaded -->
+                  <div class="inline-video-wrapper" *ngIf="currentVideoConfig">
+                    <app-video-tutorial 
+                      [config]="currentVideoConfig"
+                      [autoplay]="true"
+                      [inline]="true"
+                      class="inline-video">
+                    </app-video-tutorial>
+                  </div>
                 </div>
-                <button class="action-button walkthrough">
+                <button class="action-button walkthrough" (click)="startWalkthrough(selectedTodo)">
                   Start Walkthrough
                 </button>
               </div>
@@ -164,6 +184,17 @@ interface Todo {
           </div>
         </div>
       </ng-container>
+
+      <!-- Floating video player - appears when user navigates away but video should continue -->
+      <app-video-tutorial 
+        [config]="currentVideoConfig"
+        [inline]="false"
+        *ngIf="currentVideoConfig && isVideoFloating"
+        class="floating-video">
+      </app-video-tutorial>
+
+      <!-- Tutorial FAB for hidden videos -->
+      <app-tutorial-fab></app-tutorial-fab>
     </div>
   `,
   styles: [
@@ -423,8 +454,8 @@ interface Todo {
         flex-direction: column;
         gap: 12px;
         margin-bottom: 24px;
-        width: 400px;
-        max-width: 100%;
+        width: 100%;
+        max-width: 400px;
       }
 
       .action-button {
@@ -441,6 +472,49 @@ interface Todo {
       .action-button:hover {
         background-color: #f9fafb;
         border-color: #9ca3af;
+      }
+
+      .video-container {
+        position: relative;
+        width: 100%;
+        max-width: 400px;
+        height: 224px; /* Fixed height to maintain layout */
+        border-radius: 6px;
+        overflow: hidden;
+        background: #000;
+      }
+
+      .inline-video-wrapper {
+        width: 100%;
+        height: 100%;
+        position: relative;
+      }
+
+      .inline-video {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      .inline-video ::ng-deep .video-tutorial-container {
+        position: static !important;
+        width: 100% !important;
+        height: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+      }
+
+      .inline-video ::ng-deep .video-wrapper {
+        border-radius: 0 !important;
+        height: 100% !important;
+      }
+
+      .inline-video ::ng-deep .video-js {
+        width: 100% !important;
+        height: 100% !important;
+        min-height: 100% !important;
       }
 
       .video-placeholder {
@@ -604,8 +678,22 @@ export class GetStartedSurveyComponent {
   selectedTodo: Todo | null = null;
   onboardingComplete = false;
   trialEndDate: Date | null = null;
+  currentVideoConfig: VideoConfig | null = null;
+  isVideoFloating = false;
 
-  constructor(private userProfileService: UserProfileService) {}
+  constructor(
+    private userProfileService: UserProfileService,
+    private videoTutorialService: VideoTutorialService
+  ) {
+    // Listen to video tutorial state changes
+    this.videoTutorialService.state$.subscribe(state => {
+      // Handle floating video when it's detached from inline position
+      if (state.isInitialized && !state.isHidden && !state.isPiP) {
+        // Video is playing but not in PiP - could be floating
+        this.isVideoFloating = false; // Keep inline for now
+      }
+    });
+  }
 
   answer(value: any) {
     const currentQuestion = this.questions[this.currentQuestionIndex];
@@ -721,5 +809,52 @@ export class GetStartedSurveyComponent {
   exploreApp() {
     // This can be changed to navigate to the main dashboard or another page
     console.log('Explore the app!');
+  }
+
+  playTutorialVideo(todo: Todo) {
+    // Create video config based on the todo item
+    let videoUrl = '/assets/tutorials/tutorial_quotation.mp4';
+    let videoTitle = 'Tutorial Video';
+    
+    // Map different todos to different videos if needed
+    switch (todo.id) {
+      case 'add_products':
+        videoTitle = 'How to Add Products';
+        break;
+      case 'setup_payroll':
+        videoTitle = 'How to Set up Payroll';
+        break;
+      case 'invite_users':
+        videoTitle = 'How to Invite Your Team';
+        break;
+      case 'setup_company':
+        videoTitle = 'How to Set Up Your Company Profile';
+        break;
+      case 'connect_bank':
+        videoTitle = 'How to Connect Your Bank Account';
+        break;
+      default:
+        videoTitle = todo.details.title;
+    }
+
+    this.currentVideoConfig = {
+      id: `tutorial_${todo.id}`,
+      url: videoUrl,
+      title: videoTitle,
+      description: todo.details.description,
+      startTime: 0
+    };
+
+    // Initialize the video tutorial
+    this.videoTutorialService.initializeVideo(this.currentVideoConfig);
+  }
+
+  startWalkthrough(todo: Todo) {
+    // For now, this will play the same video
+    // In the future, this could navigate to interactive guides
+    this.playTutorialVideo(todo);
+    
+    // You could also navigate to specific pages here
+    console.log(`Starting walkthrough for: ${todo.details.title}`);
   }
 } 

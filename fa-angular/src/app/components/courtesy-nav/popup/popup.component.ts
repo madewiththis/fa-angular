@@ -32,6 +32,10 @@ export class PopupComponent {
   @Output() closed = new EventEmitter<void>();
 
   private overlayRef?: OverlayRef;
+  
+  get isOpen(): boolean {
+    return !!this.overlayRef;
+  }
 
   constructor(private overlay: Overlay, private vcr: ViewContainerRef) {}
 
@@ -59,6 +63,14 @@ export class PopupComponent {
     this.overlayRef = this.overlay.create(overlayConfig);
     this.overlayRef.attach(new TemplatePortal(this.popupContent, this.vcr));
     this.overlayRef.backdropClick().subscribe(() => this.close());
+  }
+
+  toggle() {
+    if (this.isOpen) {
+      this.close();
+    } else {
+      this.open();
+    }
   }
 
   close() {

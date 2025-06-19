@@ -1,0 +1,1 @@
+export { FloatingVideoComponent } from './floating-video.component'; 

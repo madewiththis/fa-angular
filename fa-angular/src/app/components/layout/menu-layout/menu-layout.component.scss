@@ -76,3 +76,12 @@ main.flex-1 {
 :host.menu-expanded {
   --main-menu-width: 100px; // Expanded width
 }
+
+// Courtesy nav positioning - make it truly floating
+app-courtesy-nav {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1050;
+  pointer-events: auto;
+}

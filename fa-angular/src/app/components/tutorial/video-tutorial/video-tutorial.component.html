@@ -1,0 +1,66 @@
+<div 
+  class="video-tutorial-container"
+  [class.hidden]="state.isHidden"
+  [class.pip-mode]="state.isPiP"
+  [class.inline-mode]="inline"
+  [class.floating-mode]="!inline && !state.isHidden"
+  role="region"
+  aria-label="Video Tutorial Player"
+>
+  <div class="video-wrapper">
+    <video
+      #videoElement
+      class="video-js vjs-default-skin"
+      preload="metadata"
+      data-setup="{}"
+      [attr.aria-label]="config?.title || 'Tutorial Video'"
+    >
+      <p class="vjs-no-js">
+        To view this video please enable JavaScript, and consider upgrading to a web browser that
+        <a href="https://videojs.com/html5-video-support/" target="_blank" rel="noopener">
+          supports HTML5 video
+        </a>.
+      </p>
+    </video>
+  </div>
+  
+  <!-- Loading indicator -->
+  <div 
+    class="loading-indicator" 
+    *ngIf="!state.isInitialized"
+    aria-live="polite"
+    aria-label="Loading video tutorial"
+  >
+    <div class="spinner"></div>
+    <span>Loading tutorial...</span>
+  </div>
+  
+  <!-- Error state -->
+  <div 
+    class="error-state" 
+    *ngIf="state.isInitialized && !state.videoUrl"
+    role="alert"
+    aria-live="assertive"
+  >
+    <mat-icon>error_outline</mat-icon>
+    <span>Unable to load video tutorial</span>
+    <button 
+      mat-stroked-button 
+      (click)="restoreVideo()"
+      aria-label="Retry loading video"
+    >
+      Retry
+    </button>
+  </div>
+  
+  <!-- PiP mode indicator -->
+  <div 
+    class="pip-indicator" 
+    *ngIf="state.isPiP && inline"
+    role="status"
+    aria-live="polite"
+  >
+    <mat-icon>picture_in_picture_alt</mat-icon>
+    <span>Video playing in Picture-in-Picture mode</span>
+  </div>
+</div> 

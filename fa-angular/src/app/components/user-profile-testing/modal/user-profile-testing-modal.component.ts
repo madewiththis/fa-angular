@@ -122,16 +122,12 @@ export class UserProfileTestingModalComponent {
   ) {}
 
   currentState() {
-    const state = this.userProfileTestingService.testingState();
-    console.log('🧪 Modal currentState() called:', state);
-    return state;
+    return this.userProfileTestingService.testingState();
   }
 
   // Properties for ngModel binding
   get userRole() {
-    const value = this.userProfileTestingService.testingState().user_role;
-    console.log('🧪 Modal get userRole:', value);
-    return value;
+    return this.userProfileTestingService.testingState().user_role;
   }
   set userRole(value: string) {
     console.log('🧪 Modal set userRole:', value);
@@ -140,9 +136,7 @@ export class UserProfileTestingModalComponent {
   }
 
   get package() {
-    const value = this.userProfileTestingService.testingState().package;
-    console.log('🧪 Modal get package:', value);
-    return value;
+    return this.userProfileTestingService.testingState().package;
   }
   set package(value: string) {
     console.log('🧪 Modal set package:', value);
@@ -151,9 +145,7 @@ export class UserProfileTestingModalComponent {
   }
 
   get packageStatus() {
-    const value = this.userProfileTestingService.testingState().package_status;
-    console.log('🧪 Modal get packageStatus:', value);
-    return value;
+    return this.userProfileTestingService.testingState().package_status;
   }
   set packageStatus(value: string) {
     console.log('🧪 Modal set packageStatus:', value);
@@ -162,9 +154,7 @@ export class UserProfileTestingModalComponent {
   }
 
   get paymentFrequency() {
-    const value = this.userProfileTestingService.testingState().payment_frequency;
-    console.log('🧪 Modal get paymentFrequency:', value);
-    return value;
+    return this.userProfileTestingService.testingState().payment_frequency;
   }
   set paymentFrequency(value: string) {
     console.log('🧪 Modal set paymentFrequency:', value);
@@ -173,9 +163,7 @@ export class UserProfileTestingModalComponent {
   }
 
   get paymentMethod() {
-    const value = this.userProfileTestingService.testingState().payment_method;
-    console.log('🧪 Modal get paymentMethod:', value);
-    return value;
+    return this.userProfileTestingService.testingState().payment_method;
   }
   set paymentMethod(value: string) {
     console.log('🧪 Modal set paymentMethod:', value);

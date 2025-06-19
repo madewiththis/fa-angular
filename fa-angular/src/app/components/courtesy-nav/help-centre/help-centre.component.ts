@@ -35,7 +35,7 @@ export class HelpCentreComponent {
 
   togglePopup() {
     if (this.popup) {
-      this.popup.open();
+      this.popup.toggle();
     }
   }
 }

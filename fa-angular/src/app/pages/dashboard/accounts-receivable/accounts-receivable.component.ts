@@ -8,7 +8,14 @@ import { CommonModule } from '@angular/common';
   template: `
     <div>
       <h1>Collect Money (Accounts Receivable)</h1>
-      <p>This is where the accounts receivable content will go.</p>
+      <p>This is where the accounts receivable content will go.
+      <br> Quotes to Send
+      <br/> Invoices to Send
+      <br/> Invoices to 
+      <br/>
+      <br/>
+      <br/>
+      </p>
     </div>
   `,
   styles: [],

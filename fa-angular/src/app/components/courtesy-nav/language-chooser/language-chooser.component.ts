@@ -61,7 +61,7 @@ export class LanguageChooserComponent {
 
   togglePopup() {
     if (this.popup) {
-      this.popup.open();
+      this.popup.toggle();
     }
   }
 }

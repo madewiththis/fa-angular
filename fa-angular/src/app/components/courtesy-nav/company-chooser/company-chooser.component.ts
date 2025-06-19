@@ -127,7 +127,7 @@ export class CompanyChooserComponent implements OnInit {
 
   togglePopup() {
     if (this.popup) {
-      this.popup.open();
+      this.popup.toggle();
     }
   }
 
