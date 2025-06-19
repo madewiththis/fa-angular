@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { UserProfileService } from '../../services/user-profile.service';
-import { VideoTutorialComponent } from '../tutorial/video-tutorial/video-tutorial.component';
-import { TutorialFabComponent } from '../tutorial/tutorial-fab/tutorial-fab.component';
-import { VideoTutorialService, VideoConfig } from '../tutorial/services/video-tutorial.service';
+import { VideoPlayerComponent } from '../media-player/video-player/video-player.component';
+import { MediaPlayerFabComponent } from '../media-player/fab/media-player-fab.component';
+import { MediaPlayerService, MediaConfig, PlayerState } from '../media-player/services/media-player.service';
 
 interface SurveyQuestion {
   key: string;
@@ -31,7 +31,7 @@ interface Todo {
 @Component({
   selector: 'app-get-started-survey',
   standalone: true,
-  imports: [CommonModule, VideoTutorialComponent, TutorialFabComponent],
+  imports: [CommonModule, VideoPlayerComponent, MediaPlayerFabComponent],
   template: `
     <div class="survey-container">
       <ng-container *ngIf="!surveyCompleted">
@@ -161,12 +161,11 @@ interface Todo {
                   
                   <!-- Inline video player - shows when video is loaded -->
                   <div class="inline-video-wrapper" *ngIf="currentVideoConfig">
-                    <app-video-tutorial 
-                      [config]="currentVideoConfig"
-                      [autoplay]="true"
-                      [inline]="true"
+                    <app-video-player
+                      [src]="currentVideoConfig.url"
+                      [isPlaying]="!isVideoFloating"
                       class="inline-video">
-                    </app-video-tutorial>
+                    </app-video-player>
                   </div>
                 </div>
                 <button class="action-button walkthrough" (click)="startWalkthrough(selectedTodo)">
@@ -185,16 +184,8 @@ interface Todo {
         </div>
       </ng-container>
 
-      <!-- Floating video player - appears when user navigates away but video should continue -->
-      <app-video-tutorial 
-        [config]="currentVideoConfig"
-        [inline]="false"
-        *ngIf="currentVideoConfig && isVideoFloating"
-        class="floating-video">
-      </app-video-tutorial>
-
-      <!-- Tutorial FAB for hidden videos -->
-      <app-tutorial-fab></app-tutorial-fab>
+      <!-- Floating video player is now managed by FloatingPlayerComponent -->
+      <app-media-player-fab></app-media-player-fab>
     </div>
   `,
   styles: [
@@ -678,26 +669,30 @@ export class GetStartedSurveyComponent {
   selectedTodo: Todo | null = null;
   onboardingComplete = false;
   trialEndDate: Date | null = null;
-  currentVideoConfig: VideoConfig | null = null;
+  currentVideoConfig: MediaConfig | null = null;
   isVideoFloating = false;
+  playerState: PlayerState;
 
   constructor(
     private userProfileService: UserProfileService,
-    private videoTutorialService: VideoTutorialService
+    private mediaPlayerService: MediaPlayerService
   ) {
-    // Listen to video tutorial state changes
-    this.videoTutorialService.state$.subscribe(state => {
-      // Handle floating video when it's detached from inline position
-      if (state.isInitialized && !state.isHidden && !state.isPiP) {
-        // Video is playing but not in PiP - could be floating
-        this.isVideoFloating = false; // Keep inline for now
-      }
+    this.playerState = this.mediaPlayerService.currentState;
+    this.mediaPlayerService.state$.subscribe(state => {
+      this.playerState = state;
+      // sync local state with service state
+      this.currentVideoConfig = state.videoId ? { id: state.videoId, url: state.videoUrl! } : null;
+      this.isVideoFloating = state.isFloating;
     });
   }
 
+  ngOnInit() {
+    this.generateTodos();
+  }
+
   answer(value: any) {
-    const currentQuestion = this.questions[this.currentQuestionIndex];
-    this.answers[currentQuestion.key] = value;
+    const key = this.questions[this.currentQuestionIndex].key;
+    this.answers[key] = value;
 
     if (this.currentQuestionIndex < this.questions.length - 1) {
       this.currentQuestionIndex++;
@@ -812,49 +807,17 @@ export class GetStartedSurveyComponent {
   }
 
   playTutorialVideo(todo: Todo) {
-    // Create video config based on the todo item
-    let videoUrl = '/assets/tutorials/tutorial_quotation.mp4';
-    let videoTitle = 'Tutorial Video';
-    
-    // Map different todos to different videos if needed
-    switch (todo.id) {
-      case 'add_products':
-        videoTitle = 'How to Add Products';
-        break;
-      case 'setup_payroll':
-        videoTitle = 'How to Set up Payroll';
-        break;
-      case 'invite_users':
-        videoTitle = 'How to Invite Your Team';
-        break;
-      case 'setup_company':
-        videoTitle = 'How to Set Up Your Company Profile';
-        break;
-      case 'connect_bank':
-        videoTitle = 'How to Connect Your Bank Account';
-        break;
-      default:
-        videoTitle = todo.details.title;
-    }
-
-    this.currentVideoConfig = {
+    const config: MediaConfig = {
       id: `tutorial_${todo.id}`,
-      url: videoUrl,
-      title: videoTitle,
-      description: todo.details.description,
-      startTime: 0
+      url: `/assets/tutorials/tutorial_quotation.mp4`, // Placeholder URL
+      title: todo.details.title,
+      description: todo.details.description
     };
-
-    // Initialize the video tutorial
-    this.videoTutorialService.initializeVideo(this.currentVideoConfig);
+    this.mediaPlayerService.launchFloatingPlayer(config);
   }
 
   startWalkthrough(todo: Todo) {
-    // For now, this will play the same video
-    // In the future, this could navigate to interactive guides
-    this.playTutorialVideo(todo);
-    
-    // You could also navigate to specific pages here
-    console.log(`Starting walkthrough for: ${todo.details.title}`);
+    // Logic to start an interactive walkthrough
+    console.log('Starting walkthrough for:', todo.details.title);
   }
 } 

@@ -1,0 +1,16 @@
+<div class="video-placeholder" (click)="playVideo()">
+  <div class="placeholder-content">
+    <div class="thumbnail" [style.background-image]="'url(' + thumbnailUrl + ')'">
+      <div class="play-overlay">
+        <div class="launch-button">
+          <mat-icon>play_circle_outline</mat-icon>
+          <span>Launch Video</span>
+        </div>
+      </div>
+    </div>
+    <div class="video-info" *ngIf="title || description">
+      <h3 class="video-title" *ngIf="title">{{ title }}</h3>
+      <p class="video-description" *ngIf="description">{{ description }}</p>
+    </div>
+  </div>
+</div> 

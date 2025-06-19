@@ -1,14 +1,14 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
-import { TutorialFabComponent } from '../../../components/tutorial/tutorial-fab/tutorial-fab.component';
-import { VideoPlaceholderComponent } from '../../../components/tutorial/video-placeholder/video-placeholder.component';
-import { VideoConfig, VideoTutorialService } from '../../../components/tutorial/services/video-tutorial.service';
+import { MediaPlayerFabComponent } from '../../../components/media-player/fab/media-player-fab.component';
+import { VideoPlaceholderComponent } from '../../../components/media-player/video-placeholder/video-placeholder.component';
+import { MediaConfig, MediaPlayerService } from '../../../components/media-player/services/media-player.service';
 
 @Component({
   selector: 'app-get-started',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, TutorialFabComponent, VideoPlaceholderComponent],
+  imports: [CommonModule, MatButtonModule, MediaPlayerFabComponent, VideoPlaceholderComponent],
   template: `
     <div class="get-started-container">
       <!-- Video Tutorial Section -->
@@ -23,12 +23,19 @@ import { VideoConfig, VideoTutorialService } from '../../../components/tutorial/
             [title]="testVideoConfig.title"
             [description]="testVideoConfig.description"
           ></app-video-placeholder>
+
+          <app-video-placeholder
+            [videoId]="youtubeVideoConfig.id"
+            [videoUrl]="youtubeVideoConfig.url"
+            [title]="youtubeVideoConfig.title"
+            [description]="youtubeVideoConfig.description"
+          ></app-video-placeholder>
         </div>
       </div>
     </div>
     
     <!-- Tutorial FAB for hidden videos -->
-    <app-tutorial-fab></app-tutorial-fab>
+    <app-media-player-fab></app-media-player-fab>
   `,
   styles: [
     `
@@ -68,6 +75,9 @@ import { VideoConfig, VideoTutorialService } from '../../../components/tutorial/
       .video-container {
         max-width: 600px;
         margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
       }
 
       @media (max-width: 768px) {
@@ -82,13 +92,21 @@ import { VideoConfig, VideoTutorialService } from '../../../components/tutorial/
   ],
 })
 export class GetStartedComponent {
-  readonly tutorialService = inject(VideoTutorialService);
+  readonly mediaPlayerService = inject(MediaPlayerService);
 
-  testVideoConfig: VideoConfig = {
+  testVideoConfig: MediaConfig = {
     id: 'test_tutorial',
     url: '/assets/tutorials/tutorial_quotation.mp4',
     title: 'FlowAccount Tutorial - Test Video',
     description: 'This is a test video to demonstrate the video tutorial system capabilities.',
+    startTime: 0
+  };
+
+  youtubeVideoConfig: MediaConfig = {
+    id: 'youtube_test',
+    url: 'https://www.youtube.com/watch?v=LiYV9XKnvjk',
+    title: 'Learn more about the DAC event',
+    description: 'Learn more about the DAC event from this youtube video.',
     startTime: 0
   };
 } 
