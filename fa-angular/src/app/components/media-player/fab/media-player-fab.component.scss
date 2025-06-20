@@ -14,6 +14,8 @@
   transition: all 0.3s ease;
 }
 
+
+
 .fab-container:hover {
   background: rgba(255, 255, 255, 0.25);
   transform: translateY(-2px);
@@ -50,6 +52,116 @@
 
 .separator {
   margin: 0 4px;
+}
+
+// Volume Control Styles
+.volume-control {
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: default;
+}
+
+.volume-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+  user-select: none;
+}
+
+.volume-icon:hover {
+  opacity: 1;
+}
+
+.volume-slider-container {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 12px 8px;
+  margin-bottom: 8px;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-width: 120px;
+}
+
+.volume-slider-container.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.volume-slider {
+  width: 80px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.3);
+  outline: none;
+  border-radius: 2px;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.volume-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.volume-slider::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.1s ease;
+}
+
+.volume-slider::-moz-range-thumb:hover {
+  transform: scale(1.2);
+}
+
+.volume-percentage {
+  font-size: 0.75rem;
+  color: white;
+  opacity: 0.9;
+  user-select: none;
+}
+
+.minimize-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+  user-select: none;
+}
+
+.minimize-icon:hover {
+  opacity: 1;
 }
 
 .close-icon {

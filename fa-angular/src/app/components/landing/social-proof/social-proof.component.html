@@ -1,9 +1,85 @@
 <section class="social-proof-section">
   <div class="container">
-    <h2>Social Proof</h2>
-    <div class="content-box">
-      <div class="placeholder-content">
-        <p>Social proof content will go here</p>
+    <div class="header">
+      <h1>Customer Stories</h1>
+      <p class="subtitle">Learn how leading businesses use FlowAccount to manage and grow their operations</p>
+    </div>
+
+    <!-- Business Navigation Tabs -->
+    <div class="business-tabs">
+      <button 
+        *ngFor="let caseStudy of caseStudies" 
+        class="tab-button"
+        [class.active]="selectedCaseStudy.id === caseStudy.id"
+        (click)="selectCaseStudy(caseStudy)"
+        [attr.aria-label]="'View ' + caseStudy.companyName + ' case study'">
+        <div class="tab-content">
+          <span class="company-name">{{ caseStudy.companyName }}</span>
+          <span class="business-type">{{ caseStudy.businessType }}</span>
+        </div>
+      </button>
+    </div>
+
+    <!-- Case Study Content -->
+    <div class="case-study-content">
+      <!-- Left Side: Use Case and Quote -->
+      <div class="left-panel">
+        <div class="use-case-section">
+          <div class="section-header">
+            <h3>Their challenge</h3>
+          </div>
+          <p>{{ selectedCaseStudy.useCase }}</p>
+        </div>
+
+        <div class="features-section">
+          <div class="section-header">
+            <h3>Key Features Used</h3>
+          </div>
+          <ul>
+            <li *ngFor="let feature of selectedCaseStudy.keyFeatures">
+              <span>{{ feature }}</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="quote-section">
+          <blockquote>
+            "{{ selectedCaseStudy.quote }}"
+          </blockquote>
+          <div class="author">
+            <div class="author-avatar initials">
+              {{ getInitials(selectedCaseStudy.author.name) }}
+            </div>
+            <div class="author-info">
+              <strong>{{ selectedCaseStudy.author.name }}</strong>
+              <span>{{ selectedCaseStudy.author.title }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Side: Overview and Video -->
+      <div class="right-panel">
+        <div class="overview-section">
+          <h2>{{ selectedCaseStudy.overview.title }}</h2>
+          <p>{{ selectedCaseStudy.overview.description }}</p>
+          <div class="video-content">
+            <div class="video-embed">
+              <iframe 
+                [src]="selectedCaseStudy.overview.videoUrl" 
+                frameborder="0" 
+                allowfullscreen
+                title="Customer Story Video">
+              </iframe>
+              <div class="video-overlay">
+                <a [href]="selectedCaseStudy.overview.videoUrl" target="_blank" class="watch-video-btn">
+                  <span class="material-symbols-outlined play-icon">play_arrow</span>
+                  Watch Video
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

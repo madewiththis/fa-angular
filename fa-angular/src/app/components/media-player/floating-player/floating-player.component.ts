@@ -47,6 +47,10 @@ export class FloatingPlayerComponent implements OnInit, OnDestroy {
   state!: PlayerState;
   showPositionSelector = false;
   isHovering = false;
+  showVolumeSlider = false;
+  readonly Math = Math;
+  private previousVolume = 1; // Store volume before muting
+  private volumeHideTimeout: any;
   
   constructor() {
     this.mediaPlayerService.state$.pipe(
@@ -62,6 +66,9 @@ export class FloatingPlayerComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    if (this.volumeHideTimeout) {
+      clearTimeout(this.volumeHideTimeout);
+    }
   }
   
   onMouseLeavePlayer(): void {
@@ -149,6 +156,54 @@ export class FloatingPlayerComponent implements OnInit, OnDestroy {
     return (this.state.currentTime / this.state.duration) * 100;
   }
   
+  // Volume control methods
+  showVolumeControl(): void {
+    if (this.volumeHideTimeout) {
+      clearTimeout(this.volumeHideTimeout);
+      this.volumeHideTimeout = null;
+    }
+    this.showVolumeSlider = true;
+  }
+
+  hideVolumeControl(): void {
+    // Add a delay before hiding to allow mouse movement to slider
+    this.volumeHideTimeout = setTimeout(() => {
+      this.showVolumeSlider = false;
+    }, 300); // 300ms delay
+  }
+
+  toggleMute(): void {
+    if (this.state.volume > 0) {
+      // Currently has volume, so mute it
+      this.previousVolume = this.state.volume;
+      this.mediaPlayerService.setVolume(0);
+    } else {
+      // Currently muted, so restore previous volume
+      this.mediaPlayerService.setVolume(this.previousVolume);
+    }
+  }
+
+  onVolumeChange(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    const volume = parseFloat(target.value);
+    this.mediaPlayerService.setVolume(volume);
+    
+    // Update previousVolume if volume is not 0 (so we can restore it later)
+    if (volume > 0) {
+      this.previousVolume = volume;
+    }
+  }
+
+  getVolumeIcon(volume: number): string {
+    if (volume === 0) {
+      return 'volume_off';
+    } else if (volume < 0.5) {
+      return 'volume_down';
+    } else {
+      return 'volume_up';
+    }
+  }
+
   get playerClasses(): Record<string, boolean> {
     return {
       'floating-player-container': true,

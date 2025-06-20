@@ -13,13 +13,34 @@
           [class.active]="feature === selectedFeature"
           class="feature-button"
         >
-          {{ feature.title }}
+          <div class="button-content">
+            <h4>{{ feature.title }}</h4>
+            <p>{{ feature.description }}</p>
+          </div>
         </button>
-        <button class="feature-button">More</button>
       </div>
-      <div class="text-column" *ngIf="selectedFeature">
-        <h3>{{ selectedFeature.title }}</h3>
-        <p>{{ selectedFeature.description }}</p>
+      <div class="content-column" *ngIf="selectedFeature">
+        <div class="text-content">
+          <h3>{{ selectedFeature.title }}</h3>
+          <p>{{ selectedFeature.content }}</p>
+        </div>
+        <div class="media-content">
+          <video 
+            *ngIf="selectedFeature.mediaType === 'video'" 
+            [src]="selectedFeature.mediaSrc"
+            controls
+            muted
+            class="feature-video"
+            preload="metadata">
+            Your browser does not support the video tag.
+          </video>
+          <img 
+            *ngIf="selectedFeature.mediaType === 'image'" 
+            [src]="selectedFeature.mediaSrc"
+            [alt]="selectedFeature.mediaAlt"
+            class="feature-image"
+            loading="lazy">
+        </div>
       </div>
     </div>
   </div>

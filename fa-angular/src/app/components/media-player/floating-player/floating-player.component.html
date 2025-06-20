@@ -54,7 +54,7 @@
           <mat-icon>{{ state.isPlaying ? 'pause' : 'play_arrow' }}</mat-icon>
         </button>
         <button class="control-button" (click)="toggleSize()" [disabled]="state.isFakeFullscreen">
-          <mat-icon>{{ state.pipSize === 'full' ? 'unfold_less' : 'unfold_more' }}</mat-icon>
+          <mat-icon>{{ state.pipSize === 'full' ? 'collapse_content' : 'expand_content' }}</mat-icon>
         </button>
         <button class="control-button" (click)="toggleFullscreen()">
           <mat-icon>{{ state.isFakeFullscreen ? 'fullscreen_exit' : 'fullscreen' }}</mat-icon>
@@ -62,6 +62,34 @@
         <button class="control-button" (click)="togglePositionSelector()" [disabled]="state.isFakeFullscreen">
           <mat-icon>open_with</mat-icon>
         </button>
+        
+        <!-- Volume Control -->
+        <div class="volume-control-container" 
+             (mouseenter)="showVolumeControl()" 
+             (mouseleave)="hideVolumeControl()">
+          <button class="control-button volume-button" (click)="toggleMute()">
+            <mat-icon>{{ getVolumeIcon(state.volume) }}</mat-icon>
+          </button>
+          
+          <div class="volume-slider-overlay" 
+               [class.visible]="showVolumeSlider"
+               (mouseenter)="showVolumeControl()" 
+               (mouseleave)="hideVolumeControl()">
+            <div class="volume-percentage">{{ Math.round(state.volume * 100) }}%</div>
+            <input 
+              type="range" 
+              class="volume-slider vertical"
+              min="0" 
+              max="1" 
+              step="0.01"
+              [value]="state.volume"
+              (input)="onVolumeChange($event)"
+              (click)="$event.stopPropagation()"
+              orient="vertical"
+              aria-label="Volume slider">
+          </div>
+        </div>
+        
         <button class="control-button" (click)="minimize()">
           <mat-icon>minimize</mat-icon>
         </button>

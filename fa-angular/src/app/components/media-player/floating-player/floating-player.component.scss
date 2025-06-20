@@ -374,4 +374,105 @@
       0 3px 6px rgba(0, 0, 0, 0.23);
     transform: translateY(-1px);
   }
+}
+
+/* Volume Control Styles */
+.volume-control-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.volume-button {
+  // Inherits all control-button styles
+}
+
+.volume-slider-overlay {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--controller-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 4px;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-height: 120px;
+  min-width: 50px;
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.14),
+    0 3px 4px rgba(0, 0, 0, 0.12),
+    0 1px 5px rgba(0, 0, 0, 0.20);
+}
+
+.volume-slider-overlay.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.volume-slider {
+  width: 4px;
+  height: 80px;
+  background: rgba(255, 255, 255, 0.3);
+  outline: none;
+  border-radius: 10px; /* Full rounded corners */
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.volume-slider.vertical {
+  writing-mode: bt-lr; /* IE */
+  -webkit-appearance: slider-vertical; /* WebKit */
+}
+
+.volume-slider::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  background: var(--primary-color);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+  border: 2px solid white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.volume-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  background: var(--primary-hover);
+}
+
+.volume-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  background: var(--primary-color);
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid white;
+  transition: transform 0.1s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.volume-slider::-moz-range-thumb:hover {
+  transform: scale(1.2);
+  background: var(--primary-hover);
+}
+
+.volume-percentage {
+  font-size: 0.75rem;
+  color: white;
+  opacity: 0.9;
+  user-select: none;
+  font-weight: 500;
 } 

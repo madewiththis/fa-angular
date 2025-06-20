@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -29,11 +29,24 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
     ])
   ]
 })
-export class MediaPlayerFabComponent {
+export class MediaPlayerFabComponent implements OnInit {
   private readonly mediaPlayerService = inject(MediaPlayerService);
   public readonly state$: Observable<PlayerState> = this.mediaPlayerService.state$;
   
+  // Volume control properties
+  public showVolumeSlider = false;
+  public readonly Math = Math; // Expose Math object to template
+  
+  ngOnInit() {
+    // Component initialized
+  }
+  
   fabState(state: PlayerState): 'hidden' | 'visible' {
+    // Temporarily show FAB when there's any video loaded for testing volume control
+    if (state.videoId && state.isInitialized) {
+      return 'visible';
+    }
+    
     if (state.isMinimized) {
       return 'hidden';
     }
@@ -42,6 +55,11 @@ export class MediaPlayerFabComponent {
 
   restore(): void {
     this.mediaPlayerService.restore();
+  }
+
+  minimize(event: MouseEvent): void {
+    event.stopPropagation();
+    this.mediaPlayerService.minimizeVideo(this.mediaPlayerService.currentState.currentTime);
   }
 
   close(event: MouseEvent): void {
@@ -53,5 +71,27 @@ export class MediaPlayerFabComponent {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = Math.floor(seconds % 60);
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  }
+
+  // Volume control methods
+  toggleVolumeSlider(event: MouseEvent): void {
+    event.stopPropagation();
+    this.showVolumeSlider = !this.showVolumeSlider;
+  }
+
+  onVolumeChange(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    const volume = parseFloat(target.value);
+    this.mediaPlayerService.setVolume(volume);
+  }
+
+  getVolumeIcon(volume: number): string {
+    if (volume === 0) {
+      return 'volume_off';
+    } else if (volume < 0.5) {
+      return 'volume_down';
+    } else {
+      return 'volume_up';
+    }
   }
 }
