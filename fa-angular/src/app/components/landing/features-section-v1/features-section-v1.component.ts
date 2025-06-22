@@ -19,13 +19,13 @@ interface UserRole {
 }
 
 @Component({
-  selector: 'app-features-section',
+  selector: 'app-features-section-v1',
   standalone: true,
   imports: [CommonModule, FixedPlayerComponent],
-  templateUrl: './features-section.html',
-  styleUrl: './features-section.scss'
+  templateUrl: './features-section-v1.html',
+  styleUrl: './features-section-v1.scss'
 })
-export class FeaturesSectionComponent implements OnInit {
+export class FeaturesSectionV1Component implements OnInit {
   private readonly mediaPlayerService = inject(MediaPlayerService);
 
   userRoles: UserRole[] = [
@@ -132,4 +132,4 @@ export class FeaturesSectionComponent implements OnInit {
       this.initializeVideoPlayer(this.selectedFeature);
     }
   }
-}
+} 

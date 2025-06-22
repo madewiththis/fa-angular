@@ -24,6 +24,7 @@ export class VideoPlayerComponent implements OnInit, OnChanges, AfterViewInit, O
   @Input() src!: string;
   @Input() isPlaying = false;
   @Input() seekTime: number | null = null;
+  @Input() volume = 1;
 
   @Output() timeUpdate = new EventEmitter<number>();
   @Output() durationChange = new EventEmitter<number>();
@@ -50,6 +51,11 @@ export class VideoPlayerComponent implements OnInit, OnChanges, AfterViewInit, O
       this.determineVideoType();
       this.loadVideo();
       return;
+    }
+    
+    // Handle volume changes
+    if (changes['volume']) {
+      this.setVolume();
     }
     
     // If a seek is requested, store the intent to play and then seek.
@@ -134,10 +140,21 @@ export class VideoPlayerComponent implements OnInit, OnChanges, AfterViewInit, O
       this.onSeeked(); // Still notify the parent that the seek command was sent
     }
   }
+
+  private setVolume(): void {
+    if (this.videoType === 'html5' && this.videoElement?.nativeElement) {
+      this.videoElement.nativeElement.volume = this.volume;
+    } else if (this.videoType === 'youtube' && this.youtubePlayer && typeof this.youtubePlayer.setVolume === 'function') {
+      this.youtubePlayer.setVolume(this.volume * 100); // YouTube volume is 0-100
+    }
+  }
   
   onLoaded(): void {
     this.loaded.emit();
     this.onDurationChange();
+    
+    // Set initial volume
+    this.setVolume();
     
     // Handle initial seek time if provided (important for restored minimized videos)
     if (this.seekTime !== null) {
@@ -206,6 +223,10 @@ export class VideoPlayerComponent implements OnInit, OnChanges, AfterViewInit, O
   private onYouTubePlayerReady(event: { target: any }): void {
     this.loaded.emit();
     this.durationChange.emit(this.youtubePlayer.getDuration());
+    
+    // Set initial volume
+    this.setVolume();
+    
     if (this.seekTime) {
       // Set the flag before seeking
       this.playAfterSeek = this.isPlaying;

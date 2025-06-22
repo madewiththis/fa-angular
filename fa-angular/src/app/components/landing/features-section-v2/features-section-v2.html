@@ -1,0 +1,109 @@
+<section class="features-section">
+  <div class="container">
+    <div class="headings">
+      <div class="main-heading">
+        <h2>Features.</h2>
+      </div>
+    </div>
+    
+    <div class="role-selection">
+      <div class="role-buttons">
+        <button
+          *ngFor="let role of userRoles"
+          (click)="selectRole(role)"
+          [class.active]="role === selectedRole"
+          class="role-button"
+        >
+          {{ role.label }}
+        </button>
+      </div>
+    </div>
+    
+    <!-- Card View -->
+    <div class="features-grid" *ngIf="currentView === 'cards'">
+      <div 
+        *ngFor="let feature of filteredFeatures"
+        (click)="selectFeature(feature)"
+        class="feature-card"
+      >
+        <div class="card-media">
+          <img 
+            [src]="feature.mediaSrc"
+            [alt]="feature.mediaAlt"
+            class="card-image"
+            loading="lazy">
+          <div class="play-overlay" *ngIf="feature.mediaType === 'video'">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+          </div>
+        </div>
+        <div class="card-content">
+          <h3>{{ feature.title }}</h3>
+          <p>{{ feature.description }}</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Content View -->
+    <div class="content-view" *ngIf="currentView === 'content' && selectedFeature">
+      <div class="content-sidebar">
+        <div class="sidebar-header">
+          <h4>Features</h4>
+        </div>
+        <div class="mini-cards">
+          <div 
+            *ngFor="let feature of filteredFeatures"
+            (click)="selectFeature(feature)"
+            [class.active]="feature === selectedFeature"
+            class="mini-card"
+          >
+            <img 
+              [src]="feature.mediaSrc"
+              [alt]="feature.mediaAlt"
+              class="mini-image"
+              loading="lazy">
+            <div class="mini-content">
+              <h5>{{ feature.title }}</h5>
+              <div class="play-indicator" *ngIf="feature.mediaType === 'video'">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="content-main">
+        <div class="content-header">
+          <h3>{{ selectedFeature.title }}</h3>
+          <button (click)="closeContent()" class="close-button" aria-label="Close">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+            </svg>
+          </button>
+        </div>
+        
+        <div class="content-body">
+          <div class="content-text">
+            <p>{{ selectedFeature.content }}</p>
+          </div>
+          
+          <div class="content-media">
+            <app-fixed-player 
+              *ngIf="selectedFeature.mediaType === 'video'" 
+              class="feature-video">
+            </app-fixed-player>
+            <img 
+              *ngIf="selectedFeature.mediaType === 'image'" 
+              [src]="selectedFeature.mediaSrc"
+              [alt]="selectedFeature.mediaAlt"
+              class="feature-image"
+              loading="lazy">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section> 

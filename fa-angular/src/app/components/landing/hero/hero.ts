@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HeroImageComponent } from './hero-image/hero-image.component';
+import { HeroBentoComponent } from './hero-bento/hero-bento.component';
 
 @Component({
   selector: 'app-hero',
   standalone: true,
-  imports: [CommonModule, HeroImageComponent],
+  imports: [CommonModule, HeroBentoComponent],
   templateUrl: './hero.html',
   styleUrl: './hero.scss',
   host: {

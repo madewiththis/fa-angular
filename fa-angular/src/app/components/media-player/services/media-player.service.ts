@@ -24,6 +24,8 @@ export interface PlayerState {
   isFakeFullscreen: boolean;
   // for seeking
   seekTo: number | null;
+  // Player mode - floating or fixed
+  playerMode: 'floating' | 'fixed';
 }
 
 export interface MediaConfig {
@@ -32,6 +34,7 @@ export interface MediaConfig {
   title?: string;
   description?: string;
   startTime?: number;
+  mode?: 'floating' | 'fixed';
 }
 
 @Injectable({
@@ -59,6 +62,7 @@ export class MediaPlayerService {
     timeBeforeMinimize: null,
     isFakeFullscreen: false,
     seekTo: null,
+    playerMode: 'fixed',
   };
 
   private readonly stateSubject = new BehaviorSubject<PlayerState>(this.initialState);
@@ -75,6 +79,7 @@ export class MediaPlayerService {
     
     const savedPosition = this.loadVideoPosition(config.id);
     const startTime = config.startTime !== undefined ? config.startTime : savedPosition;
+    const mode = config.mode || 'fixed';
     
     const newState: PlayerState = {
       ...this.initialState,
@@ -84,17 +89,19 @@ export class MediaPlayerService {
       description: config.description,
       currentTime: startTime,
       isInitialized: true,
-      isFloating: currentState.isFloating,
+      isFloating: mode === 'floating' ? true : currentState.isFloating,
       pipPosition: currentState.pipPosition,
       pipSize: currentState.pipSize,
-      isFakeFullscreen: false
+      isFakeFullscreen: false,
+      playerMode: mode
     };
     
     this.stateSubject.next(newState);
     this.trackEvent('video_init', { 
       videoId: config.id,
       startTime: startTime,
-      savedPosition: savedPosition
+      savedPosition: savedPosition,
+      mode: mode
     });
   }
 
@@ -160,13 +167,27 @@ export class MediaPlayerService {
   }
 
   enterFloating(): void {
-    this.updateState({ isFloating: true });
+    this.updateState({ isFloating: true, playerMode: 'floating' });
     this.trackEvent('video_floating_enter', { 
       videoId: this.currentState.videoId
     });
   }
 
+  enterFixed(): void {
+    this.updateState({ isFloating: false, playerMode: 'fixed' });
+    this.trackEvent('video_fixed_enter', { 
+      videoId: this.currentState.videoId
+    });
+  }
+
   exitFloating(): void {
+    if(this.currentState.videoId) {
+        this.saveVideoPosition(this.currentState.videoId, this.currentState.currentTime);
+    }
+    this.updateState({ ...this.initialState });
+  }
+
+  exitFixed(): void {
     if(this.currentState.videoId) {
         this.saveVideoPosition(this.currentState.videoId, this.currentState.currentTime);
     }
@@ -199,6 +220,28 @@ export class MediaPlayerService {
 
   seekTo(time: number): void {
     this.updateState({ seekTo: time, isPlaying: true });
+  }
+
+  skipBackward(seconds: number = 10): void {
+    const newTime = Math.max(0, this.currentState.currentTime - seconds);
+    this.seekTo(newTime);
+    this.trackEvent('video_skip_backward', { 
+      videoId: this.currentState.videoId,
+      fromTime: this.currentState.currentTime,
+      toTime: newTime,
+      skipAmount: seconds
+    });
+  }
+
+  skipForward(seconds: number = 10): void {
+    const newTime = Math.min(this.currentState.duration || this.currentState.currentTime + seconds, this.currentState.currentTime + seconds);
+    this.seekTo(newTime);
+    this.trackEvent('video_skip_forward', { 
+      videoId: this.currentState.videoId,
+      fromTime: this.currentState.currentTime,
+      toTime: newTime,
+      skipAmount: seconds
+    });
   }
 
   reset(): void {
@@ -300,6 +343,24 @@ export class MediaPlayerService {
       description: config.description ?? null,
       currentTime: startTime,
       isPlaying: true,
+      playerMode: 'floating'
+    });
+  }
+
+  launchFixedPlayer(config: MediaConfig): void {
+    const savedPosition = this.loadVideoPosition(config.id);
+    const startTime = config.startTime !== undefined ? config.startTime : savedPosition;
+
+    this.updateState({
+      ...this.initialState,
+      isFloating: false,
+      videoId: config.id,
+      videoUrl: config.url,
+      title: config.title ?? null,
+      description: config.description ?? null,
+      currentTime: startTime,
+      isPlaying: true,
+      playerMode: 'fixed'
     });
   }
 } 

@@ -1,0 +1,87 @@
+<ng-container *ngIf="state.playerMode === 'fixed' && state.videoUrl">
+  <!-- Main Fixed Player -->
+  <div 
+    #playerContainer 
+    [ngClass]="playerClasses"
+    (mouseenter)="onMouseEnterPlayer()"
+    (mouseleave)="onMouseLeavePlayer()">
+    <div class="video-wrapper">
+      <app-video-player 
+        [src]="state.videoUrl!"
+        [isPlaying]="state.isPlaying"
+        [seekTime]="state.seekTo"
+        [volume]="state.volume"
+        (timeUpdate)="onTimeUpdate($event)"
+        (durationChange)="onDurationChange($event)"
+        (loaded)="onLoaded()"
+        (seeked)="onSeeked()"
+      >
+      </app-video-player>
+    </div>
+
+    <!-- Hover Controls Overlay -->
+    <div class="controls-overlay" [class.show-controls]="isHovering">
+      <!-- Unified Control Group (anchored to bottom) -->
+      <div class="unified-control-group">
+        <!-- Controls Row with inline progress bar -->
+        <div class="main-controls">
+          <!-- Left control group -->
+          <div class="control-group-left">
+            <button class="control-button" (click)="mediaPlayerService.setPlaying(!state.isPlaying)">
+              <mat-icon>{{ state.isPlaying ? 'pause' : 'play_arrow' }}</mat-icon>
+            </button>
+            
+            <!-- Volume Control -->
+            <div class="volume-control-container" 
+                 (mouseenter)="showVolumeControl()" 
+                 (mouseleave)="hideVolumeControl()">
+              <button class="control-button volume-button" (click)="toggleMute()">
+                <mat-icon>{{ getVolumeIcon(state.volume) }}</mat-icon>
+              </button>
+              
+              <div class="volume-slider-overlay" 
+                   [class.visible]="showVolumeSlider"
+                   (mouseenter)="showVolumeControl()" 
+                   (mouseleave)="hideVolumeControl()">
+                <input 
+                  type="range" 
+                  class="volume-slider horizontal"
+                  min="0" 
+                  max="1" 
+                  step="0.01"
+                  [value]="state.volume"
+                  (input)="onVolumeChange($event)"
+                  (click)="$event.stopPropagation()"
+                  aria-label="Volume slider">
+                <div class="volume-percentage">{{ Math.round(state.volume * 100) }}%</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Inline Progress Bar -->
+          <div class="progress-container"
+               (mouseenter)="showProgressTime = true" 
+               (mouseleave)="showProgressTime = false"
+               (mousemove)="onProgressHover($event)">
+            <div class="progress-bar-container" (click)="onProgressBarClick($event)">
+              <div class="progress-bar-fill" [style.width.%]="progressPercent"></div>
+              <!-- Hover time tooltip -->
+              <div class="progress-time-tooltip" 
+                   [class.visible]="showProgressTime"
+                   [style.left.%]="hoverTimePosition">
+                {{ formatTime(hoverTime) }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Right control group -->
+          <div class="control-group-right">
+            <button class="control-button" (click)="toggleFullscreen()">
+              <mat-icon>{{ state.isFakeFullscreen ? 'fullscreen_exit' : 'fullscreen' }}</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container> 
