@@ -10,7 +10,7 @@
         (click)="handleCardHover(item.id)"
       >
         <!-- Thumbnail Content -->
-        <div *ngIf="!isExpanded(item.id)" class="thumbnail-content">
+        <div *ngIf="shouldShowThumbnail(item.id)" class="thumbnail-content">
           <div class="icon-container">
             <mat-icon>{{ item.icon }}</mat-icon>
           </div>
@@ -67,7 +67,7 @@
         (click)="handleCardHover(item.id)"
       >
         <!-- Thumbnail Content -->
-        <div *ngIf="!isExpanded(item.id)" class="thumbnail-content">
+        <div *ngIf="shouldShowThumbnail(item.id)" class="thumbnail-content">
           <div class="icon-container">
             <mat-icon>{{ item.icon }}</mat-icon>
           </div>

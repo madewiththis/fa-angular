@@ -38,6 +38,7 @@
 .bento-card-thumbnail {
   flex: 1;
   opacity: 0.8;
+  transition: all 0.3s ease-in-out;
 }
 
 .bento-card-thumbnail:hover {
@@ -64,6 +65,8 @@
   position: absolute;
   top: 0;
   left: 0;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
 }
 
 .icon-container {
@@ -112,6 +115,7 @@
   opacity: 0;
   pointer-events: none;
   transition-delay: 0s; /* Fade out immediately when collapsing */
+  transition-duration: 0.25s; /* Faster fade out */
 }
 
 .expanded-header {

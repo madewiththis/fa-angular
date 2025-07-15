@@ -16,6 +16,8 @@ export class HeroBentoComponent implements OnInit, OnDestroy {
   isAutoRotating = true;
   private autoRotationInterval: any;
   private resumeAutoRotationTimeout: any;
+  private isTransitioningGlobal = false;
+  private transitionTimeout: any;
 
   bentoItems: BentoItem[] = BENTO_ITEMS;
 
@@ -35,6 +37,9 @@ export class HeroBentoComponent implements OnInit, OnDestroy {
     this.stopAutoRotation();
     if (this.resumeAutoRotationTimeout) {
       clearTimeout(this.resumeAutoRotationTimeout);
+    }
+    if (this.transitionTimeout) {
+      clearTimeout(this.transitionTimeout);
     }
   }
 
@@ -56,9 +61,24 @@ export class HeroBentoComponent implements OnInit, OnDestroy {
   }
 
   handleCardHover(cardId: number): void {
+    if (this.expandedCard === cardId) return; // Don't re-trigger if already expanded
+    
     this.isAutoRotating = false;
     this.stopAutoRotation();
-    this.expandedCard = cardId;
+    
+    // Clear any existing transition timeout
+    if (this.transitionTimeout) {
+      clearTimeout(this.transitionTimeout);
+    }
+    
+    // Set global transitioning state to hide all thumbnails during transition
+    this.isTransitioningGlobal = true;
+    
+    // Delay the card expansion to allow current content to fade out
+    this.transitionTimeout = setTimeout(() => {
+      this.expandedCard = cardId;
+      this.isTransitioningGlobal = false;
+    }, 250); // 250ms to match the faster content fade out timing
 
     // Clear any existing timeout
     if (this.resumeAutoRotationTimeout) {
@@ -93,6 +113,11 @@ export class HeroBentoComponent implements OnInit, OnDestroy {
 
   isExpanded(cardId: number): boolean {
     return cardId === this.expandedCard;
+  }
+
+  shouldShowThumbnail(cardId: number): boolean {
+    // Show thumbnail only if not expanded and not in global transition state
+    return !this.isExpanded(cardId) && !this.isTransitioningGlobal;
   }
 
   getCardClasses(cardId: number): string {

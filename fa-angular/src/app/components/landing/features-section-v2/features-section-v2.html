@@ -26,21 +26,14 @@
         (click)="selectFeature(feature)"
         class="feature-card"
       >
-        <div class="card-media">
-          <img 
-            [src]="feature.mediaSrc"
-            [alt]="feature.mediaAlt"
-            class="card-image"
-            loading="lazy">
-          <div class="play-overlay" *ngIf="feature.mediaType === 'video'">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M8 5v14l11-7z"/>
-            </svg>
-          </div>
-        </div>
         <div class="card-content">
           <h3>{{ feature.title }}</h3>
           <p>{{ feature.description }}</p>
+          <div class="play-indicator" *ngIf="feature.mediaType === 'video'">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+          </div>
         </div>
       </div>
     </div>
