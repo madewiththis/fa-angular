@@ -36,6 +36,7 @@ export class FeaturesSectionV2Component implements OnInit {
   selectedFeature: Feature | null = null;
 
   userRoles: UserRole[] = [
+    
     { id: 'owner', label: 'Owners' },
     { id: 'admin', label: 'Admins' },
     { id: 'accountant', label: 'Accountants' },

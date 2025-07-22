@@ -119,6 +119,20 @@ export const routes: Routes = [
             (m) => m.ExpensesComponent
           ),
       },
+      {
+        path: 'packages',
+        loadComponent: () =>
+          import('./components/checkout/package-selection/package-selection.component').then(
+            (m) => m.PackageSelectionComponent
+          ),
+      },
+      {
+        path: 'checkout',
+        loadComponent: () =>
+          import('./components/checkout/checkout-page/checkout-page.component').then(
+            (m) => m.CheckoutPageComponent
+          ),
+      },
       { path: '**', redirectTo: '/dashboard' },
     ],
   },

@@ -1,0 +1,745 @@
+// Ensure FontAwesome icons render properly on page load
+i[class*="fa-"], i[class*="fas"], i[class*="far"], i[class*="fab"] {
+  display: inline-block !important;
+  font-style: normal !important;
+  font-variant: normal !important;
+  text-rendering: auto !important;
+  -webkit-font-smoothing: antialiased !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.checkout-alt-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: white;
+  min-height: 100vh;
+}
+
+.checkout-header {
+  text-align: center;
+  margin-bottom: 40px;
+  
+  .back-button {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    font-size: 14px;
+    margin-bottom: 20px;
+    
+    .back-icon {
+      font-size: 18px;
+      font-weight: bold;
+    }
+    
+    &:hover {
+      color: #333;
+    }
+  }
+  
+  h1 {
+    font-size: 28px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 10px 0;
+  }
+  
+  .subtitle {
+    color: #666;
+    font-size: 16px;
+    margin: 0;
+  }
+}
+
+.checkout-content {
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+}
+
+.payment-form-container {
+  flex: 2;
+  max-width: 600px;
+}
+
+.payment-detail-container {
+  flex: 1;
+  max-width: 400px;
+}
+
+.payment-detail-box {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 24px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+
+  h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 20px 0;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 15px;
+  }
+
+  .package-name {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 15px;
+  }
+
+  .package-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+
+    .option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 15px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: white;
+
+      &.selected {
+        border-color: #4285f4;
+        background-color: #f8f9ff;
+      }
+
+      .option-details {
+        flex: 1;
+      }
+
+      .duration {
+        font-weight: 500;
+      }
+
+      .discount {
+        color: #4285f4;
+        font-size: 12px;
+        margin-left: 8px;
+      }
+
+      .price {
+        font-weight: 600;
+      }
+    }
+  }
+
+  .coupon-section {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+
+    input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+    }
+
+    .apply-button {
+      padding: 10px 20px;
+      background-color: #4285f4;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  }
+
+  .tax-withheld {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    font-size: 14px;
+
+    label {
+      flex: 1;
+    }
+
+    span {
+      font-size: 12px;
+      color: #666;
+    }
+
+    .withheld-amount {
+      font-weight: 500;
+    }
+  }
+
+  .total-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+
+  .vat-notice {
+    text-align: right;
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 20px;
+  }
+
+  .confirm-button {
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: 600;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-bottom: 20px;
+
+    &:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+  }
+
+  .security-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    color: #666;
+
+    .payment-logo {
+      height: 15px;
+    }
+
+    .omise-logo {
+      height: 15px;
+    }
+
+    .powered-by {
+      margin-left: 5px;
+      margin-right: 5px;
+    }
+  }
+}
+
+.payment-section {
+  max-width: 600px;
+  width: 100%;
+  
+  .form-step {
+    margin-bottom: 40px;
+    
+    .step-container {
+      display: flex;
+      gap: 15px;
+      align-items: flex-start;
+      
+      .step-number {
+        background: #4285f4;
+        color: white;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        font-weight: 600;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+      
+      .step-content {
+        flex: 1;
+        
+        h3 {
+          font-size: 20px;
+          font-weight: 600;
+          color: #333;
+          margin: 0 0 20px 0;
+        }
+      }
+    }
+  }
+}
+
+.payment-methods {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin-bottom: 30px;
+  
+  
+  .payment-method {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding-left: 16px;
+    padding-right: 0px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-align: center;
+    min-height: 80px;
+    
+    &.selected {
+      border-color: #4285f4;
+      background-color: #f8f9ff;
+    }
+    
+    input[type="radio"] {
+      margin: 0;
+      flex-shrink: 0;
+      align-self: center;
+    }
+    
+    .method-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      align-items: flex-start;
+      
+      i {
+        font-size: 16px;
+        color: #666;
+      }
+      
+      .method-name {
+        font-size: 14px;
+        color: #666;
+        line-height: 1.2;
+        font-weight: 500;
+      }
+    }
+    
+    &.selected .method-content i {
+      color: #4285f4;
+    }
+  }
+}
+
+.card-form {
+  .form-group {
+    margin-bottom: 20px;
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #333;
+      font-weight: 500;
+      
+      .required {
+        color: #f44336;
+      }
+    }
+    
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+      box-sizing: border-box;
+      
+      &:focus {
+        outline: none;
+        border-color: #4285f4;
+        box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.1);
+      }
+      
+      &::placeholder {
+        color: #999;
+      }
+    }
+  }
+  
+  .input-with-help-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    input {
+      flex: 1;
+    }
+
+    .help-icon {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #4285f4;
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: white;
+      cursor: help;
+      font-weight: bold;
+      font-style: normal;
+
+      &:hover .help-tooltip {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+  }
+
+  .input-with-icon {
+    position: relative;
+  }
+  
+  .input-with-icon input {
+    padding-right: 30px; 
+    width: 100%;
+  }
+  
+  .input-with-icon .help-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #4285f4;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: white;
+    cursor: help;
+    font-weight: bold;
+    font-style: normal;
+  }
+
+  .ng-invalid.ng-touched {
+    border-color: #f44336 !important;
+  }
+  
+  .error-message {
+    color: #f44336;
+    font-size: 12px;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 30px;
+    
+    .form-group {
+      margin-bottom: 0;
+    }
+  }
+  
+  .cvv-input-container {
+    position: relative;
+    
+    input {
+      padding-right: 40px !important;
+    }
+    
+    .cvv-toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #666;
+      cursor: pointer;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      
+      i {
+        font-size: 14px;
+        display: inline-block !important;
+        width: 14px;
+        height: 14px;
+        line-height: 1;
+        font-style: normal;
+        font-weight: 900;
+        text-align: center;
+        
+        &:hover {
+          color: #4285f4;
+        }
+      }
+    }
+  }
+  
+  .auto-renew-notice {
+    font-size: 12px;
+    color: #666;
+    margin-top: 15px;
+    line-height: 1.4;
+  }
+}
+
+.invoice-notice {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+  
+  a {
+    color: #4285f4;
+    text-decoration: none;
+  }
+}
+
+.invoice-types {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 30px;
+  
+  .invoice-type {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-align: center;
+    min-height: 90px;
+    position: relative;
+    
+    &.selected {
+      border-color: #4285f4;
+      background-color: #f8f9ff;
+      
+      .type-content i {
+        color: #4285f4;
+      }
+    }
+    
+    input[type="radio"] {
+      margin: 0;
+      flex-shrink: 0;
+      align-self: center;
+    }
+    
+    .type-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      justify-content: center;
+      
+      i {
+        font-size: 20px;
+        color: #666;
+        flex-shrink: 0;
+        display: inline-block !important;
+        width: 20px;
+        height: 20px;
+        line-height: 1;
+        font-style: normal;
+        font-weight: 900;
+        text-align: center;
+      }
+      
+      .type-name {
+        font-size: 14px;
+        color: #666;
+        line-height: 1.2;
+        font-weight: 500;
+      }
+    }
+    
+    &.selected .type-content i {
+      color: #4285f4;
+    }
+  }
+}
+
+.invoice-form {
+  .form-group {
+    position: relative;
+    margin-bottom: 20px;
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #333;
+      font-weight: 500;
+      
+      .required {
+        color: #f44336;
+      }
+    }
+    
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      box-sizing: border-box;
+      
+      &:focus {
+        outline: none;
+        border-color: #4285f4;
+        box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.1);
+      }
+      
+      &::placeholder {
+        color: #999;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+    }
+    
+    .label-with-help {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .help-icon {
+      position: relative;
+      background: #4285f4;
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: white;
+      cursor: help;
+      font-weight: bold;
+      font-style: normal;
+
+      &:hover .help-tooltip {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+
+    .help-tooltip {
+      position: absolute;
+      top: 25px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      padding: 12px;
+      min-width: 200px;
+      z-index: 10;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.2s ease;
+
+      .tooltip-header {
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #333;
+        font-size: 12px;
+      }
+
+      ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+
+        li {
+          margin-bottom: 4px;
+          font-size: 11px;
+          color: #666;
+          line-height: 1.4;
+        }
+      }
+    }
+  }
+  
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+    
+    .form-group {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .payment-methods {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    
+    .payment-method {
+      padding: 14px;
+      min-height: 70px;
+      gap: 12px;
+    }
+  }
+  
+  .card-form .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+    margin-bottom: 20px;
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+  }
+  
+  .invoice-types {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    
+    .invoice-type {
+      padding: 12px;
+      min-height: 50px;
+      gap: 10px;
+    }
+  }
+  
+  .invoice-form .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+  }
+} 

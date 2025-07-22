@@ -1,0 +1,173 @@
+<div class="pricing-page">
+  <!-- Header Section -->
+  <div class="header-section">
+    <button class="back-button" (click)="goBack()">
+      <span class="back-arrow">←</span> Back
+    </button>
+    <h1 class="main-title">Choose the right plan for your business</h1>
+    <p class="subtitle">Join over 123,983 businesses already using FlowAccount</p>
+    
+    <!-- Rating -->
+    <div class="rating-section">
+      <div class="stars">
+        <span class="star">★</span>
+        <span class="star">★</span>
+        <span class="star">★</span>
+        <span class="star">★</span>
+        <span class="star">★</span>
+      </div>
+      <span class="rating-text">4.9/5 from 888 reviews</span>
+    </div>
+
+    <!-- Feature Highlights -->
+    <div class="feature-highlights">
+      <div class="feature-item">
+        <span class="checkmark">✓</span>
+        <span>Mobile App</span>
+      </div>
+      <div class="feature-item">
+        <span class="checkmark">✓</span>
+        <span>Instant Setup</span>
+      </div>
+      <div class="feature-item">
+        <span class="checkmark">✓</span>
+        <span>Expert Support</span>
+      </div>
+    </div>
+  </div>
+
+      <!-- Features Comparison Table -->
+  <div class="features-table">
+    <!-- Integrated Header Row with Pricing Cards -->
+    <div class="table-row pricing-header-row">
+      <!-- Help Section in First Column -->
+      <div class="help-section">
+        <h3>Need help choosing?</h3>
+        <p>Contact us on every<br>Monday - Friday 9AM - 6PM</p>
+        <div class="contact-info">
+          <button class="phone-button" (click)="callSupport()">
+            📞 02-026-8989
+          </button>
+          <span class="or">or</span>
+          <button class="chat-button" (click)="openChat()">
+            Chat Now >
+          </button>
+        </div>
+      </div>
+
+      <!-- Pricing Cards as Header Columns -->
+      <div class="pricing-card header-pricing-card" *ngFor="let plan of plans" [class.highlighted]="plan.id === 'pro'">
+        <div class="card-header">
+          <h3 class="plan-name">{{ plan.name }}</h3>
+          <p class="plan-description">{{ plan.description }}</p>
+        </div>
+
+        <div class="pricing-info">
+          <div class="price-main">
+            <span class="currency">{{ plan.currency }}</span>
+            <span class="price">{{ plan.annualPrice }}</span>
+            <span class="period">/month</span>
+          </div>
+          <p class="billing-note">Billed annually</p>
+          <div class="savings-badge">Save 17% = {{ plan.currency }}{{ plan.savings }}</div>
+          
+          <div class="price-alternative">
+            <span class="or">or</span>
+            <div class="monthly-price">
+              <span class="currency">{{ plan.currency }}</span>
+              <span class="price">{{ plan.monthlyPrice }}</span>
+              <span class="period">/month</span>
+            </div>
+          </div>
+        </div>
+
+        <button class="trial-button" (click)="startFreeTrial(plan)">
+          {{ plan.buttonText }}
+          <div class="button-subtext">{{ plan.buttonSubtext }}</div>
+        </button>
+      </div>
+    </div>
+
+    <ng-container *ngFor="let section of featureSections">
+      <!-- Main Feature Row -->
+      <div class="table-row feature-section-row" [class.expanded]="section.expanded">
+        <div class="feature-label main-feature" (click)="toggleFeatureSection(section)">
+          {{ section.label }}
+          <span class="expand-icon" *ngIf="section.subFeatures.length > 0" [class.rotated]="section.expanded">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+              <path d="M4.5 3L7.5 6L4.5 9"/>
+            </svg>
+          </span>
+        </div>
+        <div class="plan-column" *ngFor="let plan of plans">
+          <div class="feature-value" [class.has-crossmark]="section.key !== 'users' && !getFeatureValue(plan, section.key)">
+            <ng-container *ngIf="section.key === 'users'">
+              {{ plan.users }}
+            </ng-container>
+            <ng-container *ngIf="section.key !== 'users'">
+              <span class="checkmark" *ngIf="getFeatureValue(plan, section.key); else crossmark">✓</span>
+              <ng-template #crossmark>
+                <span class="crossmark">✗</span>
+              </ng-template>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sub-features (when expanded) -->
+      <ng-container *ngIf="section.expanded && section.subFeatures.length > 0">
+        <div class="table-row sub-feature-row" *ngFor="let subFeature of section.subFeatures">
+          <div class="feature-label sub-feature">
+            {{ subFeature.name }}
+            <!-- Add platform icons for specific features -->
+            <div class="platform-icons" *ngIf="subFeature.name.includes('Lazada') || subFeature.name.includes('Shopee') || subFeature.name.includes('banks')">
+              <span class="icon lazada" *ngIf="subFeature.name.includes('Lazada')">🛒</span>
+              <span class="icon shopee" *ngIf="subFeature.name.includes('Shopee')">🛍️</span>
+              <span class="icon tiktok" *ngIf="subFeature.name.includes('Tiktok')">🎵</span>
+              <span class="icon bank" *ngIf="subFeature.name.includes('banks')">🏦</span>
+            </div>
+          </div>
+          <div class="plan-column">
+            <div class="feature-value" [class.has-crossmark]="typeof getSubFeatureValue(subFeature, 'standard') === 'boolean' && !getSubFeatureValue(subFeature, 'standard')">
+              <ng-container *ngIf="typeof getSubFeatureValue(subFeature, 'standard') === 'string'">
+                {{ getSubFeatureValue(subFeature, 'standard') }}
+              </ng-container>
+              <ng-container *ngIf="typeof getSubFeatureValue(subFeature, 'standard') === 'boolean'">
+                <span class="checkmark" *ngIf="getSubFeatureValue(subFeature, 'standard'); else crossmark1">✓</span>
+                <ng-template #crossmark1>
+                  <span class="crossmark">✗</span>
+                </ng-template>
+              </ng-container>
+            </div>
+          </div>
+          <div class="plan-column">
+            <div class="feature-value" [class.has-crossmark]="typeof getSubFeatureValue(subFeature, 'pro') === 'boolean' && !getSubFeatureValue(subFeature, 'pro')">
+              <ng-container *ngIf="typeof getSubFeatureValue(subFeature, 'pro') === 'string'">
+                {{ getSubFeatureValue(subFeature, 'pro') }}
+              </ng-container>
+              <ng-container *ngIf="typeof getSubFeatureValue(subFeature, 'pro') === 'boolean'">
+                <span class="checkmark" *ngIf="getSubFeatureValue(subFeature, 'pro'); else crossmark2">✓</span>
+                <ng-template #crossmark2>
+                  <span class="crossmark">✗</span>
+                </ng-template>
+              </ng-container>
+            </div>
+          </div>
+          <div class="plan-column">
+            <div class="feature-value" [class.has-crossmark]="typeof getSubFeatureValue(subFeature, 'proBusiness') === 'boolean' && !getSubFeatureValue(subFeature, 'proBusiness')">
+              <ng-container *ngIf="typeof getSubFeatureValue(subFeature, 'proBusiness') === 'string'">
+                {{ getSubFeatureValue(subFeature, 'proBusiness') }}
+              </ng-container>
+              <ng-container *ngIf="typeof getSubFeatureValue(subFeature, 'proBusiness') === 'boolean'">
+                <span class="checkmark" *ngIf="getSubFeatureValue(subFeature, 'proBusiness'); else crossmark3">✓</span>
+                <ng-template #crossmark3>
+                  <span class="crossmark">✗</span>
+                </ng-template>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+</div>

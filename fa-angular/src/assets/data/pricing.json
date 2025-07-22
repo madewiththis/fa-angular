@@ -1,0 +1,56 @@
+{
+  "standard": {
+    "name": "Standard Package",
+    "monthly": {
+      "price": 199,
+      "discountInfo": "",
+      "savings": 0
+    },
+    "oneYear": {
+      "price": 1990,
+      "discountInfo": "Save 17%",
+      "savings": 398
+    },
+    "twoYears": {
+      "price": 3980,
+      "discountInfo": "Free 2 months/Save 23%",
+      "savings": 796
+    }
+  },
+  "pro": {
+    "name": "Pro Package",
+    "monthly": {
+      "price": 299,
+      "discountInfo": "",
+      "savings": 0
+    },
+    "oneYear": {
+      "price": 2990,
+      "discountInfo": "Save 17%",
+      "savings": 598
+    },
+    "twoYears": {
+      "price": 5980,
+      "discountInfo": "Free 2 months/Save 23%",
+      "savings": 1196
+    }
+  },
+  "pro-business": {
+    "name": "Pro Business Package",
+    "monthly": {
+      "price": 549,
+      "discountInfo": "",
+      "savings": 0
+    },
+    "oneYear": {
+      "price": 5490,
+      "discountInfo": "Save 17%",
+      "savings": 1098
+    },
+    "twoYears": {
+      "price": 10980,
+      "discountInfo": "Free 2 months/Save 23%",
+      "savings": 2196
+    }
+  }
+} 

@@ -4,6 +4,8 @@
 
 This is a **frontend prototype** for the new version of FlowAccount.com, built with Angular 20. The purpose is to create a development-only prototype that represents the new branding, sales copy, design language, and in-app interface for FlowAccount's upcoming redesign. This allows for rapid, near-production-feel prototyping without backend dependencies.
 
+> **📋 Strategic Context**: For comprehensive project purpose, deliverables, and Growth Book A/B testing integration strategy, see [`dev_files/context/context-project-purpose-and-deliverables.md`](dev_files/context/context-project-purpose-and-deliverables.md). This document defines the UX improvement pipeline workflow and documentation standards.
+
 **Project Purpose:**
 - Prototype new FlowAccount branding and design language
 - Test new sales copy and user experience flows
@@ -148,6 +150,7 @@ Handles demo authentication:
 - **Interfaces**: Define TypeScript interfaces for all data structures
 - **Template/Style**: Separate HTML and SCSS files for components
 - **Copy Management**: Sales copy and content easily modifiable for testing
+- **Angular Templates**: Use `&#64;` HTML entity for @ symbols in templates (Angular 17+ interprets `@` as control flow blocks like `@if`, `@for`)
 
 ### Media Player Usage
 ```typescript
@@ -179,8 +182,8 @@ This project is managed as a Git repository to enable:
 
 ### Git Workflow
 ```bash
-# Clone the repository
-git clone [repository-url]
+# Clone the private repository
+git clone https://github.com/madewiththis/fa-angular.git
 
 # Create feature branch for new designs
 git checkout -b feature/new-hero-design
@@ -192,6 +195,12 @@ git commit -m "Update hero section with new branding"
 # Push changes for team review
 git push origin feature/new-hero-design
 ```
+
+### Repository Details
+- **URL**: https://github.com/madewiththis/fa-angular
+- **Access**: Private repository (team members need access permissions)
+- **Organization**: madewiththis
+- **Hosting**: GitHub with Vercel integration for automatic deployments
 
 ### Team Access & Review
 The prototype is hosted at **flowaccount.vercel.com** to provide access to the wider FlowAccount teams to:
@@ -263,6 +272,251 @@ The project automatically deploys to flowaccount.vercel.com when changes are pus
 - Position persistence reduces re-watching
 - Efficient state management with RxJS
 - Memory cleanup on component destruction
+
+## 🎯 AI-Optimized Task Management System
+
+**A complexity-based approach designed for zero-context resumability and AI collaboration.**
+
+### Task Classification by Complexity
+
+**Simple Tasks (S)**
+- Single file changes, config updates, typos, styling fixes
+- **Scope**: Isolated changes with minimal dependencies
+- **Documentation**: TodoWrite tool only, no file creation needed
+
+**Standard Tasks (M)**  
+- Feature enhancements, new components, API endpoints, multi-file changes
+- **Scope**: Well-defined changes with clear boundaries
+- **Documentation**: Brief task file with clear context for resumption
+
+**Complex Tasks (L)**
+- New features, architectural changes, cross-system integrations
+- **Scope**: Multiple components, potential breaking changes, research required
+- **Documentation**: Comprehensive task file with decision logs and architecture notes
+
+### Universal Task Flow
+
+#### 1. Problem Understanding & Classification
+- **Clarify the problem** and desired outcome with user
+- **Classify complexity** (S/M/L) based on scope and dependencies
+- **Confirm alignment** and document task appropriately
+
+#### 2. Zero-Context Documentation Strategy
+
+**For Simple Tasks (S):**
+- Use TodoWrite tool only with descriptive task description
+- Include file paths and specific changes needed
+
+**For Standard Tasks (M):**
+- Create task file: `/dev_files/tasks/active/{YYYY-MM-DD}-{brief-name}.md`
+- Include enough context that a fresh AI instance can immediately understand and continue
+
+**For Complex Tasks (L):**
+- Create comprehensive task file with decision logs and research findings
+- Document "AI handoff points" - everything needed to continue work
+
+#### 3. AI-Resumable Implementation
+
+**Status Progression:**
+- `todo` - Task defined, not started
+- `research` - Understanding current state and approach  
+- `in_progress` - Active implementation
+- `testing` - Verification phase
+- `blocked` - Waiting for user input or external dependency
+- `awaiting_user_approval` - Implementation complete, pending explicit user (project owner) quality/UX check
+- `completed` - Only mark as completed after the user has explicitly approved the result
+- `abandoned` - Stopped with documented reason
+
+**MANDATORY USER APPROVAL:**
+- Every task must include a step for explicit user (project owner) quality and UX check.
+- The task is only marked as `completed` after the user has reviewed and explicitly stated that it passes their standards.
+- Until then, the task remains in `awaiting_user_approval` status.
+
+**AI Handoff Requirements:**
+- Current understanding of the problem
+- Files already examined/modified
+- Key architectural decisions made
+- Next specific steps to take
+- Any blockers or dependencies discovered
+
+### AI-Scannable File Organization
+
+**Task management is located in the root directory:**
+```
+/dev_files/tasks/
+├── _task_index.md             # AI-readable task overview and status (START HERE)
+├── active/                    # Currently in progress
+├── completed/                 # Finished tasks (reference)
+└── abandoned/                 # Stopped tasks with lessons
+```
+
+**🚀 IMPORTANT FOR AI INSTANCES**: Always start by reading `/dev_files/tasks/_task_index.md` to understand current project state and active tasks.
+
+### Task Templates for AI Resumability
+
+**Standard Task Template (M):**
+```markdown
+# Task: {Brief Title}
+**Date**: {YYYY-MM-DD} | **Complexity**: M | **Status**: {current_status}
+**Component**: {frontend Angular component}
+
+## Problem Summary
+Clear one-paragraph description of what needs to be solved
+
+## Current Understanding  
+- **Root cause**: {what's causing the issue}
+- **Affected files**: {list of files involved}  
+- **Dependencies**: {what this connects to}
+
+## Solution Approach
+- **Strategy**: {high-level approach}
+- **Files to modify**: {specific files and changes}
+- **Testing approach**: {how to verify it works}
+
+## AI Handoff State
+**If someone else picks this up, they need to know:**
+- Files already examined: {list with key findings}
+- Decisions made: {architectural or implementation choices}
+- Current progress: {what's done, what's next}
+- Blockers: {anything waiting for user input}
+
+## Implementation Checklist
+- [ ] Research completed  
+- [ ] Files identified and examined
+- [ ] Implementation approach confirmed
+- [ ] Changes implemented
+- [ ] Tests written/updated
+- [ ] Manual testing completed
+- [ ] Code quality checks passed
+- [ ] **Explicit user (project owner) quality/UX check and approval**
+
+## Status Log
+- {timestamp}: {status} - {what happened and key findings}
+```
+
+**Complex Task Template (L):**
+```markdown
+# Task: {Feature Name}
+**Date**: {YYYY-MM-DD} | **Complexity**: L | **Status**: {current_status}
+**Component**: {Angular components/services involved}
+
+## Problem Statement
+Detailed description of the business problem and user need
+
+## Research & Analysis
+### Codebase Investigation
+- **Files examined**: {list with purpose of each}
+- **Patterns discovered**: {existing conventions to follow}
+- **Integration points**: {how this connects to existing features}
+
+### Architecture Decisions
+- **Approach chosen**: {why this approach over alternatives}
+- **Breaking changes**: {any backwards compatibility issues}
+- **Component structure**: {new components and services needed}
+
+## Implementation Plan
+### Phase 1: Foundation
+- [ ] {specific deliverable with acceptance criteria}
+- [ ] {specific deliverable with acceptance criteria}
+
+### Phase 2: Integration  
+- [ ] {specific deliverable with acceptance criteria}
+- [ ] {specific deliverable with acceptance criteria}
+
+## AI Handoff State
+**Complete context for continuation:**
+- **Current phase**: {which phase is active}
+- **Files modified**: {what's been changed so far}
+- **Key insights**: {important discoveries during implementation}
+- **Next actions**: {immediate next steps to take}
+- **Open questions**: {anything unclear that needs user input}
+
+## Acceptance Criteria
+- [ ] {specific, testable success criteria}
+- [ ] {performance or UX requirements}
+- [ ] {integration requirements}
+- [ ] **Explicit user (project owner) quality/UX check and approval**
+
+## Status Log
+- {timestamp}: {status} - {detailed progress and decisions}
+```
+
+### Master Task Index (_task_index.md)
+**Designed for AI to quickly scan and understand project state:**
+
+```markdown
+# Task Index - AI Quick Reference
+**Last Updated**: {auto-updated timestamp}
+
+## Currently Active (Pick up and continue)
+- **2025-01-17-component-updates.md** (L) - `in_progress`
+  - Landing page hero section improvements
+  - NEXT: Implement responsive design fixes (research complete)
+  - BLOCKER: None
+
+- **2025-01-17-media-player-fixes.md** (M) - `research`  
+  - Fix video player positioning issues
+  - NEXT: Examine MediaPlayerService state management
+  - BLOCKER: None
+
+## Recently Completed (Reference for patterns)
+- **2025-01-16-auth-component.md** (M) - Password protection styling updates
+- **2025-01-16-routing-config.md** (S) - Route guard configuration
+
+## Abandoned (Learn from failures)  
+- **2025-01-15-complex-animation.md** (L) - Advanced hero animations
+  - REASON: Too complex without performance impact analysis
+
+## Quick Context for AI
+**How to use this system:**
+1. Scan this index to understand current state
+2. Read the specific task file for detailed context  
+3. Ask user which task to work on or continue
+4. Update task file with progress and decisions
+5. Update this index when status changes
+
+**Project Patterns:**
+- Components: Angular standalone components in `/src/app/components/`
+- Services: Business logic in `/src/app/services/`
+- Routing: Angular Router with lazy loading
+- Styling: SCSS with Angular Material theming
+- Testing: Jasmine/Karma co-located with components
+```
+
+### AI Workflow Integration
+
+**Fresh Instance Onboarding:**
+1. **ALWAYS START**: Read `/dev_files/tasks/_task_index.md` for immediate context
+2. **Task Selection**: Ask user: "I see {X} active tasks. Which would you like me to work on?"
+3. **Get Context**: Read specific task file in `/dev_files/tasks/active/` for detailed context
+4. **Sync Status**: Update TodoWrite with current understanding
+5. **Work & Update**: Proceed with implementation, updating task file with progress
+
+**TodoWrite Integration:**
+- Sync TodoWrite with task file status 
+- Use TodoWrite for real-time progress within a session
+- Update task file at completion or when blocked
+
+**Git Integration:**
+- Branch naming: `task/{date}-{brief-name}` (e.g., `task/2025-01-17-hero-fixes`)
+- Commit messages reference task: `feat: implement hero responsive design (ref: 2025-01-17-component-updates.md)`
+- Move task to completed/ folder after successful merge
+
+**Quality Gates by Complexity:**
+- **S**: Manual verification, basic testing
+- **M**: Component testing + linting + type checking
+- **L**: Full test suite + integration tests + performance verification
+
+### System Benefits for AI Collaboration
+
+1. **Zero Context Resumability**: Any AI can pick up any task immediately
+2. **Complexity-Appropriate**: Simple fixes don't get buried in documentation  
+3. **Decision Preservation**: Architecture choices and reasoning captured
+4. **Progress Transparency**: Users can see exactly where things stand
+5. **Learning System**: Completed tasks become reference patterns
+6. **Failure Analysis**: Abandoned tasks document what didn't work and why
+
+**Key Innovation**: The `_task_index.md` file serves as an **AI dashboard** - scan once to understand the entire project state, then dive deep into specific tasks as needed.
 
 ## Common Tasks
 
