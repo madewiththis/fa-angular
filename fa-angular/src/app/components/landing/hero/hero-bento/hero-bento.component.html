@@ -1,0 +1,117 @@
+<div class="bento-container">
+  <div class="bento-grid" (mouseleave)="onMouseLeave()">
+    <!-- Top Row -->
+    <div class="bento-row">
+      <div
+        *ngFor="let item of topRowCards"
+        [class]="getCardClasses(item.id)"
+        (mouseenter)="handleCardHover(item.id)"
+        (mouseleave)="onCardMouseLeave()"
+        (click)="handleCardHover(item.id)"
+      >
+        <!-- Thumbnail Content -->
+        <div *ngIf="shouldShowThumbnail(item.id)" class="thumbnail-content">
+          <div class="icon-container">
+            <mat-icon>{{ item.icon }}</mat-icon>
+          </div>
+          <h3 class="thumbnail-title">{{ item.word }}</h3>
+        </div>
+
+        <!-- Expanded Content -->
+        <div 
+          class="expanded-content"
+          [class.expanded-content-visible]="isExpanded(item.id)"
+          [class.expanded-content-hidden]="!isExpanded(item.id)"
+        >
+          <div 
+            class="expanded-header"
+            [class.expanded-header-visible]="isExpanded(item.id)"
+            [class.expanded-header-hidden]="!isExpanded(item.id)"
+          >
+            <div class="icon-container-small">
+              <mat-icon>{{ item.icon }}</mat-icon>
+            </div>
+            <h3 class="expanded-title">{{ item.word }}</h3>
+          </div>
+          
+          <p 
+            class="expanded-description"
+            [class.expanded-description-visible]="isExpanded(item.id)"
+            [class.expanded-description-hidden]="!isExpanded(item.id)"
+          >
+            {{ item.description }}
+          </p>
+          
+          <button 
+            mat-flat-button 
+            color="primary" 
+            class="cta-button"
+            [class.cta-button-visible]="isExpanded(item.id)"
+            [class.cta-button-hidden]="!isExpanded(item.id)"
+            (click)="onCtaClick(item)"
+          >
+            {{ item.cta }}
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Row -->
+    <div class="bento-row">
+      <div
+        *ngFor="let item of bottomRowCards"
+        [class]="getCardClasses(item.id)"
+        (mouseenter)="handleCardHover(item.id)"
+        (mouseleave)="onCardMouseLeave()"
+        (click)="handleCardHover(item.id)"
+      >
+        <!-- Thumbnail Content -->
+        <div *ngIf="shouldShowThumbnail(item.id)" class="thumbnail-content">
+          <div class="icon-container">
+            <mat-icon>{{ item.icon }}</mat-icon>
+          </div>
+          <h3 class="thumbnail-title">{{ item.word }}</h3>
+        </div>
+
+        <!-- Expanded Content -->
+        <div 
+          class="expanded-content"
+          [class.expanded-content-visible]="isExpanded(item.id)"
+          [class.expanded-content-hidden]="!isExpanded(item.id)"
+        >
+          <div 
+            class="expanded-header"
+            [class.expanded-header-visible]="isExpanded(item.id)"
+            [class.expanded-header-hidden]="!isExpanded(item.id)"
+          >
+            <div class="icon-container-small">
+              <mat-icon>{{ item.icon }}</mat-icon>
+            </div>
+            <h3 class="expanded-title">{{ item.word }}</h3>
+          </div>
+          
+          <p 
+            class="expanded-description"
+            [class.expanded-description-visible]="isExpanded(item.id)"
+            [class.expanded-description-hidden]="!isExpanded(item.id)"
+          >
+            {{ item.description }}
+          </p>
+          
+          <button 
+            mat-flat-button 
+            color="primary" 
+            class="cta-button"
+            [class.cta-button-visible]="isExpanded(item.id)"
+            [class.cta-button-hidden]="!isExpanded(item.id)"
+            (click)="onCtaClick(item)"
+          >
+            {{ item.cta }}
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

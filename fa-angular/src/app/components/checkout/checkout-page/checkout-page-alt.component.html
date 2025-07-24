@@ -1,0 +1,98 @@
+<div class="checkout-alt-container">
+  <!-- Header -->
+  <div class="checkout-header">
+    <button class="back-button" (click)="goBack()">
+      <span class="back-icon">‹</span> Back to choose plan
+    </button>
+    <h1>Payment method</h1>
+    <p class="subtitle">You can choose to pay with credit card or with bank transfer</p>
+  </div>
+
+  <div class="checkout-content">
+    <!-- Left Column - Payment Form -->
+    <div class="payment-section">
+      <!-- Step 1: Choose payment method -->
+      <div class="form-step">
+        <div class="step-container">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h3>Choose payment method</h3>
+            
+            <div class="payment-methods">
+              <div class="payment-method" 
+                   *ngFor="let method of paymentMethods"
+                   [class.selected]="method.selected"
+                   (click)="selectPaymentMethod(method.id)">
+                <input type="radio" 
+                       [name]="'paymentMethod'" 
+                       [checked]="method.selected"
+                       readonly>
+                <div class="method-content">
+                  <i [class]="method.icon"></i>
+                  <span class="method-name">{{ method.name }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Credit Card Form -->
+            <div class="card-form" *ngIf="getSelectedPaymentMethod()?.id === 'credit-card'">
+              <!-- Card Number + Expiration Date + CVV Row -->
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="cardNumber">Card Number <span class="required">*</span></label>
+                  <input 
+                    type="text" 
+                    id="cardNumber"
+                    formControlName="cardNumber"
+                    placeholder="1234 1234 1234 1234"
+                    maxlength="19"
+                    (input)="formatCardNumber($event)">
+                </div>
+                
+                <div class="form-group">
+                  <label for="expirationDate">Expiration Date <span class="required">*</span></label>
+                  <input 
+                    type="text" 
+                    id="expirationDate"
+                    formControlName="expirationDate"
+                    placeholder="MM/YY"
+                    maxlength="5"
+                    (input)="formatExpirationDate($event)">
+                </div>
+                
+                <div class="form-group">
+                  <label for="cvv">CVV <span class="required">*</span></label>
+                  <div class="cvv-input-container">
+                    <input 
+                      [type]="showCvv ? 'text' : 'password'"
+                      id="cvv"
+                      formControlName="cvv"
+                      placeholder="CVV"
+                      maxlength="4">
+                    <span class="cvv-toggle" (click)="toggleCvvVisibility()">
+                      <i [class]="showCvv ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Name on Card - Full Width Row -->
+              <div class="form-group">
+                <label for="nameOnCard">Name on card <span class="required">*</span></label>
+                <input 
+                  type="text" 
+                  id="nameOnCard"
+                  formControlName="nameOnCard"
+                  placeholder="Name on card">
+              </div>
+              
+              <p class="auto-renew-notice">
+                Your subscription will automatically renew. Turn off auto-renew anytime
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

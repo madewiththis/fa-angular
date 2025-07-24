@@ -1,0 +1,18 @@
+<app-menu-layout>
+    <div class="page-container">
+      <h1>Quotations</h1>
+  
+      <div class="controls-container">
+        <div class="search-filter">
+            <app-search-input></app-search-input>
+            <app-filter-button></app-filter-button>
+        </div>
+        <div class="actions">
+            <app-action-button text="Download" icon="download"></app-action-button>
+            <app-action-button text="New Quotation" icon="add" color="primary"></app-action-button>
+        </div>
+      </div>
+  
+      <app-data-table [columns]="columns" [data]="data"></app-data-table>
+    </div>
+  </app-menu-layout> 

@@ -1,0 +1,27 @@
+<div class="start-container">
+  <div class="start-form">
+    <h1>Get Started</h1>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input 
+          id="email" 
+          type="email" 
+          formControlName="email" 
+          placeholder="name@company.com">
+      </div>
+      <button type="submit" [disabled]="loginForm.invalid || isLoading">{{ ctaText }}</button>
+    </form>
+    <div class="login-hint-container">
+      <p class="login-hint" style="font-size: smaller; color: darkgray; font-style: italic;">Test with: user&#64;company.com</p>
+  </div>
+</div>
+
+<app-modal 
+  *ngIf="showModal"
+  [title]="modalTitle"
+  [message]="modalMessage"
+  [link]="modalLink"
+  [linkText]="modalLinkText"
+  (close)="closeModal()">
+</app-modal> 

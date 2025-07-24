@@ -1,0 +1,111 @@
+<div class="signup-container">
+  <div class="signup-box">
+    <h1>Start your free trial</h1>
+    <p *ngIf="email" class="email-display">Signing up with {{ email }}</p>
+
+    <!-- Step Progress Indicator -->
+    <div class="step-indicator">
+      <div class="step" [class.active]="currentStep >= 1">
+        <div class="step-number">1</div>
+        <div class="step-label">User Details</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step" [class.active]="currentStep >= 2">
+        <div class="step-number">2</div>
+        <div class="step-label">User Profile</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step" [class.active]="currentStep >= 3">
+        <div class="step-number">3</div>
+        <div class="step-label">Launch</div>
+      </div>
+    </div>
+
+    <form [formGroup]="signupForm" (ngSubmit)="launchApp()">
+      <!-- Step 1: User Details -->
+      <div *ngIf="currentStep === 1">
+        <h2>Step 1: User Details</h2>
+        <div class="form-field">
+          <label for="phoneNumber">Phone Number</label>
+          <input id="phoneNumber" type="tel" formControlName="phoneNumber" placeholder="Your phone number">
+          <div *ngIf="signupForm.get('phoneNumber')?.touched && signupForm.get('phoneNumber')?.invalid" class="error">
+            Phone number is required.
+          </div>
+        </div>
+        <div class="name-fields">
+            <div class="form-field">
+              <label for="firstName">First Name</label>
+              <input id="firstName" type="text" formControlName="firstName" placeholder="First Name">
+              <div *ngIf="signupForm.get('firstName')?.touched && signupForm.get('firstName')?.invalid" class="error">
+                First name is required.
+              </div>
+            </div>
+            <div class="form-field">
+              <label for="lastName">Last Name</label>
+              <input id="lastName" type="text" formControlName="lastName" placeholder="Last Name">
+              <div *ngIf="signupForm.get('lastName')?.touched && signupForm.get('lastName')?.invalid" class="error">
+                Last name is required.
+              </div>
+            </div>
+        </div>
+        <div class="form-actions">
+          <button type="button" (click)="nextStep()" class="next-btn">Next</button>
+        </div>
+      </div>
+
+      <!-- Step 2: User Profile -->
+      <div *ngIf="currentStep === 2">
+        <h2>Step 2: User Profile</h2>
+        <div class="form-field">
+          <label for="role">Your Role</label>
+          <select id="role" formControlName="role">
+            <option value="" disabled>Select your role</option>
+            <option *ngFor="let role of roles" [value]="role.value">{{ role.label }}</option>
+          </select>
+          <div *ngIf="signupForm.get('role')?.touched && signupForm.get('role')?.invalid" class="error">
+            Please select a role.
+          </div>
+        </div>
+        <div class="form-field">
+          <label for="businessType">Business Type</label>
+          <select id="businessType" formControlName="businessType">
+            <option value="" disabled>Select your business type</option>
+            <option *ngFor="let type of businessTypes" [value]="type.value">{{ type.label }}</option>
+          </select>
+          <div *ngIf="signupForm.get('businessType')?.touched && signupForm.get('businessType')?.invalid" class="error">
+            Please select a business type.
+          </div>
+        </div>
+        <div class="form-field">
+          <label for="companyName">Company Name</label>
+          <input id="companyName" type="text" formControlName="companyName" placeholder="Your company name">
+           <div *ngIf="signupForm.get('companyName')?.touched && signupForm.get('companyName')?.invalid" class="error">
+            Company name is required.
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="button" (click)="previousStep()" class="back-btn">Back</button>
+          <button type="button" (click)="nextStep()" class="next-btn">Next</button>
+        </div>
+      </div>
+
+      <!-- Step 3: Launch -->
+      <div *ngIf="currentStep === 3">
+        <h2>Ready to go!</h2>
+        <p>Review your details and launch your new workspace.</p>
+        <div class="summary">
+            <p><strong>Email:</strong> {{ email }}</p>
+            <p><strong>Phone:</strong> {{ signupForm.get('phoneNumber')?.value }}</p>
+            <p><strong>Name:</strong> {{ signupForm.get('firstName')?.value }} {{ signupForm.get('lastName')?.value }}</p>
+            <p><strong>Company:</strong> {{ signupForm.get('companyName')?.value }}</p>
+            <p><strong>Role:</strong> {{ getRoleLabel(signupForm.get('role')?.value) }}</p>
+            <p><strong>Business Type:</strong> {{ getBusinessTypeLabel(signupForm.get('businessType')?.value) }}</p>
+        </div>
+        <div class="form-actions">
+          <button type="button" (click)="previousStep()" class="back-btn">Back</button>
+          <button type="submit" class="launch-btn" [disabled]="signupForm.invalid">Launch App</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

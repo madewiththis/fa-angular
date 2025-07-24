@@ -1,0 +1,81 @@
+<div class="profile-container">
+  <div class="user-info">
+    <h2>{{ user.name }}</h2>
+    <div class="contact-info">
+      <mat-icon>email</mat-icon>
+      <span>{{ user.email }}</span>
+    </div>
+    <div class="contact-info">
+      <mat-icon>phone</mat-icon>
+      <span>{{ user.phone }}</span>
+    </div>
+  </div>
+
+  <div class="language-switcher">
+    <div class="language-label">
+      <mat-icon>translate</mat-icon>
+      <span>Language</span>
+    </div>
+    <div class="language-buttons">
+      <button
+        class="lang-button"
+        [class.active]="selectedLanguage === 'EN'"
+        (click)="selectedLanguage = 'EN'"
+      >
+        EN
+      </button>
+      <button
+        class="lang-button"
+        [class.active]="selectedLanguage === 'TH'"
+        (click)="selectedLanguage = 'TH'"
+      >
+        TH
+      </button>
+    </div>
+  </div>
+
+  <div class="actions-grid">
+    <button class="action-button">
+      <mat-icon>chat</mat-icon>
+      <span>Chat</span>
+    </button>
+    <button class="action-button" (click)="copyToClipboard('02-026-8989', 'phone')">
+      <div class="call-content">
+        <div class="call-main">
+          <mat-icon>call</mat-icon>
+          <span>Call</span>
+        </div>
+        <div class="call-number">
+          02-026-8989
+          <mat-icon class="copy-icon">{{ isPhoneCopied ? 'check' : 'content_copy' }}</mat-icon>
+        </div>
+      </div>
+    </button>
+  </div>
+
+  <button class="action-button full-width">
+    <mat-icon>phone_callback</mat-icon>
+    <span>Request Callback</span>
+  </button>
+
+  <div class="id-section" (click)="copyToClipboard(user.id, 'id')">
+    <div class="id-content">
+      <mat-icon>label</mat-icon>
+      <span>{{ user.id }}</span>
+    </div>
+    <mat-icon class="copy-icon">{{ isIdCopied ? 'check' : 'content_copy' }}</mat-icon>
+  </div>
+
+  <button class="action-button full-width change-company">
+    <div class="button-content">
+      <mat-icon>business</mat-icon>
+      <span>Change Company</span>
+    </div>
+    <mat-icon>chevron_right</mat-icon>
+  </button>
+
+  <button class="logout-button" (click)="logout()">
+    <mat-icon>logout</mat-icon>
+    <span>Logout</span>
+  </button>
+</div> 

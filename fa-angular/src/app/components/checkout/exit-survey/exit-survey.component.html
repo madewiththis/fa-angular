@@ -1,0 +1,55 @@
+<div class="exit-survey-overlay" [class.visible]="isVisible" (click)="onBackdropClick($event)">
+  <div class="exit-survey-modal" (click)="$event.stopPropagation()">
+    <div class="survey-content">
+      <h2 class="survey-title">What is the reason you want to leave?</h2>
+      
+      <div class="survey-options">
+        <div 
+          class="survey-option" 
+          *ngFor="let reason of surveyReasons"
+          [class.selected]="selectedReasonId === reason.id"
+          (click)="onReasonChange(reason.id, reason.text)"
+        >
+          <input 
+            type="radio" 
+            [id]="'reason-' + reason.id" 
+            name="exitReason"
+            [value]="reason.id"
+            [checked]="selectedReasonId === reason.id"
+            (change)="onReasonChange(reason.id, reason.text)"
+          />
+          <label [for]="'reason-' + reason.id">{{ reason.text }}</label>
+        </div>
+        
+        <!-- Other reason textarea - appears when "Others" is selected -->
+        <div class="other-reason-container" *ngIf="isOthersSelected()">
+          <textarea 
+            class="other-reason-input"
+            placeholder="Please tell us more about your reason..."
+            [(ngModel)]="otherReasonText"
+            (input)="onOtherReasonChange($event)"
+            rows="3">
+          </textarea>
+        </div>
+      </div>
+      
+      <div class="survey-buttons">
+        <button 
+          type="button" 
+          class="btn btn-secondary confirm-btn"
+          (click)="onConfirm()"
+          [disabled]="!selectedReason || (isOthersSelected() && !otherReasonText.trim())"
+        >
+          Confirm
+        </button>
+        <button 
+          type="button" 
+          class="btn btn-primary stay-btn"
+          (click)="onStayOnPage()"
+        >
+          Stay on this page
+        </button>
+      </div>
+    </div>
+  </div>
+</div> 

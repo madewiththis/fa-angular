@@ -1,0 +1,8 @@
+<div class="modal-backdrop" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <button class="close-button" (click)="closeModal()">X</button>
+    <h2>{{ title }}</h2>
+    <p>{{ message }}</p>
+    <a *ngIf="link" [routerLink]="link">{{ linkText }}</a>
+  </div>
+</div> 

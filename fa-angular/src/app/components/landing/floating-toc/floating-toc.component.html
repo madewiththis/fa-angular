@@ -1,0 +1,15 @@
+<div class="floating-toc" [class.visible]="isVisible">
+  <div class="toc-container">
+    <nav class="toc-nav" role="navigation" aria-label="Page sections">
+      <button 
+        *ngFor="let item of tocItems; trackBy: trackByFn" 
+        class="toc-item"
+        [class.active]="activeSection === item.target"
+        [class.cta]="item.isCta"
+        [attr.aria-label]="'Go to ' + item.label + ' section'"
+        (click)="scrollToSection(item.target, item.isCta)">
+        {{ item.label }}
+      </button>
+    </nav>
+  </div>
+</div> 

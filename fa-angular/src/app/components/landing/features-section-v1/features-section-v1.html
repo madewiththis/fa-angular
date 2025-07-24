@@ -1,0 +1,56 @@
+<section class="features-section">
+  <div class="container">
+    <div class="headings">
+      <div class="main-heading">
+        <h2>Features.</h2>
+      </div>
+    </div>
+    
+    <div class="role-selection">
+      <div class="role-buttons">
+        <button
+          *ngFor="let role of userRoles"
+          (click)="selectRole(role)"
+          [class.active]="role === selectedRole"
+          class="role-button"
+        >
+          {{ role.label }}
+        </button>
+      </div>
+    </div>
+    
+    <div class="content-wrapper">
+      <div class="buttons-column">
+        <button
+          *ngFor="let feature of features"
+          (click)="selectFeature(feature)"
+          [class.active]="feature === selectedFeature"
+          class="feature-button"
+        >
+          <div class="button-content">
+            <h4>{{ feature.title }}</h4>
+            <p>{{ feature.description }}</p>
+          </div>
+        </button>
+      </div>
+      <div class="content-column" *ngIf="selectedFeature">
+        <div class="text-content">
+          <h3>{{ selectedFeature.title }}</h3>
+          <p>{{ selectedFeature.content }}</p>
+        </div>
+        <div class="media-content">
+          <app-fixed-player 
+            *ngIf="selectedFeature.mediaType === 'video'" 
+            class="feature-video">
+          </app-fixed-player>
+          <img 
+            *ngIf="selectedFeature.mediaType === 'image'" 
+            [src]="selectedFeature.mediaSrc"
+            [alt]="selectedFeature.mediaAlt"
+            class="feature-image"
+            loading="lazy">
+        </div>
+      </div>
+    </div>
+  </div>
+</section> 

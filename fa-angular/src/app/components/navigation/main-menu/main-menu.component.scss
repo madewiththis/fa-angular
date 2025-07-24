@@ -1,0 +1,254 @@
+// Primary color scheme based on #138DCE
+:host {
+  --primary: #138dce;
+  --primary-light: rgba(19, 141, 206, 0.8);
+  --primary-dark: rgba(19, 141, 206, 0.3);
+  
+  display: block;
+  height: 100vh;
+  width: auto;
+  min-height: 100vh;
+  max-height: 100vh;
+}
+
+// Main container
+.main-menu-container {
+  height: 100vh;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--primary);
+  color: white;
+  z-index: 1100; // Ensure it's above courtesy nav
+  position: relative;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  
+  // Width states
+  &.collapsed {
+    width: 60px;
+  }
+  
+  &.expanded {
+    width: 100px;
+  }
+}
+
+// Logo section
+.logo-section {
+  padding: 12px;
+  border-bottom: 1px solid var(--primary-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  height: 64px; // Fixed height to prevent menu items from moving
+  
+  &.collapsed {
+    padding: 14px 8px;
+    height: 64px; // Same fixed height in collapsed state
+  }
+}
+
+.logo-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  overflow: visible;
+  width: 40px;
+  height: auto;
+  position: relative;
+  z-index: 20;
+  
+  &.collapsed {
+    width: 100%;
+    padding: 0;
+  }
+
+  // Logo link styling - Circular button with logo background
+  .logo-link {
+    display: block;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 50%;
+    text-decoration: none;
+    width: 40px;
+    height: 40px;
+    //background-color: white;
+    background-image: url('/assets/fa_logo_dark.png');
+    background-size: 100%; // Logo takes up 70% of the circle
+    background-position: center;
+    background-repeat: no-repeat;
+    border: none;
+    
+    &:hover {
+      //transform: scale(1.05);
+      //background-color: #f8f9fa;
+    }
+    
+    &:active {
+      //transform: scale(0.95);
+    }
+    
+    &:focus {
+      outline: 2px solid rgba(255, 255, 255, 0.8);
+      outline-offset: 2px;
+      border-radius: 50%;
+    }
+  }
+  
+  .collapsed .logo-link {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+
+
+// Menu content area
+.menu-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-top: 16px;
+}
+
+.main-nav {
+  flex: 1;
+  padding-bottom: 24px;
+}
+
+.menu-items-container {
+  padding: 0 12px;
+  transition: all 0.3s ease;
+  
+  &.collapsed {
+    padding: 0 8px;
+  }
+  
+  // Gap between items
+  > * + * {
+    margin-top: 8px;
+  }
+}
+
+// Spacer to push utility section to bottom
+.spacer {
+  flex-grow: 1;
+}
+
+// Utility section
+.utility-section {
+  border-top: 1px solid var(--primary-dark);
+  background-color: rgba(19, 141, 206, 0.1);
+  margin-top: 16px;
+  margin-bottom: 16px;
+  flex-shrink: 0;
+  padding: 8px;
+  transition: all 0.3s ease;
+  
+  &.collapsed {
+    padding: 8px;
+  }
+}
+
+
+
+// Unified menu button styling (DRY approach)
+.menu-button {
+  width: calc(100% - 8px);
+  margin: 0 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-weight: 500;
+  border: none;
+  outline: none;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  position: relative;
+  cursor: pointer;
+  background-color: transparent;
+  color: white;
+  height: 64px;
+  padding: 8px 0;
+  
+  // Hover state
+  &:hover {
+    background-color: #47A3D7;
+    color: white;
+
+    //box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  // Active state
+  &:active {
+    transform: translateY(0);
+  }
+  
+  // Focus state
+  &:focus {
+    outline: none;
+  }
+  
+  // Selected state
+  &.selected {
+    background-color: var(--primary-light);
+    color: white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  }
+  
+  // Hovered state (for programmatic hover)
+  &.hovered {
+    background-color: #47A3D7;
+    color: white;
+  }
+}
+
+// Icon styling
+.button-icon {
+  font-weight: 400;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+  color: white;
+  transition: all 0.3s ease;
+  font-size: 28px;
+  height: 28px;
+  width: 28px;
+  margin-bottom: 2px;
+}
+
+// Text label styling
+.menu-label {
+  transition: opacity 0.3s ease-in-out;
+  font-weight: 500;
+  color: white;
+  text-align: center;
+  line-height: 1.2;
+  white-space: nowrap;
+  font-size: 11px;
+  display: block;
+  height: 14px; // Fixed height to maintain space
+  
+  &.collapsed {
+    opacity: 0;
+    visibility: hidden;
+  }
+  
+  &.expanded {
+    opacity: 1;
+    visibility: visible;
+  }
+}

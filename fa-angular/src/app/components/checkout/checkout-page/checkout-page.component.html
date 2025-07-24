@@ -1,0 +1,334 @@
+<div class="checkout-alt-container">
+  <!-- Header -->
+  <div class="checkout-header">
+    <button class="back-button" (click)="goBack()">
+      <span class="back-icon">‹</span> Back to choose plan
+    </button>
+    <h1>Payment method</h1>
+    <p class="subtitle">You can choose to pay with credit card or with bank transfer</p>
+  </div>
+
+  <div class="checkout-content">
+    <!-- Left Column - Payment Form -->
+    <div class="payment-form-container">
+      <form [formGroup]="checkoutForm">
+        <div class="payment-section">
+          <!-- Step 1: Choose payment method -->
+          <div class="form-step">
+            <div class="step-container">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h3>Choose payment method</h3>
+                
+                <div class="payment-methods">
+                  <div class="payment-method" 
+                       *ngFor="let method of paymentMethods"
+                       [ngClass]="{ 'selected': method.selected }"
+                       (click)="selectPaymentMethod(method.id)">
+                    <input type="radio" 
+                           [name]="'paymentMethod'" 
+                           [checked]="method.selected"
+                           readonly>
+                    <div class="method-content">
+                      <i [ngClass]="method.icon"></i>
+                      <span class="method-name">{{ method.name }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Credit Card Form -->
+                <div class="card-form" *ngIf="getSelectedPaymentMethod()?.id === 'credit-card'">
+                  <!-- Card Number + Expiration Date + CVV Row -->
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="cardNumber">Card Number <span class="required">*</span></label>
+                      <input 
+                        type="text" 
+                        id="cardNumber"
+                        formControlName="cardNumber"
+                        placeholder="1234 1234 1234 1234"
+                        maxlength="19"
+                        (input)="formatCardNumber($event)">
+                      <div *ngIf="f['cardNumber'].invalid && f['cardNumber'].touched" class="error-message">
+                        <i class="fa fa-exclamation-circle"></i> Complete fields
+                      </div>
+                    </div>
+                    
+                    <div class="form-group">
+                      <label for="expirationDate">Expiration Date <span class="required">*</span></label>
+                      <input 
+                        type="text" 
+                        id="expirationDate"
+                        formControlName="expirationDate"
+                        placeholder="MM/YY"
+                        maxlength="5"
+                        (input)="formatExpirationDate($event)">
+                      <div *ngIf="f['expirationDate'].invalid && f['expirationDate'].touched" class="error-message">
+                        <i class="fa fa-exclamation-circle"></i> Complete fields
+                      </div>
+                    </div>
+                    
+                    <div class="form-group">
+                      <label for="cvv">CVV <span class="required">*</span></label>
+                      <div class="cvv-input-container">
+                        <input 
+                          [type]="showCvv ? 'text' : 'password'"
+                          id="cvv"
+                          formControlName="cvv"
+                          placeholder="CVV"
+                          maxlength="4">
+                        <span class="cvv-toggle" (click)="toggleCvvVisibility()">
+                          <i [ngClass]="{ 'fa': true, 'fa-eye-slash': showCvv, 'fa-eye': !showCvv }"></i>
+                        </span>
+                      </div>
+                      <div *ngIf="f['cvv'].invalid && f['cvv'].touched" class="error-message">
+                        <i class="fa fa-exclamation-circle"></i> Complete fields
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- Name on Card - Full Width Row -->
+                  <div class="form-group">
+                    <label for="nameOnCard">Name on card <span class="required">*</span></label>
+                    <input 
+                      type="text" 
+                      id="nameOnCard"
+                      formControlName="nameOnCard"
+                      placeholder="Name on card">
+                    <div *ngIf="f['nameOnCard'].invalid && f['nameOnCard'].touched" class="error-message">
+                      <i class="fa fa-exclamation-circle"></i> Complete fields
+                    </div>
+                  </div>
+                  
+                  <p class="auto-renew-notice">
+                    Your subscription will automatically renew. Turn off auto-renew anytime
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: Tax Invoice/Receipt Form -->
+          <div class="form-step">
+            <div class="step-container">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h3>Fill out the form to request Tax Invoice/Receipt</h3>
+                
+                <p class="invoice-notice">
+                  Your e-Tax invoice will be sent to <a href="mailto:user&#64;company.com">user&#64;company.com</a> within 24 hours.
+                </p>
+
+                <div class="invoice-types">
+                  <div class="invoice-type" 
+                       *ngFor="let type of invoiceTypes"
+                       [ngClass]="{ 'selected': type.selected }"
+                       (click)="selectInvoiceType(type.id)">
+                    <input type="radio" 
+                           [name]="'invoiceType'" 
+                           [checked]="type.selected"
+                           readonly>
+                    <div class="type-content">
+                      <i [ngClass]="type.icon"></i>
+                      <span class="type-name">{{ type.name }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Corporation Form -->
+                <div class="invoice-form" *ngIf="getSelectedInvoiceType() === 'corporation'">
+                  <div class="form-group">
+                    <label for="companyName">Company Name <span class="required">*</span></label>
+                    <div class="input-with-icon">
+                      <input 
+                        type="text" 
+                        id="companyName"
+                        formControlName="companyName"
+                        placeholder="Company Name">
+                      <span class="help-icon">
+                        <i>i</i>
+                        <div class="help-tooltip">
+                          <div class="tooltip-header">Examples</div>
+                          <ul>
+                            <li>For Company Limited: FlowAccount Co.,</li>
+                            <li>Ltd. For Partnership Limited:</li>
+                            <li>FlowAccount Part., Ltd.</li>
+                          </ul>
+                        </div>
+                      </span>
+                    </div>
+                    <div *ngIf="f['companyName'].invalid && f['companyName'].touched" class="error-message">
+                      <i class="fa fa-exclamation-circle"></i> Complete fields
+                    </div>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="address">Address <span class="required">*</span></label>
+                    <textarea 
+                      id="address"
+                      formControlName="address"
+                      placeholder="Address (Building No., Building Name, Road, District, Subdistrict, Province)"
+                      rows="3"
+                      resize="none"></textarea>
+                    <div *ngIf="f['address'].invalid && f['address'].touched" class="error-message">
+                      <i class="fa fa-exclamation-circle"></i> Complete fields
+                    </div>
+                  </div>
+                  
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="zipCode">ZIP Code:</label>
+                      <input 
+                        type="text" 
+                        id="zipCode"
+                        formControlName="zipCode"
+                        placeholder="ZIP Code">
+                    </div>
+                    
+                    <div class="form-group">
+                      <label for="taxId">Tax ID <span class="required">*</span></label>
+                      <input 
+                        type="text" 
+                        id="taxId"
+                        formControlName="taxId"
+                        placeholder="Tax ID">
+                      <div *ngIf="f['taxId'].invalid && f['taxId'].touched" class="error-message">
+                        <i class="fa fa-exclamation-circle"></i> Complete fields
+                      </div>
+                    </div>
+                    
+                    <div class="form-group">
+                      <label for="branchNumber">Branch/Branch Number:</label>
+                      <input 
+                        type="text" 
+                        id="branchNumber"
+                        formControlName="branchNumber"
+                        placeholder="Head Office">
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Individual Form -->
+                <div class="invoice-form" *ngIf="getSelectedInvoiceType() === 'individual'">
+                  <div class="form-group">
+                    <label for="fullName">Full Name <span class="required">*</span></label>
+                    <input 
+                      type="text" 
+                      id="fullName"
+                      formControlName="fullName"
+                      placeholder="Full Name">
+                    <div *ngIf="f['fullName'].invalid && f['fullName'].touched" class="error-message">
+                      <i class="fa fa-exclamation-circle"></i> Complete fields
+                    </div>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="individualAddress">Address <span class="required">*</span></label>
+                    <textarea 
+                      id="individualAddress"
+                      formControlName="address"
+                      placeholder="Address (Building No., Building Name, Road, District, Subdistrict, Province)"
+                      rows="3"></textarea>
+                    <div *ngIf="f['address'].invalid && f['address'].touched" class="error-message">
+                      <i class="fa fa-exclamation-circle"></i> Complete fields
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="zipCode">ZIP Code:</label>
+                      <input 
+                        type="text" 
+                        id="zipCode"
+                        formControlName="zipCode"
+                        placeholder="ZIP Code">
+                  </div>
+                    
+                    <div class="form-group">
+                      <label for="taxId">ID Number <span class="required">*</span></label>
+                      <input 
+                        type="text" 
+                        id="taxId"
+                        formControlName="taxId"
+                        placeholder="ID Number">
+                      <div *ngIf="f['taxId'].invalid && f['taxId'].touched" class="error-message">
+                        <i class="fa fa-exclamation-circle"></i> Complete fields
+                      </div>
+                    </div>
+                    
+                    <div class="form-group">
+                      <label for="branchNumber">Branch/Branch Number:</label>
+                      <input 
+                        type="text" 
+                        id="branchNumber"
+                        formControlName="branchNumber"
+                        placeholder="Head Office">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Column - Payment Detail -->
+    <div class="payment-detail-container">
+      <div class="payment-detail-box">
+        <h3>Payment Detail</h3>
+        
+        <div class="package-name">{{ planName }}</div>
+        
+        <div class="package-options">
+          <div class="option" 
+               *ngFor="let option of packageOptions"
+               [class.selected]="option.selected"
+               (click)="selectPackageOption(option.id)">
+            <input type="radio" name="packageOption" [checked]="option.selected">
+            <div class="option-details">
+              <span class="duration">{{ option.duration }}</span>
+              <span class="discount">{{ option.discountInfo }}</span>
+            </div>
+            <span class="price">{{ option.price | number:'1.2-2' }}</span>
+          </div>
+        </div>
+        
+        <div class="coupon-section">
+          <input type="text" placeholder="Enter coupon code">
+          <button class="apply-button">Apply</button>
+        </div>
+        
+        <div class="tax-withheld" *ngIf="getSelectedInvoiceType() === 'corporation'">
+          <input type="checkbox" id="taxWithheld" (change)="toggleTaxWithholding()">
+          <label for="taxWithheld">Tax Withheld 3% <br><span>Only for corporation</span></label>
+          <span class="withheld-amount" *ngIf="isTaxWithheld">-{{ withholdingAmount | number:'1.2-2' }}</span>
+        </div>
+        
+        <div class="total-section">
+          <span class="total-label">Total</span>
+          <span class="total-amount">{{ total | number:'1.2-2' }} THB</span>
+        </div>
+        <div class="vat-notice">*VAT Included</div>
+        
+        <button class="confirm-button" (click)="confirmPayment()" [disabled]="checkoutForm.invalid">Confirm Payment</button>
+        
+        <div class="security-info">
+          <i class="fa fa-shield-alt"></i>
+          <span>Secured by</span>
+          <img src="assets/payment-logos/Visa.png" alt="Visa" class="payment-logo">
+          <img src="assets/payment-logos/Mastercard.png" alt="Mastercard" class="payment-logo">
+          <img src="assets/payment-logos/Jcb.png" alt="JCB" class="payment-logo">
+          <span class="powered-by">| Powered by</span>
+          <img src="assets/payment-logos/omise-logo.png" alt="Omise" class="omise-logo">
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Exit Survey Component -->
+  <app-exit-survey 
+    (surveyResponse)="onSurveyResponse($event)"
+    (surveyClosed)="onSurveyClosed()">
+  </app-exit-survey>
+</div> 

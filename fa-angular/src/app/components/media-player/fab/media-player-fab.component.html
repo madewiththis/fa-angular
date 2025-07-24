@@ -1,0 +1,21 @@
+<div 
+  *ngIf="(state$ | async) as state" 
+  [@fabAnimation]="fabState(state)"
+  class="fab-container" 
+  (click)="restore()">
+  <div class="fab-content">
+    <mat-icon class="play-icon">play_arrow</mat-icon>
+    <div class="fab-text">
+      <div class="title-line">
+        <span class="video-title">{{ state.videoId }}</span>
+      </div>
+      <div class="time-line">
+        <span class="current-time">{{ formatTime(state.currentTime) }}</span>
+        <span class="separator">/</span>
+        <span class="duration">{{ formatTime(state.duration) }}</span>
+      </div>
+    </div>
+    
+    <mat-icon class="close-icon" (click)="close($event)">close</mat-icon>
+  </div>
+</div> 
