@@ -6,6 +6,7 @@ import {
   LearningTask,
   LearningWorkflow,
   LearningGoal,
+  QuickGuideCategory,
   ContentLibrary,
   ContentAttachments
 } from '../models/learning-content.types';
@@ -530,10 +531,61 @@ export const LEARNING_GOALS: LearningGoal[] = [
 
 // ===== MAIN EXPORT =====
 
+// ===== QUICK GUIDE CATEGORIES - Getting Started Page Curation =====
+
+export const QUICK_GUIDE_CATEGORIES: QuickGuideCategory[] = [
+  {
+    id: 'qg_dashboard_basics',
+    name: 'Dashboard Basics',
+    subtitle: 'Get familiar with your business overview',
+    description: 'Learn how to read and understand your dashboard data, graphs, and key metrics',
+    icon: 'dashboard',
+    order: 1,
+    status: 'published',
+    featureMapping: 'dashboard',
+    assignedTaskIds: [], // Will be populated via admin interface
+    assignedWorkflowIds: [],
+    assignedGoalIds: [],
+    version: 1,
+    lastUpdated: new Date('2025-01-24')
+  },
+  {
+    id: 'qg_sales_essentials',
+    name: 'Sales Essentials',
+    subtitle: 'Master the core selling features',
+    description: 'Create quotations, billing notes, and tax invoices with confidence',
+    icon: 'point_of_sale',
+    order: 2,
+    status: 'published',
+    featureMapping: 'sell',
+    assignedTaskIds: [],
+    assignedWorkflowIds: [],
+    assignedGoalIds: [],
+    version: 1,
+    lastUpdated: new Date('2025-01-24')
+  },
+  {
+    id: 'qg_mobile_workflow',
+    name: 'Mobile Workflow',
+    subtitle: 'Manage your business on the go',
+    description: 'Learn to use FlowAccount mobile app for daily business tasks',
+    icon: 'phone_android',
+    order: 3,
+    status: 'published',
+    featureMapping: 'mobile',
+    assignedTaskIds: [],
+    assignedWorkflowIds: [],
+    assignedGoalIds: [],
+    version: 1,
+    lastUpdated: new Date('2025-01-24')
+  }
+];
+
 export const CONTENT_LIBRARY: ContentLibrary = {
   goals: LEARNING_GOALS,
   workflows: LEARNING_WORKFLOWS,
-  tasks: LEARNING_TASKS
+  tasks: LEARNING_TASKS,
+  quickGuideCategories: QUICK_GUIDE_CATEGORIES
 };
 
 // ===== UTILITY FUNCTIONS =====

@@ -4,6 +4,7 @@ import {
   LearningTask,
   LearningWorkflow, 
   LearningGoal,
+  QuickGuideCategory,
   UserLearningProgress,
   TaskProgress,
   WorkflowProgress,
@@ -31,6 +32,7 @@ export class LearningContentService {
   private _goals = signal<LearningGoal[]>([]);
   private _workflows = signal<LearningWorkflow[]>([]);
   private _tasks = signal<LearningTask[]>([]);
+  private _quickGuideCategories = signal<QuickGuideCategory[]>([]);
   
   // User Progress
   private _userProgress = signal<UserLearningProgress | null>(null);
@@ -43,6 +45,7 @@ export class LearningContentService {
   readonly goals = this._goals.asReadonly();
   readonly workflows = this._workflows.asReadonly();
   readonly tasks = this._tasks.asReadonly();
+  readonly quickGuideCategories = this._quickGuideCategories.asReadonly();
   readonly userProgress = this._userProgress.asReadonly();
   readonly isLoading = this._isLoading.asReadonly();
   readonly error = this._error.asReadonly();
@@ -51,13 +54,15 @@ export class LearningContentService {
   readonly totalContent = computed(() => ({
     goals: this._goals().length,
     workflows: this._workflows().length,
-    tasks: this._tasks().length
+    tasks: this._tasks().length,
+    quickGuideCategories: this._quickGuideCategories().length
   }));
   
   readonly publishedContent = computed(() => ({
     goals: this._goals().filter(g => g.status === 'published').length,
     workflows: this._workflows().filter(w => w.status === 'published').length,
-    tasks: this._tasks().filter(t => t.status === 'published').length
+    tasks: this._tasks().filter(t => t.status === 'published').length,
+    quickGuideCategories: this._quickGuideCategories().filter(qg => qg.status === 'published').length
   }));
 
   constructor() {
@@ -78,6 +83,7 @@ export class LearningContentService {
       this._goals.set(contentLibrary.goals);
       this._workflows.set(contentLibrary.workflows);
       this._tasks.set(contentLibrary.tasks);
+      this._quickGuideCategories.set(contentLibrary.quickGuideCategories);
       
       await this.saveContent();
     } catch (error) {
@@ -103,6 +109,7 @@ export class LearningContentService {
         this._goals.set(content.goals || []);
         this._workflows.set(content.workflows || []);
         this._tasks.set(content.tasks || []);
+        this._quickGuideCategories.set(content.quickGuideCategories || []);
       } else {
         // If no stored content, initialize with default content
         await this.initializeDefaultContent();
@@ -126,6 +133,7 @@ export class LearningContentService {
       this._goals.set(CONTENT_LIBRARY.goals);
       this._workflows.set(CONTENT_LIBRARY.workflows);
       this._tasks.set(CONTENT_LIBRARY.tasks);
+      this._quickGuideCategories.set(CONTENT_LIBRARY.quickGuideCategories);
       
       // Save to localStorage for future loads
       await this.saveContent();
@@ -144,6 +152,7 @@ export class LearningContentService {
         goals: this._goals(),
         workflows: this._workflows(),
         tasks: this._tasks(),
+        quickGuideCategories: this._quickGuideCategories(),
         lastUpdated: new Date().toISOString()
       };
       
@@ -183,6 +192,82 @@ export class LearningContentService {
     return this._goals()
       .filter(goal => goal.status === 'published')
       .sort((a, b) => a.priority - b.priority);
+  }
+
+  // ===== QUICK GUIDE CATEGORY OPERATIONS =====
+
+  /**
+   * Get quick guide category by ID
+   */
+  getQuickGuideCategory(categoryId: string): QuickGuideCategory | null {
+    return this._quickGuideCategories().find(qg => qg.id === categoryId) || null;
+  }
+
+  /**
+   * Get all published quick guide categories sorted by order
+   */
+  getPublishedQuickGuideCategories(): QuickGuideCategory[] {
+    return this._quickGuideCategories()
+      .filter(qg => qg.status === 'published')
+      .sort((a, b) => a.order - b.order);
+  }
+
+  /**
+   * Create new quick guide category
+   */
+  async createQuickGuideCategory(categoryData: Omit<QuickGuideCategory, 'id' | 'version' | 'lastUpdated'>): Promise<QuickGuideCategory> {
+    const newCategory: QuickGuideCategory = {
+      ...categoryData,
+      id: this.generateId('qg'),
+      version: 1,
+      lastUpdated: new Date()
+    };
+
+    this._quickGuideCategories.update(categories => [...categories, newCategory]);
+    await this.saveContent();
+    return newCategory;
+  }
+
+  /**
+   * Update existing quick guide category
+   */
+  async updateQuickGuideCategory(categoryId: string, updates: Partial<QuickGuideCategory>): Promise<QuickGuideCategory | null> {
+    const categoryIndex = this._quickGuideCategories().findIndex(qg => qg.id === categoryId);
+    if (categoryIndex === -1) return null;
+
+    const currentCategory = this._quickGuideCategories()[categoryIndex];
+    const updatedCategory = {
+      ...currentCategory,
+      ...updates,
+      version: currentCategory.version + 1,
+      lastUpdated: new Date()
+    };
+
+    this._quickGuideCategories.update(categories => {
+      const newCategories = [...categories];
+      newCategories[categoryIndex] = updatedCategory;
+      return newCategories;
+    });
+
+    await this.saveContent();
+    return updatedCategory;
+  }
+
+  /**
+   * Delete quick guide category
+   */
+  async deleteQuickGuideCategory(categoryId: string): Promise<boolean> {
+    const categoryIndex = this._quickGuideCategories().findIndex(qg => qg.id === categoryId);
+    if (categoryIndex === -1) return false;
+
+    this._quickGuideCategories.update(categories => {
+      const newCategories = [...categories];
+      newCategories.splice(categoryIndex, 1);
+      return newCategories;
+    });
+
+    await this.saveContent();
+    return true;
   }
 
   // ===== WORKFLOW OPERATIONS =====
@@ -877,7 +962,7 @@ export class LearningContentService {
   /**
    * Generate unique ID for content
    */
-  private generateId(type: 'goal' | 'workflow' | 'task'): string {
+  private generateId(type: 'goal' | 'workflow' | 'task' | 'qg'): string {
     const timestamp = Date.now();
     const random = Math.floor(Math.random() * 1000);
     return `${type}_${timestamp}_${random}`;
@@ -904,6 +989,7 @@ export class LearningContentService {
     this._goals.set([]);
     this._workflows.set([]);
     this._tasks.set([]);
+    this._quickGuideCategories.set([]);
     this._userProgress.set(null);
   }
 }

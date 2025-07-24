@@ -46,6 +46,12 @@
             (click)="fileInput.click()">
       <mat-icon>upload</mat-icon>
     </button>
+    
+    <button mat-icon-button 
+            matTooltip="Import Draft Tasks (9 tasks from raw content)"
+            (click)="importDraftTasks()">
+      <mat-icon>playlist_add</mat-icon>
+    </button>
   </div>
 </mat-toolbar>
 
@@ -80,6 +86,9 @@
             }
             @case ('tasks') {
               <app-task-management></app-task-management>
+            }
+            @case ('get-started') {
+              <app-get-started-management></app-get-started-management>
             }
             @case ('relationships') {
               <app-relationship-builder></app-relationship-builder>

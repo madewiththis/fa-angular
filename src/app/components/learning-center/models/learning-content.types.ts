@@ -357,6 +357,24 @@ export interface ContentLibrary {
   goals: LearningGoal[];
   workflows: LearningWorkflow[];
   tasks: LearningTask[];
+  quickGuideCategories: QuickGuideCategory[];
+}
+
+// Quick Guide Categories for Getting Started Page
+export interface QuickGuideCategory {
+  id: string;
+  name: string;
+  subtitle: string;
+  description: string;
+  icon: string; // Material icon name
+  order: number; // Display order
+  status: ContentStatus;
+  featureMapping?: string; // Maps to FlowAccount feature (e.g., 'sell', 'buy', 'dashboard')
+  assignedTaskIds: string[];
+  assignedWorkflowIds: string[];
+  assignedGoalIds: string[];
+  version: number;
+  lastUpdated: Date;
 }
 
 export interface ProgressSummary {

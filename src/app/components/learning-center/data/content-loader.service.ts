@@ -108,7 +108,7 @@ export class ContentLoaderService {
       
       // Return empty content with errors
       return {
-        content: { goals: [], workflows: [], tasks: [] },
+        content: { goals: [], workflows: [], tasks: [], quickGuideCategories: [] },
         source: 'typescript', // fallback
         validation: { valid: false, errors, warnings: [] },
         loadTime,
@@ -143,7 +143,8 @@ export class ContentLoaderService {
       return {
         tasks: tasksResponse,
         workflows: workflowsResponse,
-        goals: goalsResponse
+        goals: goalsResponse,
+        quickGuideCategories: []
       };
     } catch (error) {
       throw new Error(`Failed to load JSON content: ${error}`);
@@ -175,7 +176,8 @@ export class ContentLoaderService {
     return {
       goals: content.goals.filter(g => g.status === 'published'),
       workflows: content.workflows.filter(w => w.status === 'published'),
-      tasks: content.tasks.filter(t => t.status === 'published')
+      tasks: content.tasks.filter(t => t.status === 'published'),
+      quickGuideCategories: content.quickGuideCategories.filter(qg => qg.status === 'published')
     };
   }
 

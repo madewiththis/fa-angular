@@ -162,6 +162,52 @@
   }
 }
 
+// Search and Filters Section
+.search-filters-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 16px;
+  
+  .search-field {
+    flex: 1;
+    max-width: 400px;
+  }
+  
+  .bulk-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    
+    .selection-info {
+      font-size: 14px;
+      color: #666;
+      font-weight: 500;
+    }
+  }
+}
+
+// Filter Pills
+.filter-pills {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  padding: 12px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  
+  mat-chip-listbox {
+    flex: 1;
+  }
+  
+  .clear-all-btn {
+    min-width: auto;
+    padding: 0 12px;
+  }
+}
+
 .table-card {
   flex: 1;
   overflow: hidden;
@@ -200,23 +246,61 @@
     .tasks-table {
       width: 100%;
       
-      .sortable-header {
-        cursor: pointer;
-        user-select: none;
-        position: relative;
+      // Column widths
+      .select-column {
+        width: 48px;
+        min-width: 48px;
+        max-width: 48px;
+      }
+      
+      // Header enhancements
+      .header-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
         
         .sort-icon {
-          position: absolute;
-          right: -20px;
-          top: 50%;
-          transform: translateY(-50%);
           font-size: 16px;
           width: 16px;
           height: 16px;
         }
+      }
+      
+      .sortable-header {
+        cursor: pointer;
+        user-select: none;
         
         &:hover {
           background-color: rgba(0, 0, 0, 0.04);
+        }
+      }
+      
+      .sortable-text {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        
+        &:hover {
+          color: #1976d2;
+        }
+      }
+      
+      .filterable-header {
+        .filter-btn {
+          width: 24px;
+          height: 24px;
+          
+          mat-icon {
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+          }
+          
+          &:hover {
+            background-color: rgba(0, 0, 0, 0.04);
+          }
         }
       }
       

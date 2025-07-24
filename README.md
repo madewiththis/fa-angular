@@ -1,4 +1,19 @@
-# FaAngular
+# FlowAccount Angular Prototype
+
+A frontend prototype for the new version of FlowAccount.com, built with Angular 20. This project demonstrates new branding, design language, and in-app interface concepts with a comprehensive **Learning Center system** that serves as the central content repository for all user guidance.
+
+## Learning Center - Central Content Repository 🎯
+
+The Learning Center serves as the single source of truth for all learning content in FlowAccount, providing structured guidance through a **Goals → Workflows → Tasks** hierarchy. Other system components can easily integrate with it to provide contextual help, guided experiences, and structured learning paths.
+
+**Current Integrations:**
+- ✅ Get Started Dashboard (Quick Guide Categories)
+- 🚧 Help Centre Right Panel (Next: task instructions integration)
+
+**📚 Complete Documentation:**
+- **Component Overview**: [`src/app/components/learning-center/README.md`](src/app/components/learning-center/README.md)
+- **API Reference**: [`src/app/components/learning-center/docs/API_REFERENCE.md`](src/app/components/learning-center/docs/API_REFERENCE.md)
+- **Integration Guide**: [`src/app/components/learning-center/docs/INTEGRATION_GUIDE.md`](src/app/components/learning-center/docs/INTEGRATION_GUIDE.md)
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.2.
 

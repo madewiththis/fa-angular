@@ -180,7 +180,7 @@ export class ContentMigratorService {
       const goals = this.convertJSONToGoals(parsed.goals);
 
       // Generate TypeScript file content
-      const tsContent = this.generateTypeScriptFile({ tasks, workflows, goals }, opts);
+      const tsContent = this.generateTypeScriptFile({ tasks, workflows, goals, quickGuideCategories: [] }, opts);
 
       return {
         success: true,
@@ -432,7 +432,8 @@ export function validateContentIntegrity(): { valid: boolean; errors: string[] }
     return {
       tasks: mergedTasks,
       workflows: mergedWorkflows,
-      goals: mergedGoals
+      goals: mergedGoals,
+      quickGuideCategories: primary.quickGuideCategories || []
     };
   }
 

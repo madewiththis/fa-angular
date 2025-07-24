@@ -10,6 +10,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatChipsModule } from '@angular/material/chips';
 
 import { LearningContentService } from '../../../services/learning-content.service';
 import { ContentManagementService, TaskFormData } from '../../../services/content-management.service';
@@ -29,7 +32,10 @@ import { LearningTask, DifficultyLevel, ContentStatus } from '../../../models/le
     MatInputModule,
     MatSelectModule,
     MatSnackBarModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatCheckboxModule,
+    MatMenuModule,
+    MatChipsModule
   ],
   templateUrl: './task-management.component.html',
   styleUrl: './task-management.component.scss'
@@ -52,21 +58,80 @@ export class TaskManagementComponent {
   taskForm: FormGroup;
   
   // Table configuration
-  displayedColumns = ['name', 'difficulty', 'estimatedTime', 'status', 'category', 'actions'];
+  displayedColumns = ['select', 'name', 'difficulty', 'estimatedTime', 'status', 'category', 'actions'];
   
-  // Filter and sort
+  // Search and Filters
+  searchQuery = signal<string>('');
   statusFilter = signal<ContentStatus | 'all'>('all');
+  difficultyFilter = signal<DifficultyLevel | 'all'>('all');
+  categoryFilter = signal<string>('all');
   sortBy = signal<'name' | 'difficulty' | 'estimatedTime'>('name');
   sortDirection = signal<'asc' | 'desc'>('asc');
+  
+  // Selection State
+  selectedTasks = signal<Set<string>>(new Set());
+  selectAll = signal<boolean>(false);
+  indeterminate = signal<boolean>(false);
+  
+  // Active Filters (for filter pills)
+  activeFilters = computed(() => {
+    const filters = [];
+    if (this.searchQuery()) filters.push({ type: 'search', value: this.searchQuery(), label: `Search: "${this.searchQuery()}"` });
+    if (this.statusFilter() !== 'all') filters.push({ type: 'status', value: this.statusFilter(), label: `Status: ${this.statusFilter()}` });
+    if (this.difficultyFilter() !== 'all') filters.push({ type: 'difficulty', value: this.difficultyFilter(), label: `Difficulty: ${this.difficultyFilter()}` });
+    if (this.categoryFilter() !== 'all') filters.push({ type: 'category', value: this.categoryFilter(), label: `Category: ${this.categoryFilter()}` });
+    return filters;
+  });
+  
+  // Column Filter Options
+  readonly uniqueCategories = computed(() => {
+    const categories = new Set(this.tasks().map(task => task.category || 'Uncategorized'));
+    return Array.from(categories).sort();
+  });
+  
+  // Selection computed properties
+  readonly selectedCount = computed(() => this.selectedTasks().size);
+  readonly hasSelection = computed(() => this.selectedCount() > 0);
+  readonly isAllSelected = computed(() => {
+    const filtered = this.filteredTasks();
+    return filtered.length > 0 && this.selectedTasks().size === filtered.length;
+  });
+  readonly isIndeterminate = computed(() => {
+    const selected = this.selectedCount();
+    return selected > 0 && selected < this.filteredTasks().length;
+  });
   
   // Computed filtered and sorted tasks
   readonly filteredTasks = computed(() => {
     let tasks = this.tasks();
     
+    // Apply search filter
+    const searchQuery = this.searchQuery().toLowerCase().trim();
+    if (searchQuery) {
+      tasks = tasks.filter(task => 
+        task.name.toLowerCase().includes(searchQuery) ||
+        task.description.toLowerCase().includes(searchQuery) ||
+        (task.category || '').toLowerCase().includes(searchQuery) ||
+        task.tags.some(tag => tag.toLowerCase().includes(searchQuery))
+      );
+    }
+    
     // Apply status filter
     const status = this.statusFilter();
     if (status !== 'all') {
       tasks = tasks.filter(task => task.status === status);
+    }
+    
+    // Apply difficulty filter
+    const difficulty = this.difficultyFilter();
+    if (difficulty !== 'all') {
+      tasks = tasks.filter(task => task.difficulty === difficulty);
+    }
+    
+    // Apply category filter
+    const category = this.categoryFilter();
+    if (category !== 'all') {
+      tasks = tasks.filter(task => (task.category || 'Uncategorized') === category);
     }
     
     // Apply sorting
@@ -423,8 +488,51 @@ export class TaskManagementComponent {
     this.clearAllArrays();
   }
 
+  // Search and Filter Methods
+  onSearchChange(query: string): void {
+    this.searchQuery.set(query);
+    this.clearSelection();
+  }
+
   onStatusFilterChange(status: ContentStatus | 'all'): void {
     this.statusFilter.set(status);
+    this.clearSelection();
+  }
+
+  onDifficultyFilterChange(difficulty: DifficultyLevel | 'all'): void {
+    this.difficultyFilter.set(difficulty);
+    this.clearSelection();
+  }
+
+  onCategoryFilterChange(category: string): void {
+    this.categoryFilter.set(category);
+    this.clearSelection();
+  }
+
+  removeFilter(filterType: string): void {
+    switch (filterType) {
+      case 'search':
+        this.searchQuery.set('');
+        break;
+      case 'status':
+        this.statusFilter.set('all');
+        break;
+      case 'difficulty':
+        this.difficultyFilter.set('all');
+        break;
+      case 'category':
+        this.categoryFilter.set('all');
+        break;
+    }
+    this.clearSelection();
+  }
+
+  clearAllFilters(): void {
+    this.searchQuery.set('');
+    this.statusFilter.set('all');
+    this.difficultyFilter.set('all');
+    this.categoryFilter.set('all');
+    this.clearSelection();
   }
 
   onSortChange(column: 'name' | 'difficulty' | 'estimatedTime'): void {
@@ -433,6 +541,110 @@ export class TaskManagementComponent {
     } else {
       this.sortBy.set(column);
       this.sortDirection.set('asc');
+    }
+  }
+
+  // Selection Methods
+  toggleSelectAll(): void {
+    const filteredTasks = this.filteredTasks();
+    const currentSelection = new Set(this.selectedTasks());
+    
+    if (this.isAllSelected()) {
+      // Deselect all visible tasks
+      filteredTasks.forEach(task => currentSelection.delete(task.id));
+    } else {
+      // Select all visible tasks
+      filteredTasks.forEach(task => currentSelection.add(task.id));
+    }
+    
+    this.selectedTasks.set(currentSelection);
+  }
+
+  toggleTaskSelection(taskId: string): void {
+    const currentSelection = new Set(this.selectedTasks());
+    
+    if (currentSelection.has(taskId)) {
+      currentSelection.delete(taskId);
+    } else {
+      currentSelection.add(taskId);
+    }
+    
+    this.selectedTasks.set(currentSelection);
+  }
+
+  isTaskSelected(taskId: string): boolean {
+    return this.selectedTasks().has(taskId);
+  }
+
+  clearSelection(): void {
+    this.selectedTasks.set(new Set());
+  }
+
+  // Bulk Actions
+  async bulkUpdateStatus(newStatus: ContentStatus): Promise<void> {
+    const selectedIds = Array.from(this.selectedTasks());
+    if (selectedIds.length === 0) {
+      this.snackBar.open('No tasks selected', 'Close', { duration: 3000 });
+      return;
+    }
+
+    try {
+      const updatePromises = selectedIds.map(taskId => 
+        this.learningContentService.updateTask(taskId, { status: newStatus })
+      );
+      
+      await Promise.all(updatePromises);
+      this.snackBar.open(`Updated ${selectedIds.length} tasks to ${newStatus}`, 'Close', { duration: 3000 });
+      this.clearSelection();
+    } catch (error) {
+      console.error('Error updating tasks:', error);
+      this.snackBar.open('Error updating tasks', 'Close', { duration: 3000 });
+    }
+  }
+
+  async bulkUpdateCategory(newCategory: string): Promise<void> {
+    const selectedIds = Array.from(this.selectedTasks());
+    if (selectedIds.length === 0) {
+      this.snackBar.open('No tasks selected', 'Close', { duration: 3000 });
+      return;
+    }
+
+    try {
+      const updatePromises = selectedIds.map(taskId => 
+        this.learningContentService.updateTask(taskId, { category: newCategory })
+      );
+      
+      await Promise.all(updatePromises);
+      this.snackBar.open(`Updated ${selectedIds.length} tasks to category: ${newCategory}`, 'Close', { duration: 3000 });
+      this.clearSelection();
+    } catch (error) {
+      console.error('Error updating task categories:', error);
+      this.snackBar.open('Error updating task categories', 'Close', { duration: 3000 });
+    }
+  }
+
+  async bulkDelete(): Promise<void> {
+    const selectedIds = Array.from(this.selectedTasks());
+    if (selectedIds.length === 0) {
+      this.snackBar.open('No tasks selected', 'Close', { duration: 3000 });
+      return;
+    }
+
+    if (!confirm(`Are you sure you want to delete ${selectedIds.length} selected tasks? This action cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      const deletePromises = selectedIds.map(taskId => 
+        this.learningContentService.deleteTask(taskId)
+      );
+      
+      await Promise.all(deletePromises);
+      this.snackBar.open(`Deleted ${selectedIds.length} tasks`, 'Close', { duration: 3000 });
+      this.clearSelection();
+    } catch (error) {
+      console.error('Error deleting tasks:', error);
+      this.snackBar.open('Error deleting tasks', 'Close', { duration: 3000 });
     }
   }
 

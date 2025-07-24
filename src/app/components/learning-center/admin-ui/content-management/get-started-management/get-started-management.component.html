@@ -1,0 +1,450 @@
+<div class="get-started-management">
+  <!-- Header Section -->
+  <div class="header-section">
+    <div class="header-content">
+      <h2 class="page-title">
+        <mat-icon>explore</mat-icon>
+        Get Started Categories
+      </h2>
+      <p class="page-subtitle">
+        Curate categories for the Getting Started page to guide new users through essential FlowAccount features
+      </p>
+    </div>
+    <div class="header-actions">
+      <button mat-raised-button color="primary" (click)="showCreateForm()">
+        <mat-icon>add</mat-icon>
+        Add Category
+      </button>
+    </div>
+  </div>
+
+  <!-- Quick Stats Cards -->
+  <div class="stats-row">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-number">{{ quickGuideCategories().length }}</div>
+          <div class="stat-label">Total Categories</div>
+        </div>
+        <mat-icon class="stat-icon">category</mat-icon>
+      </mat-card-content>
+    </mat-card>
+    
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-number">{{ publishedCategoriesCount() }}</div>
+          <div class="stat-label">Published</div>
+        </div>
+        <mat-icon class="stat-icon published">visibility</mat-icon>
+      </mat-card-content>
+    </mat-card>
+    
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-number">{{ totalAssignedContentCount() }}</div>
+          <div class="stat-label">Assigned Content</div>
+        </div>
+        <mat-icon class="stat-icon content">assignment</mat-icon>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Create/Edit Form -->
+  @if (showForm()) {
+    <mat-card class="form-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>{{ isEditing() ? 'edit' : 'add' }}</mat-icon>
+          {{ isEditing() ? 'Edit Category' : 'Create New Category' }}
+        </mat-card-title>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <form [formGroup]="categoryForm" (ngSubmit)="saveCategory()">
+          <!-- Basic Information -->
+          <div class="form-section">
+            <h3 class="section-title">Basic Information</h3>
+            
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Category Name</mat-label>
+                <input matInput formControlName="name" placeholder="e.g., Dashboard Basics">
+                <mat-error *ngIf="categoryForm.get('name')?.hasError('required')">
+                  Category name is required
+                </mat-error>
+                <mat-error *ngIf="categoryForm.get('name')?.hasError('minlength')">
+                  Name must be at least 3 characters
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Subtitle</mat-label>
+                <input matInput formControlName="subtitle" placeholder="e.g., Get familiar with your business overview">
+                <mat-error *ngIf="categoryForm.get('subtitle')?.hasError('required')">
+                  Subtitle is required
+                </mat-error>
+                <mat-error *ngIf="categoryForm.get('subtitle')?.hasError('minlength')">
+                  Subtitle must be at least 5 characters
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Description</mat-label>
+                <textarea matInput formControlName="description" rows="3" 
+                         placeholder="e.g., Learn how to read and understand your dashboard data, graphs, and key metrics"></textarea>
+                <mat-error *ngIf="categoryForm.get('description')?.hasError('required')">
+                  Description is required
+                </mat-error>
+                <mat-error *ngIf="categoryForm.get('description')?.hasError('minlength')">
+                  Description must be at least 10 characters
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row two-columns">
+              <mat-form-field appearance="outline">
+                <mat-label>Icon</mat-label>
+                <mat-select formControlName="icon">
+                  @for (icon of materialIcons; track icon) {
+                    <mat-option [value]="icon">
+                      <div class="icon-option">
+                        <mat-icon>{{ icon }}</mat-icon>
+                        <span>{{ icon }}</span>
+                      </div>
+                    </mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Display Order</mat-label>
+                <input matInput type="number" formControlName="order" min="1">
+                <mat-error *ngIf="categoryForm.get('order')?.hasError('required')">
+                  Order is required
+                </mat-error>
+                <mat-error *ngIf="categoryForm.get('order')?.hasError('min')">
+                  Order must be at least 1
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row two-columns">
+              <mat-form-field appearance="outline">
+                <mat-label>Status</mat-label>
+                <mat-select formControlName="status">
+                  @for (status of statusOptions; track status) {
+                    <mat-option [value]="status">
+                      <div class="status-option">
+                        <mat-icon [class]="'status-' + status">
+                          {{ status === 'published' ? 'visibility' : status === 'draft' ? 'edit' : 'archive' }}
+                        </mat-icon>
+                        <span>{{ status | titlecase }}</span>
+                      </div>
+                    </mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Feature Mapping (Optional)</mat-label>
+                <mat-select formControlName="featureMapping">
+                  <mat-option value="">None</mat-option>
+                  @for (feature of featureMappingOptions; track feature.value) {
+                    <mat-option [value]="feature.value">{{ feature.label }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- Content Assignment -->
+          <div class="form-section">
+            <h3 class="section-title">Assign Learning Content</h3>
+            
+            <!-- Tasks Assignment -->
+            <mat-expansion-panel class="assignment-panel">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <mat-icon>task_alt</mat-icon>
+                  Assigned Tasks ({{ assignedTaskIdsArray.length }})
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              
+              <div class="assignment-content">
+                @for (control of assignedTaskIdsArray.controls; track $index) {
+                  <div class="assignment-row">
+                    <mat-form-field appearance="outline" class="flex-grow">
+                      <mat-label>Select Task</mat-label>
+                      <mat-select [formControl]="$any(control)">
+                        <mat-option value="">None</mat-option>
+                        @for (task of tasks(); track task.id) {
+                          <mat-option [value]="task.id">
+                            <div class="content-option">
+                              <span class="content-name">{{ task.name }}</span>
+                              <span class="content-category">{{ task.category }}</span>
+                            </div>
+                          </mat-option>
+                        }
+                      </mat-select>
+                    </mat-form-field>
+                    <button mat-icon-button color="warn" (click)="removeTask($index)" type="button">
+                      <mat-icon>remove_circle</mat-icon>
+                    </button>
+                  </div>
+                }
+                
+                <button mat-stroked-button (click)="addTask()" type="button" class="add-content-btn">
+                  <mat-icon>add</mat-icon>
+                  Add Task
+                </button>
+              </div>
+            </mat-expansion-panel>
+
+            <!-- Workflows Assignment -->
+            <mat-expansion-panel class="assignment-panel">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <mat-icon>account_tree</mat-icon>
+                  Assigned Workflows ({{ assignedWorkflowIdsArray.length }})
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              
+              <div class="assignment-content">
+                @for (control of assignedWorkflowIdsArray.controls; track $index) {
+                  <div class="assignment-row">
+                    <mat-form-field appearance="outline" class="flex-grow">
+                      <mat-label>Select Workflow</mat-label>
+                      <mat-select [formControl]="$any(control)">
+                        <mat-option value="">None</mat-option>
+                        @for (workflow of workflows(); track workflow.id) {
+                          <mat-option [value]="workflow.id">
+                            <div class="content-option">
+                              <span class="content-name">{{ workflow.name }}</span>
+                              <span class="content-category">{{ workflow.category }}</span>
+                            </div>
+                          </mat-option>
+                        }
+                      </mat-select>
+                    </mat-form-field>
+                    <button mat-icon-button color="warn" (click)="removeWorkflow($index)" type="button">
+                      <mat-icon>remove_circle</mat-icon>
+                    </button>
+                  </div>
+                }
+                
+                <button mat-stroked-button (click)="addWorkflow()" type="button" class="add-content-btn">
+                  <mat-icon>add</mat-icon>
+                  Add Workflow
+                </button>
+              </div>
+            </mat-expansion-panel>
+
+            <!-- Goals Assignment -->
+            <mat-expansion-panel class="assignment-panel">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <mat-icon>flag</mat-icon>
+                  Assigned Goals ({{ assignedGoalIdsArray.length }})
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              
+              <div class="assignment-content">
+                @for (control of assignedGoalIdsArray.controls; track $index) {
+                  <div class="assignment-row">
+                    <mat-form-field appearance="outline" class="flex-grow">
+                      <mat-label>Select Goal</mat-label>
+                      <mat-select [formControl]="$any(control)">
+                        <mat-option value="">None</mat-option>
+                        @for (goal of goals(); track goal.id) {
+                          <mat-option [value]="goal.id">
+                            <div class="content-option">
+                              <span class="content-name">{{ goal.name }}</span>
+                              <span class="content-priority">Priority {{ goal.priority }}</span>
+                            </div>
+                          </mat-option>
+                        }
+                      </mat-select>
+                    </mat-form-field>
+                    <button mat-icon-button color="warn" (click)="removeGoal($index)" type="button">
+                      <mat-icon>remove_circle</mat-icon>
+                    </button>
+                  </div>
+                }
+                
+                <button mat-stroked-button (click)="addGoal()" type="button" class="add-content-btn">
+                  <mat-icon>add</mat-icon>
+                  Add Goal
+                </button>
+              </div>
+            </mat-expansion-panel>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="form-actions">
+            <button mat-button type="button" (click)="cancelEdit()">Cancel</button>
+            <button mat-raised-button color="primary" type="submit" [disabled]="categoryForm.invalid">
+              <mat-icon>{{ isEditing() ? 'save' : 'add' }}</mat-icon>
+              {{ isEditing() ? 'Update Category' : 'Create Category' }}
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  }
+
+  <!-- Categories Table -->
+  <mat-card class="table-card">
+    <mat-card-header>
+      <mat-card-title>Quick Guide Categories</mat-card-title>
+      <div class="table-actions">
+        <button mat-button (click)="onSortChange('order')" 
+                [class.active]="sortBy() === 'order'">
+          <mat-icon>swap_vert</mat-icon>
+          Sort by Order {{ sortBy() === 'order' ? (sortDirection() === 'asc' ? '↑' : '↓') : '' }}
+        </button>
+        <button mat-button (click)="onSortChange('name')"
+                [class.active]="sortBy() === 'name'">
+          <mat-icon>sort_by_alpha</mat-icon>
+          Sort by Name {{ sortBy() === 'name' ? (sortDirection() === 'asc' ? '↑' : '↓') : '' }}
+        </button>
+      </div>
+    </mat-card-header>
+    
+    <mat-card-content>
+      @if (sortedCategories().length === 0) {
+        <div class="empty-state">
+          <mat-icon>explore_off</mat-icon>
+          <h3>No Categories Yet</h3>
+          <p>Create your first quick guide category to get started</p>
+          <button mat-raised-button color="primary" (click)="showCreateForm()">
+            <mat-icon>add</mat-icon>
+            Create Category
+          </button>
+        </div>
+      } @else {
+        <div class="table-container">
+          <table mat-table [dataSource]="sortedCategories()" class="categories-table">
+            <!-- Order Column -->
+            <ng-container matColumnDef="order">
+              <th mat-header-cell *matHeaderCellDef>Order</th>
+              <td mat-cell *matCellDef="let category">
+                <div class="order-cell">
+                  <mat-icon class="drag-handle">drag_indicator</mat-icon>
+                  <span class="order-number">{{ category.order }}</span>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Category</th>
+              <td mat-cell *matCellDef="let category">
+                <div class="category-info">
+                  <div class="category-header">
+                    <mat-icon [class]="'category-icon status-' + category.status">{{ category.icon }}</mat-icon>
+                    <div class="category-text">
+                      <div class="category-name">{{ category.name }}</div>
+                      <div class="category-subtitle">{{ category.subtitle }}</div>
+                    </div>
+                  </div>
+                  @if (category.featureMapping) {
+                    <div class="feature-mapping">
+                      <mat-chip>{{ getFeatureMappingLabel(category.featureMapping) }}</mat-chip>
+                    </div>
+                  }
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Subtitle Column -->
+            <ng-container matColumnDef="subtitle">
+              <th mat-header-cell *matHeaderCellDef>Description</th>
+              <td mat-cell *matCellDef="let category">
+                <div class="description-cell">
+                  <p class="description-text">{{ category.description }}</p>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Status Column -->
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>Status</th>
+              <td mat-cell *matCellDef="let category">
+                <mat-chip [class]="'status-chip status-' + category.status">
+                  <mat-icon>
+                    {{ category.status === 'published' ? 'visibility' : category.status === 'draft' ? 'edit' : 'archive' }}
+                  </mat-icon>
+                  {{ category.status | titlecase }}
+                </mat-chip>
+              </td>
+            </ng-container>
+
+            <!-- Assigned Content Column -->
+            <ng-container matColumnDef="assignedContent">
+              <th mat-header-cell *matHeaderCellDef>Assigned Content</th>
+              <td mat-cell *matCellDef="let category">
+                <div class="content-summary">
+                  <div class="content-counts">
+                    @if (category.assignedTaskIds.length > 0) {
+                      <mat-chip class="content-chip tasks-chip">
+                        <mat-icon>task_alt</mat-icon>
+                        {{ category.assignedTaskIds.length }} {{ category.assignedTaskIds.length === 1 ? 'Task' : 'Tasks' }}
+                      </mat-chip>
+                    }
+                    @if (category.assignedWorkflowIds.length > 0) {
+                      <mat-chip class="content-chip workflows-chip">
+                        <mat-icon>account_tree</mat-icon>
+                        {{ category.assignedWorkflowIds.length }} {{ category.assignedWorkflowIds.length === 1 ? 'Workflow' : 'Workflows' }}
+                      </mat-chip>
+                    }
+                    @if (category.assignedGoalIds.length > 0) {
+                      <mat-chip class="content-chip goals-chip">
+                        <mat-icon>flag</mat-icon>
+                        {{ category.assignedGoalIds.length }} {{ category.assignedGoalIds.length === 1 ? 'Goal' : 'Goals' }}
+                      </mat-chip>
+                    }
+                    @if (getTotalAssignedContent(category) === 0) {
+                      <span class="no-content">No content assigned</span>
+                    }
+                  </div>
+                  <div class="total-content">
+                    Total: {{ getTotalAssignedContent(category) }} items
+                  </div>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Actions</th>
+              <td mat-cell *matCellDef="let category">
+                <div class="action-buttons">
+                  <button mat-icon-button 
+                          [matTooltip]="'Edit ' + category.name"
+                          (click)="editCategory(category)">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button mat-icon-button 
+                          color="warn"
+                          [matTooltip]="'Delete ' + category.name"
+                          (click)="deleteCategory(category)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

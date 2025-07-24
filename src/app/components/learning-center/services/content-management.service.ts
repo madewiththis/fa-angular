@@ -635,7 +635,8 @@ export class ContentManagementService {
         await this.learningContentService.initializeContent({
           goals: content.goals,
           workflows: content.workflows,
-          tasks: content.tasks
+          tasks: content.tasks,
+          quickGuideCategories: content.quickGuideCategories || []
         });
         return true;
       }

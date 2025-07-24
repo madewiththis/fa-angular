@@ -7,7 +7,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { UserProfileTestingService } from '../../../services/user-profile-testing.service';
 import { LearningPanelService } from '../../../services/learning-panel.service';
 import { CompanySetupService } from '../../../services/company-setup.service';
+import { LearningContentService } from '../../../components/learning-center/services/learning-content.service';
 import { BusinessGoal } from '../../../models/goal-system.interfaces';
+import { QuickGuideCategory, LearningTask, LearningWorkflow, LearningGoal } from '../../../components/learning-center/models/learning-content.types';
 import { getRecommendedGoals, searchGoals } from '../../../data/goal-library';
 import { CompanySetupModalComponent, CompanySetupData } from '../../../components/settings/company-setup/company-setup-modal.component';
 
@@ -96,6 +98,7 @@ import { CompanySetupModalComponent, CompanySetupData } from '../../../component
           </ng-template>
         </div>
       </div>
+
 
     </div>
 
@@ -1002,6 +1005,7 @@ export class GetStartedComponent {
   private userProfileTestingService = inject(UserProfileTestingService);
   private learningPanelService = inject(LearningPanelService);
   protected companySetupService = inject(CompanySetupService);
+  private learningContentService = inject(LearningContentService);
   private dialog = inject(MatDialog);
   
   // Goal-based interface signals  
@@ -1011,6 +1015,12 @@ export class GetStartedComponent {
   
   // Quick start menu signals
   protected selectedQuickAction = signal<string | null>(null);
+  
+  // Learning Center integration
+  readonly quickGuideCategories = this.learningContentService.quickGuideCategories;
+  readonly learningTasks = this.learningContentService.tasks;
+  readonly learningWorkflows = this.learningContentService.workflows;
+  readonly learningGoals = this.learningContentService.goals;
   
   // Business profile selection
   selectedRole = this.getCurrentRole();
@@ -1023,10 +1033,12 @@ export class GetStartedComponent {
   // Store anchor position for spatial anchoring
   private anchorPosition = { top: 0, left: 0, width: 0, height: 0 };
   
-  // Expanded quick actions for comprehensive business functions using computed signal
+  // Quick actions from Learning Center Quick Guide Categories
   quickActions = computed(() => {
     const setupCompleted = this.companySetupService.isSetupCompleted();
+    const publishedCategories = this.quickGuideCategories().filter(qg => qg.status === 'published');
     
+    // Always include company setup as the first action
     const actions = [
       {
         id: 'company-setup',
@@ -1043,258 +1055,8 @@ export class GetStartedComponent {
           this.openCompanySetup();
         }
       },
-      {
-        id: 'start-selling',
-        title: 'Start selling to customers',
-        description: setupCompleted ? 'Create quotes, send invoices, and get paid' : 'Complete setup to unlock selling features',
-        icon: 'point_of_sale',
-        iconClass: 'sell-icon',
-        completed: false, // TODO: Check selling progress
-        enabled: setupCompleted,
-        subActions: [
-          {
-            id: 'create-quote',
-            title: 'Create your first quote',
-            description: 'Generate professional quotations for potential customers',
-            icon: 'description',
-            estimatedTime: '3 min',
-            completed: false,
-            action: () => this.createQuote()
-          },
-          {
-            id: 'send-invoice',
-            title: 'Send an invoice',
-            description: 'Bill customers for products or services delivered',
-            icon: 'receipt',
-            estimatedTime: '2 min',
-            completed: false,
-            action: () => this.createInvoice()
-          },
-          {
-            id: 'record-payment',
-            title: 'Record a payment',
-            description: 'Mark invoices as paid when customers pay',
-            icon: 'payments',
-            estimatedTime: '1 min',
-            completed: false,
-            action: () => this.recordPayment()
-          },
-          {
-            id: 'handle-returns',
-            title: 'Handle returns',
-            description: 'Process credit notes and customer refunds',
-            icon: 'undo',
-            estimatedTime: '2 min',
-            completed: false,
-            action: () => this.handleReturns()
-          }
-        ],
-        action: () => this.selectQuickAction('start-selling')
-      },
-      {
-        id: 'purchase-suppliers',
-        title: 'Purchase from suppliers',
-        description: setupCompleted ? 'Manage purchase orders and track what you buy' : 'Complete setup to unlock purchasing',
-        icon: 'shopping_cart',
-        iconClass: 'buy-icon',
-        completed: false,
-        enabled: setupCompleted,
-        subActions: [
-          {
-            id: 'create-purchase-order',
-            title: 'Create purchase order',
-            description: 'Order products or services from suppliers',
-            icon: 'shopping_cart_checkout',
-            estimatedTime: '4 min',
-            completed: false,
-            action: () => this.createPurchaseOrder()
-          },
-          {
-            id: 'receive-goods',
-            title: 'Receive goods',
-            description: 'Record when ordered items arrive',
-            icon: 'inventory_2',
-            estimatedTime: '2 min',
-            completed: false,
-            action: () => this.receiveGoods()
-          },
-          {
-            id: 'process-supplier-invoice',
-            title: 'Process supplier invoice',
-            description: 'Handle bills from your suppliers',
-            icon: 'request_quote',
-            estimatedTime: '3 min',
-            completed: false,
-            action: () => this.processSupplierInvoice()
-          }
-        ],
-        action: () => this.selectQuickAction('purchase-suppliers')
-      },
-      {
-        id: 'track-expenses',
-        title: 'Track business expenses',
-        description: setupCompleted ? 'Record costs, submit claims, and control spending' : 'Complete setup to unlock expense tracking',
-        icon: 'receipt_long',
-        iconClass: 'expense-icon',
-        completed: false,
-        enabled: setupCompleted,
-        subActions: [
-          {
-            id: 'record-expense',
-            title: 'Record an expense',
-            description: 'Track business costs like travel, supplies, utilities',
-            icon: 'receipt_long',
-            estimatedTime: '2 min',
-            completed: false,
-            action: () => this.recordExpense()
-          },
-          {
-            id: 'submit-expense-claim',
-            title: 'Submit expense claim',
-            description: 'Request reimbursement for business expenses',
-            icon: 'request_page',
-            estimatedTime: '3 min',
-            completed: false,
-            action: () => this.submitExpenseClaim()
-          },
-          {
-            id: 'view-expense-reports',
-            title: 'View expense reports',
-            description: 'See spending patterns and cost analysis',
-            icon: 'summarize',
-            estimatedTime: '2 min',
-            completed: false,
-            action: () => this.viewExpenseReports()
-          }
-        ],
-        action: () => this.selectQuickAction('track-expenses')
-      },
-      {
-        id: 'organize-products',
-        title: 'Organize your products',
-        description: setupCompleted ? 'Set up inventory, categories, and stock locations' : 'Complete setup to unlock product management',
-        icon: 'inventory',
-        iconClass: 'product-icon',
-        completed: false,
-        enabled: setupCompleted,
-        subActions: [
-          {
-            id: 'add-products',
-            title: 'Add your products',
-            description: 'Create product catalog with pricing and details',
-            icon: 'add_box',
-            estimatedTime: '5 min',
-            completed: false,
-            action: () => this.addProducts()
-          },
-          {
-            id: 'organize-categories',
-            title: 'Organize categories',
-            description: 'Group products into logical categories',
-            icon: 'category',
-            estimatedTime: '3 min',
-            completed: false,
-            action: () => this.organizeCategories()
-          },
-          {
-            id: 'track-inventory',
-            title: 'Track inventory',
-            description: 'Monitor stock levels and locations',
-            icon: 'warehouse',
-            estimatedTime: '4 min',
-            completed: false,
-            action: () => this.trackInventory()
-          }
-        ],
-        action: () => this.selectQuickAction('organize-products')
-      },
-      {
-        id: 'manage-contacts',
-        title: 'Manage your contacts',
-        description: setupCompleted ? 'Add customers, suppliers, and build relationships' : 'Complete setup to unlock contact management',
-        icon: 'contacts',
-        iconClass: 'contact-icon',
-        completed: false,
-        enabled: setupCompleted,
-        subActions: [
-          {
-            id: 'add-customers',
-            title: 'Add customers',
-            description: 'Build your customer database with contact details',
-            icon: 'person_add',
-            estimatedTime: '3 min',
-            completed: false,
-            action: () => this.addCustomers()
-          },
-          {
-            id: 'add-suppliers',
-            title: 'Add suppliers',
-            description: 'Manage vendor relationships and contact info',
-            icon: 'business',
-            estimatedTime: '3 min',
-            completed: false,
-            action: () => this.addSuppliers()
-          },
-          {
-            id: 'organize-relationships',
-            title: 'Organize relationships',
-            description: 'Group and categorize your business contacts',
-            icon: 'group',
-            estimatedTime: '2 min',
-            completed: false,
-            action: () => this.organizeRelationships()
-          }
-        ],
-        action: () => this.selectQuickAction('manage-contacts')
-      },
-      {
-        id: 'business-reports',
-        title: 'See business reports',
-        description: setupCompleted ? 'Understand performance with profit/loss and cash flow' : 'Complete setup to unlock reports',
-        icon: 'analytics',
-        iconClass: 'report-icon',
-        completed: false,
-        enabled: setupCompleted,
-        subActions: [
-          {
-            id: 'profit-loss',
-            title: 'View profit & loss',
-            description: 'See if your business is making money',
-            icon: 'trending_up',
-            estimatedTime: '2 min',
-            completed: false,
-            action: () => this.viewProfitLoss()
-          },
-          {
-            id: 'cash-flow',
-            title: 'Check cash flow',
-            description: 'Understand money coming in and going out',
-            icon: 'account_balance',
-            estimatedTime: '2 min',
-            completed: false,
-            action: () => this.viewCashFlow()
-          },
-          {
-            id: 'balance-sheet',
-            title: 'Review balance sheet',
-            description: 'See your business financial position',
-            icon: 'balance',
-            estimatedTime: '3 min',
-            completed: false,
-            action: () => this.viewBalanceSheet()
-          },
-          {
-            id: 'report-tutorial',
-            title: 'Watch report tutorial',
-            description: 'Learn how to read and understand financial data',
-            icon: 'play_circle',
-            estimatedTime: '5 min',
-            completed: false,
-            action: () => this.watchReportTutorial()
-          }
-        ],
-        action: () => this.selectQuickAction('business-reports')
-      }
+      // Transform Learning Center Quick Guide Categories into quick actions
+      ...publishedCategories.map(category => this.transformCategoryToAction(category, setupCompleted))
     ];
     
     // Add accounting features conditionally
@@ -1364,6 +1126,119 @@ export class GetStartedComponent {
     { value: 'consulting', label: 'Consulting Business', description: 'Expert advice and specialized knowledge' }
   ];
   
+  // Learning Center integration methods
+  transformCategoryToAction(category: QuickGuideCategory, setupCompleted: boolean) {
+    const subActions = this.getSubActionsForCategory(category);
+    
+    return {
+      id: category.id,
+      title: category.name,
+      description: setupCompleted ? category.subtitle : `Complete setup to unlock ${category.name.toLowerCase()}`,
+      icon: category.icon,
+      iconClass: this.getIconClassForCategory(category),
+      completed: this.isCategoryCompleted(category),
+      enabled: setupCompleted,
+      subActions: subActions,
+      action: () => this.selectQuickAction(category.id)
+    };
+  }
+
+  getSubActionsForCategory(category: QuickGuideCategory) {
+    const subActions: any[] = [];
+    
+    // Add tasks as sub-actions
+    category.assignedTaskIds.forEach(taskId => {
+      const task = this.learningTasks().find(t => t.id === taskId && t.status === 'published');
+      if (task) {
+        subActions.push({
+          id: task.id,
+          title: task.name,
+          description: task.description,
+          icon: 'task_alt',
+          estimatedTime: `${task.estimatedTime} min`,
+          completed: false, // TODO: Track task completion
+          action: () => this.startLearningTask(task)
+        });
+      }
+    });
+    
+    // Add workflows as sub-actions
+    category.assignedWorkflowIds.forEach(workflowId => {
+      const workflow = this.learningWorkflows().find(w => w.id === workflowId && w.status === 'published');
+      if (workflow) {
+        subActions.push({
+          id: workflow.id,
+          title: workflow.name,
+          description: workflow.description,
+          icon: 'account_tree',
+          estimatedTime: `${workflow.estimatedTime} min`,
+          completed: false, // TODO: Track workflow completion
+          action: () => this.startLearningWorkflow(workflow)
+        });
+      }
+    });
+    
+    // Add goals as sub-actions
+    category.assignedGoalIds.forEach(goalId => {
+      const goal = this.learningGoals().find(g => g.id === goalId && g.status === 'published');
+      if (goal) {
+        subActions.push({
+          id: goal.id,
+          title: goal.name,
+          description: goal.description,
+          icon: 'flag',
+          estimatedTime: `${goal.estimatedTotalTime} min`,
+          completed: false, // TODO: Track goal completion
+          action: () => this.startLearningGoal(goal)
+        });
+      }
+    });
+    
+    return subActions;
+  }
+
+  getIconClassForCategory(category: QuickGuideCategory): string {
+    // Map Learning Center category types to existing icon classes
+    const iconClassMap: { [key: string]: string } = {
+      'dashboard': 'setup-icon',
+      'point_of_sale': 'sell-icon',
+      'phone_android': 'report-icon',
+      'shopping_cart': 'buy-icon',
+      'receipt_long': 'expense-icon',
+      'inventory': 'product-icon',
+      'contacts': 'contact-icon',
+      'analytics': 'report-icon',
+      'calculate': 'accounting-icon'
+    };
+    
+    return iconClassMap[category.icon] || 'setup-icon';
+  }
+
+  isCategoryCompleted(category: QuickGuideCategory): boolean {
+    // TODO: Implement completion tracking logic
+    // This could check if all assigned tasks/workflows/goals are completed
+    return false;
+  }
+
+  startLearningTask(task: LearningTask): void {
+    console.log('🎯 Starting learning task:', task.name);
+    // TODO: Integrate with learning panel or task execution system
+    alert(`Starting task: ${task.name}\n\n${task.description}\n\nThis would guide you through: ${task.outcome}`);
+  }
+
+  startLearningWorkflow(workflow: LearningWorkflow): void {
+    console.log('🎯 Starting learning workflow:', workflow.name);
+    // TODO: Integrate with learning panel or workflow execution system
+    alert(`Starting workflow: ${workflow.name}\n\n${workflow.description}\n\nExpected outcome: ${workflow.outcome}`);
+  }
+
+  startLearningGoal(goal: LearningGoal): void {
+    console.log('🎯 Starting learning goal:', goal.name);
+    // TODO: Integrate with learning panel or goal execution system
+    alert(`Starting goal: ${goal.name}\n\n${goal.description}\n\nExpected outcome: ${goal.expectedOutcome}`);
+  }
+
+
   // Goal-based interface methods
   getCurrentRole(): string {
     const state = this.userProfileTestingService.getCurrentTestingState();

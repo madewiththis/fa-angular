@@ -8,17 +8,11 @@
 - **Onboarding Strategy Master Plan**: [`/dev_files/planning/onboarding-strategy-master-plan.md`](../planning/onboarding-strategy-master-plan.md) - Cohesive strategy for all onboarding initiatives
 
 ## Currently Active (Pick up and continue)
-- **2025-01-24-learning-content-foundation.md** (L) - `todo`
-  - Learning Content Foundation System (Goals → Workflows → Tasks)
-  - CRITICAL: Foundation for ALL onboarding solutions
-  - NEXT: Design data models and create TypeScript interfaces
-  - BLOCKER: None - this unlocks other features
-
 - **2025-01-23-learning-center-walkthrough.md** (L) - `todo`
-  - Learning Center integration with Quick Start actions
-  - Part of Onboarding Strategy Solution 2: Guided Learning
-  - NEXT: Research existing learning panel components and create default walkthrough goal
-  - DEPENDS ON: Learning Content Foundation for content structure
+  - **RE-SCOPED**: Migrate existing Learning Center panel UI to use new content system
+  - Connect new Goals → Workflows → Tasks content to existing slide-out panel
+  - NEXT: Update LearningPanelService and component to use LearningContentService
+  - BLOCKER: None - foundation is complete
 
 ## On Hold Tasks (Deprioritized)
 - **2025-01-23-task-based-evaluation-onboarding.md** (L) - `on_hold`
@@ -32,6 +26,19 @@
   - ON HOLD: Validating simpler solutions before adding complexity
 
 ## Recently Completed (Reference for patterns)
+- **2025-01-24-learning-content-foundation.md** (L) - **LEARNING CONTENT FOUNDATION ✅**
+  - ✅ Complete Goals → Workflows → Tasks content management system
+  - ✅ Self-contained Learning Center module with full CRUD operations
+  - ✅ Admin interface for content management with relationships
+  - ✅ Comprehensive documentation and integration guides
+  - ✅ Ready for system-wide integration - foundation for ALL onboarding solutions
+
+- **2025-01-24-learning-center-admin-ui.md** (L) - **LEARNING CENTER ADMIN INTERFACE ✅**
+  - ✅ Complete admin dashboard with Goals, Workflows, Tasks, Get Started tabs
+  - ✅ Advanced table features: bulk actions, search, column filters, filter pills
+  - ✅ Quick Guide Categories management for Get Started dashboard integration
+  - ✅ CRUD operations for all content types with relationship management
+
 - **2025-01-23-revolutionize-company-setup-modal.md** (L) - **COMPANY SETUP TRANSFORMATION**
   - ✅ Transformed boring form into "Make your documents look professional" experience
   - ✅ Live document preview with real-time updates as users type

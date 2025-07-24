@@ -15,6 +15,8 @@ import { WorkflowManagementComponent } from '../content-management/workflow-mana
 import { TaskManagementComponent } from '../content-management/task-management/task-management.component';
 import { RelationshipBuilderComponent } from '../relationship-builder/relationship-builder.component';
 import { ContentValidationDisplayComponent } from '../shared/content-validation-display/content-validation-display.component';
+import { GetStartedManagementComponent } from '../content-management/get-started-management/get-started-management.component';
+import { importDraftTasks } from '../../data/import-draft-tasks';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -32,7 +34,8 @@ import { ContentValidationDisplayComponent } from '../shared/content-validation-
     WorkflowManagementComponent,
     TaskManagementComponent,
     RelationshipBuilderComponent,
-    ContentValidationDisplayComponent
+    ContentValidationDisplayComponent,
+    GetStartedManagementComponent
   ],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.scss'
@@ -86,6 +89,12 @@ export class AdminDashboardComponent {
       icon: 'task_alt',
       badge: () => this.contentStats().total.tasks,
       component: 'tasks'
+    },
+    {
+      label: 'Get Started',
+      icon: 'explore',
+      badge: () => this.contentStats().total.quickGuideCategories,
+      component: 'get-started'
     },
     {
       label: 'Relationships',
@@ -149,6 +158,21 @@ export class AdminDashboardComponent {
     if (confirm('Are you sure you want to reset all content? This action cannot be undone.')) {
       this.learningContentService.resetAll();
       this.validateContent();
+    }
+  }
+
+  async importDraftTasks(): Promise<void> {
+    if (confirm('Import draft tasks from the raw content file? This will add 9 new learning tasks to the system.')) {
+      try {
+        console.log('Starting draft tasks import...');
+        await importDraftTasks(this.learningContentService);
+        console.log('Draft tasks imported successfully!');
+        this.validateContent();
+        alert('Successfully imported 9 draft tasks!');
+      } catch (error) {
+        console.error('Error importing draft tasks:', error);
+        alert('Failed to import draft tasks. Check console for details.');
+      }
     }
   }
 }
