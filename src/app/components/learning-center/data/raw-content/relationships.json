@@ -1,0 +1,120 @@
+{
+  "description": "Defines the relationships between Goals, Workflows, and Tasks",
+  "version": "1.0.0",
+  "lastUpdated": "2025-01-24",
+  "relationships": {
+    "goal_to_workflow": [
+      {
+        "goalId": "goal_1737722400_001",
+        "goalName": "Improve Cash Flow",
+        "workflows": [
+          {
+            "workflowId": "workflow_1737722400_001",
+            "workflowName": "Quotation Follow-Up Process",
+            "isRequired": true
+          },
+          {
+            "workflowId": "workflow_1737722400_002",
+            "workflowName": "Expense Management & Budget Control",
+            "isRequired": false
+          }
+        ]
+      },
+      {
+        "goalId": "goal_1737722400_002",
+        "goalName": "Ensure Tax Compliance",
+        "workflows": [
+          {
+            "workflowId": "workflow_1737722400_003",
+            "workflowName": "e-Tax Invoice Setup",
+            "isRequired": true
+          }
+        ]
+      },
+      {
+        "goalId": "goal_1737722400_003",
+        "goalName": "Improve Team Productivity",
+        "workflows": [
+          {
+            "workflowId": "workflow_1737722400_004",
+            "workflowName": "User Management & Permissions",
+            "isRequired": true
+          }
+        ]
+      }
+    ],
+    "workflow_to_task": [
+      {
+        "workflowId": "workflow_1737722400_001",
+        "workflowName": "Quotation Follow-Up Process",
+        "tasks": [
+          {
+            "taskId": "task_1737722400_001",
+            "taskName": "Review Pending Quotations",
+            "order": 1,
+            "isPrerequisite": false
+          },
+          {
+            "taskId": "task_1737722400_002",
+            "taskName": "Send Follow-Up Reminder",
+            "order": 2,
+            "isPrerequisite": true,
+            "prerequisites": ["task_1737722400_001"]
+          }
+        ]
+      },
+      {
+        "workflowId": "workflow_1737722400_002",
+        "workflowName": "Expense Management & Budget Control",
+        "tasks": [
+          {
+            "taskId": "task_1737722400_003",
+            "taskName": "Set Up Expense Categories",
+            "order": 1,
+            "isPrerequisite": false
+          }
+        ]
+      },
+      {
+        "workflowId": "workflow_1737722400_003",
+        "workflowName": "e-Tax Invoice Setup",
+        "tasks": [
+          {
+            "taskId": "task_1737722400_004",
+            "taskName": "Configure Tax Rates",
+            "order": 1,
+            "isPrerequisite": false
+          }
+        ]
+      },
+      {
+        "workflowId": "workflow_1737722400_004",
+        "workflowName": "User Management & Permissions",
+        "tasks": [
+          {
+            "taskId": "task_1737722400_005",
+            "taskName": "Add Team Member",
+            "order": 1,
+            "isPrerequisite": false
+          }
+        ]
+      }
+    ]
+  },
+  "metadata": {
+    "totalGoals": 3,
+    "totalWorkflows": 4,
+    "totalTasks": 5,
+    "categoryBreakdown": {
+      "Sales": 2,
+      "Expenses": 1,
+      "Tax Compliance": 1,
+      "Team Management": 1
+    },
+    "difficultyBreakdown": {
+      "beginner": 4,
+      "intermediate": 1,
+      "advanced": 0
+    }
+  }
+}

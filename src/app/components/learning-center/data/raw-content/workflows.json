@@ -1,0 +1,90 @@
+[
+  {
+    "id": "workflow_1737722400_001",
+    "name": "Quotation Follow-Up Process",
+    "description": "Systematic approach to converting quotes into sales",
+    "outcome": "Increase quote acceptance rate and reduce sales cycle time",
+    "businessValue": "Convert 30% more quotes into sales and reduce average sales cycle by 1 week",
+    "taskIds": ["task_1737722400_001", "task_1737722400_002"],
+    "taskSequence": "sequential",
+    "estimatedTime": 20,
+    "difficulty": "beginner",
+    "category": "Sales",
+    "completionCriteria": "User has sent follow-up on at least one pending quotation",
+    "successIndicators": [
+      "Quote response rate increase of 25%",
+      "Average quote-to-close time reduced by 3-5 days",
+      "Improved customer engagement metrics"
+    ],
+    "expectedROI": "20-30% increase in quote conversion",
+    "version": 1,
+    "status": "published",
+    "lastUpdated": "2025-01-24"
+  },
+  {
+    "id": "workflow_1737722400_002",
+    "name": "Expense Management & Budget Control",
+    "description": "Reduce unnecessary spending and improve expense visibility",
+    "outcome": "Better control over business expenses and budget adherence",
+    "businessValue": "Identify cost-saving opportunities worth 10-15% of monthly expenses",
+    "taskIds": ["task_1737722400_003"],
+    "taskSequence": "sequential",
+    "estimatedTime": 10,
+    "difficulty": "beginner",
+    "category": "Expenses",
+    "completionCriteria": "User has set up expense categories and reviewed monthly spending",
+    "successIndicators": [
+      "Monthly expense variance reduced by 10-15%",
+      "Better visibility of spending patterns",
+      "Improved budget adherence"
+    ],
+    "expectedROI": "10-15% reduction in unnecessary expenses",
+    "version": 1,
+    "status": "published",
+    "lastUpdated": "2025-01-24"
+  },
+  {
+    "id": "workflow_1737722400_003",
+    "name": "e-Tax Invoice Setup",
+    "description": "Configure automated tax-compliant invoicing system",
+    "outcome": "Automated tax-compliant invoicing with zero manual errors",
+    "businessValue": "100% tax compliance with automatic e-Tax submission, eliminating audit risks",
+    "taskIds": ["task_1737722400_004"],
+    "taskSequence": "sequential",
+    "estimatedTime": 10,
+    "difficulty": "intermediate",
+    "category": "Tax Compliance",
+    "completionCriteria": "User has successfully configured tax rates for e-Tax compliant invoicing",
+    "successIndicators": [
+      "100% tax compliance",
+      "Zero manual tax calculation errors",
+      "Audit risk elimination"
+    ],
+    "expectedROI": "Eliminates potential tax penalties and audit costs",
+    "version": 1,
+    "status": "published",
+    "lastUpdated": "2025-01-24"
+  },
+  {
+    "id": "workflow_1737722400_004",
+    "name": "User Management & Permissions",
+    "description": "Set up secure, role-based access for team members",
+    "outcome": "Secure team collaboration with proper access controls",
+    "businessValue": "Enable team productivity while maintaining financial data security",
+    "taskIds": ["task_1737722400_005"],
+    "taskSequence": "sequential",
+    "estimatedTime": 15,
+    "difficulty": "intermediate",
+    "category": "Team Management",
+    "completionCriteria": "User has added at least one team member with appropriate permissions",
+    "successIndicators": [
+      "Team productivity increase",
+      "Maintained data security",
+      "Proper access control implementation"
+    ],
+    "expectedROI": "Increased team efficiency while maintaining security",
+    "version": 1,
+    "status": "published",
+    "lastUpdated": "2025-01-24"
+  }
+]

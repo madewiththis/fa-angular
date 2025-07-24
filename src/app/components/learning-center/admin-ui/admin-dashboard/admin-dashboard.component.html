@@ -1,0 +1,106 @@
+<mat-toolbar color="primary" class="admin-header">
+  <mat-icon>school</mat-icon>
+  <span class="title">Learning Center Admin</span>
+  
+  <div class="toolbar-spacer"></div>
+  
+  <!-- Content Statistics -->
+  <div class="content-stats">
+    <span class="stat-item">
+      <mat-icon>flag</mat-icon>
+      {{ contentStats().total.goals }} Goals
+    </span>
+    <span class="stat-item">
+      <mat-icon>account_tree</mat-icon>
+      {{ contentStats().total.workflows }} Workflows
+    </span>
+    <span class="stat-item">
+      <mat-icon>task_alt</mat-icon>
+      {{ contentStats().total.tasks }} Tasks
+    </span>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="toolbar-actions">
+    <button mat-icon-button 
+            matTooltip="Validate Content" 
+            (click)="validateContent()">
+      <mat-icon [color]="hasValidationErrors() ? 'warn' : 'primary'">
+        {{ hasValidationErrors() ? 'error' : 'verified' }}
+      </mat-icon>
+    </button>
+    
+    <button mat-icon-button 
+            matTooltip="Export Content"
+            (click)="exportContent()">
+      <mat-icon>download</mat-icon>
+    </button>
+    
+    <input #fileInput 
+           type="file" 
+           accept=".json"
+           style="display: none"
+           (change)="importContent($event)">
+    <button mat-icon-button 
+            matTooltip="Import Content"
+            (click)="fileInput.click()">
+      <mat-icon>upload</mat-icon>
+    </button>
+  </div>
+</mat-toolbar>
+
+<div class="admin-content">
+  <mat-tab-group 
+    [selectedIndex]="selectedTabIndex()"
+    (selectedTabChange)="onTabChange($event.index)"
+    animationDuration="300ms"
+    class="admin-tabs">
+    
+    @for (tab of tabConfig; track tab.component) {
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">{{ tab.icon }}</mat-icon>
+          <span class="tab-label">{{ tab.label }}</span>
+          @if (tab.badge()) {
+            <span matBadge="{{ tab.badge() }}" 
+                  matBadgeSize="small" 
+                  [matBadgeColor]="tab.component === 'validation' && hasValidationErrors() ? 'warn' : 'primary'"
+                  class="tab-badge">
+            </span>
+          }
+        </ng-template>
+        
+        <div class="tab-content">
+          @switch (tab.component) {
+            @case ('goals') {
+              <app-goal-management></app-goal-management>
+            }
+            @case ('workflows') {
+              <app-workflow-management></app-workflow-management>
+            }
+            @case ('tasks') {
+              <app-task-management></app-task-management>
+            }
+            @case ('relationships') {
+              <app-relationship-builder></app-relationship-builder>
+            }
+            @case ('validation') {
+              <app-content-validation-display></app-content-validation-display>
+            }
+          }
+        </div>
+      </mat-tab>
+    }
+  </mat-tab-group>
+</div>
+
+<!-- Emergency Actions -->
+<div class="emergency-actions">
+  <button mat-stroked-button 
+          color="warn"
+          (click)="resetContent()"
+          class="reset-button">
+    <mat-icon>refresh</mat-icon>
+    Reset All Content
+  </button>
+</div>

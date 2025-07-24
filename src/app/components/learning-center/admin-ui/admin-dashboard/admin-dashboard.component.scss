@@ -1,0 +1,117 @@
+.admin-header {
+  .title {
+    margin-left: 12px;
+    font-size: 20px;
+    font-weight: 500;
+  }
+  
+  .toolbar-spacer {
+    flex: 1 1 auto;
+  }
+  
+  .content-stats {
+    display: flex;
+    gap: 24px;
+    margin-right: 24px;
+    
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+  
+  .toolbar-actions {
+    display: flex;
+    gap: 8px;
+  }
+}
+
+.admin-content {
+  flex: 1;
+  overflow: hidden;
+  
+  .admin-tabs {
+    height: 100%;
+    
+    ::ng-deep .mat-mdc-tab-group {
+      height: 100%;
+      
+      .mat-mdc-tab-body-wrapper {
+        height: calc(100% - 48px);
+        
+        .mat-mdc-tab-body {
+          height: 100%;
+          
+          .mat-mdc-tab-body-content {
+            height: 100%;
+            overflow: auto;
+          }
+        }
+      }
+    }
+    
+    .tab-icon {
+      margin-right: 8px;
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+    
+    .tab-label {
+      margin-right: 8px;
+    }
+    
+    .tab-badge {
+      margin-left: 4px;
+    }
+    
+    .tab-content {
+      height: 100%;
+      padding: 24px;
+      background-color: #fafafa;
+    }
+  }
+}
+
+.emergency-actions {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  
+  .reset-button {
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+  }
+}
+
+// Host styling for full height
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .admin-header {
+    .content-stats {
+      display: none;
+    }
+    
+    .title {
+      font-size: 18px;
+    }
+  }
+  
+  .admin-content .admin-tabs .tab-content {
+    padding: 16px;
+  }
+}

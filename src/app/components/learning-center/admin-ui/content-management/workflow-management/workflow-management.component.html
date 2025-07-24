@@ -1,0 +1,451 @@
+<div class="workflow-management">
+  <!-- Header -->
+  <div class="management-header">
+    <h2>Workflow Management</h2>
+    
+    <div class="header-actions">
+      <!-- Filter and Sort Controls -->
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Status Filter</mat-label>
+        <mat-select [value]="statusFilter()" (selectionChange)="onStatusFilterChange($event.value)">
+          <mat-option value="all">All Statuses</mat-option>
+          @for (status of statusOptions; track status) {
+            <mat-option [value]="status">{{ status | titlecase }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      
+      <button mat-raised-button color="primary" (click)="showCreateForm()">
+        <mat-icon>add</mat-icon>
+        Create Workflow
+      </button>
+    </div>
+  </div>
+
+  <!-- Content -->
+  @if (showForm()) {
+    <!-- Workflow Form -->
+    <mat-card class="form-card">
+      <mat-card-header>
+        <mat-card-title>
+          {{ isEditing() ? 'Edit Workflow' : 'Create New Workflow' }}
+        </mat-card-title>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <form [formGroup]="workflowForm" class="workflow-form">
+          <!-- Basic Information -->
+          <div class="form-section">
+            <h3>Basic Information</h3>
+            
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Workflow Name</mat-label>
+                <input matInput formControlName="name" placeholder="Enter workflow name">
+                @if (workflowForm.get('name')?.hasError('required') && workflowForm.get('name')?.touched) {
+                  <mat-error>Workflow name is required</mat-error>
+                }
+              </mat-form-field>
+            </div>
+            
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Description</mat-label>
+                <textarea matInput formControlName="description" rows="3" 
+                         placeholder="Describe what this workflow accomplishes"></textarea>
+                @if (workflowForm.get('description')?.hasError('required') && workflowForm.get('description')?.touched) {
+                  <mat-error>Description is required</mat-error>
+                }
+              </mat-form-field>
+            </div>
+            
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Outcome</mat-label>
+                <textarea matInput formControlName="outcome" rows="2"
+                         placeholder="What will users achieve by completing this workflow?"></textarea>
+                @if (workflowForm.get('outcome')?.hasError('required') && workflowForm.get('outcome')?.touched) {
+                  <mat-error>Outcome is required</mat-error>
+                }
+              </mat-form-field>
+            </div>
+            
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Business Value</mat-label>
+                <textarea matInput formControlName="businessValue" rows="2"
+                         placeholder="Explain the business impact and measurable benefits"></textarea>
+                @if (workflowForm.get('businessValue')?.hasError('required') && workflowForm.get('businessValue')?.touched) {
+                  <mat-error>Business value is required</mat-error>
+                }
+              </mat-form-field>
+            </div>
+            
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="third-width">
+                <mat-label>Category</mat-label>
+                <input matInput formControlName="category" placeholder="e.g., Sales, Accounting, Setup">
+                @if (workflowForm.get('category')?.hasError('required') && workflowForm.get('category')?.touched) {
+                  <mat-error>Category is required</mat-error>
+                }
+              </mat-form-field>
+              
+              <mat-form-field appearance="outline" class="third-width">
+                <mat-label>Task Sequence</mat-label>
+                <mat-select formControlName="taskSequence">
+                  @for (sequence of sequenceOptions; track sequence) {
+                    <mat-option [value]="sequence">{{ sequence | titlecase }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+              
+              <mat-form-field appearance="outline" class="third-width">
+                <mat-label>Status</mat-label>
+                <mat-select formControlName="status">
+                  @for (status of statusOptions; track status) {
+                    <mat-option [value]="status">{{ status | titlecase }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Completion Criteria</mat-label>
+                <textarea matInput formControlName="completionCriteria" rows="2"
+                         placeholder="How will users know they've completed this workflow?"></textarea>
+                @if (workflowForm.get('completionCriteria')?.hasError('required') && workflowForm.get('completionCriteria')?.touched) {
+                  <mat-error>Completion criteria is required</mat-error>
+                }
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- Task Management -->
+          <div class="form-section">
+            <h3>Tasks in This Workflow</h3>
+            
+            @for (taskIdControl of taskIdsArray.controls; track $index) {
+              <div class="form-row task-row">
+                <mat-form-field appearance="outline" class="task-field">
+                  <mat-label>Task {{ $index + 1 }}</mat-label>
+                  <mat-select [formControl]="$any(taskIdControl)">
+                    <mat-option value="">Select a task</mat-option>
+                    @for (task of availableTasks(); track task.id) {
+                      <mat-option [value]="task.id">
+                        {{ task.name }} ({{ task.difficulty }}, {{ task.estimatedTime }}min)
+                      </mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+                
+                <button mat-icon-button color="warn" 
+                        (click)="removeTaskId($index)"
+                        matTooltip="Remove task">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            }
+            
+            <button mat-stroked-button (click)="addTaskId()" class="add-task-btn">
+              <mat-icon>add</mat-icon>
+              Add Task
+            </button>
+          </div>
+
+          <!-- Content Attachments -->
+          <div class="form-section">
+            <h3>Content Attachments</h3>
+            
+            <!-- Video URLs -->
+            <div class="attachment-group">
+              <h4>Video URLs</h4>
+              @for (videoUrl of videoUrlsArray.controls; track $index) {
+                <div class="form-row attachment-row">
+                  <mat-form-field appearance="outline" class="attachment-field">
+                    <mat-label>Video URL {{ $index + 1 }}</mat-label>
+                    <input matInput [formControl]="$any(videoUrl)" 
+                           placeholder="https://example.com/video.mp4">
+                  </mat-form-field>
+                  
+                  <button mat-icon-button color="warn" 
+                          (click)="removeVideoUrl($index)"
+                          matTooltip="Remove video URL">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              }
+              
+              <button mat-stroked-button (click)="addVideoUrl()" class="add-attachment-btn">
+                <mat-icon>add</mat-icon>
+                Add Video URL
+              </button>
+            </div>
+
+            <!-- Article URLs -->
+            <div class="attachment-group">
+              <h4>Article URLs</h4>
+              @for (articleUrl of articleUrlsArray.controls; track $index) {
+                <div class="form-row attachment-row">
+                  <mat-form-field appearance="outline" class="attachment-field">
+                    <mat-label>Article URL {{ $index + 1 }}</mat-label>
+                    <input matInput [formControl]="$any(articleUrl)" 
+                           placeholder="https://example.com/article">
+                  </mat-form-field>
+                  
+                  <button mat-icon-button color="warn" 
+                          (click)="removeArticleUrl($index)"
+                          matTooltip="Remove article URL">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              }
+              
+              <button mat-stroked-button (click)="addArticleUrl()" class="add-attachment-btn">
+                <mat-icon>add</mat-icon>
+                Add Article URL
+              </button>
+            </div>
+
+            <!-- AI Prompts -->
+            <div class="attachment-group">
+              <h4>AI Prompts</h4>
+              @for (aiPrompt of aiPromptsArray.controls; track $index) {
+                <div class="form-row attachment-row">
+                  <mat-form-field appearance="outline" class="attachment-field">
+                    <mat-label>AI Prompt {{ $index + 1 }}</mat-label>
+                    <textarea matInput [formControl]="$any(aiPrompt)" rows="2"
+                             placeholder="AI prompt for future assistance"></textarea>
+                  </mat-form-field>
+                  
+                  <button mat-icon-button color="warn" 
+                          (click)="removeAiPrompt($index)"
+                          matTooltip="Remove AI prompt">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              }
+              
+              <button mat-stroked-button (click)="addAiPrompt()" class="add-attachment-btn">
+                <mat-icon>add</mat-icon>
+                Add AI Prompt
+              </button>
+            </div>
+
+            <!-- Attachment Notes -->
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Attachment Notes</mat-label>
+                <textarea matInput [formControl]="$any(contentAttachmentsGroup.get('attachmentNotes'))" rows="2"
+                         placeholder="General notes about these attachments"></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- Success Metrics -->
+          <div class="form-section">
+            <h3>Success Indicators</h3>
+            
+            @for (indicator of successIndicatorsArray.controls; track $index) {
+              <div class="form-row indicator-row">
+                <mat-form-field appearance="outline" class="indicator-field">
+                  <mat-label>Success Indicator {{ $index + 1 }}</mat-label>
+                  <input matInput [formControl]="$any(indicator)" 
+                         placeholder="How will you measure success?">
+                </mat-form-field>
+                
+                <button mat-icon-button color="warn" 
+                        (click)="removeSuccessIndicator($index)"
+                        matTooltip="Remove indicator">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            }
+            
+            <button mat-stroked-button (click)="addSuccessIndicator()" class="add-btn">
+              <mat-icon>add</mat-icon>
+              Add Success Indicator
+            </button>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Expected ROI (optional)</mat-label>
+                <textarea matInput formControlName="expectedROI" rows="2"
+                         placeholder="What return on investment do you expect from this workflow?"></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- Prerequisites -->
+          <div class="form-section">
+            <h3>Prerequisites (Optional)</h3>
+            
+            @for (prerequisite of prerequisitesArray.controls; track $index) {
+              <div class="form-row prerequisite-row">
+                <mat-form-field appearance="outline" class="prerequisite-field">
+                  <mat-label>Prerequisite {{ $index + 1 }}</mat-label>
+                  <input matInput [formControl]="$any(prerequisite)" 
+                         placeholder="Required workflow or knowledge">
+                </mat-form-field>
+                
+                <button mat-icon-button color="warn" 
+                        (click)="removePrerequisite($index)"
+                        matTooltip="Remove prerequisite">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            }
+            
+            <button mat-stroked-button (click)="addPrerequisite()" class="add-btn">
+              <mat-icon>add</mat-icon>
+              Add Prerequisite
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+      
+      <mat-card-actions align="end">
+        <button mat-button (click)="cancelEdit()">Cancel</button>
+        <button mat-raised-button color="primary" 
+                (click)="saveWorkflow()" 
+                [disabled]="workflowForm.invalid">
+          {{ isEditing() ? 'Update Workflow' : 'Create Workflow' }}
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  } @else {
+    <!-- Workflows Table -->
+    <mat-card class="table-card">
+      <mat-card-content>
+        @if (filteredWorkflows().length === 0) {
+          <div class="empty-state">
+            <mat-icon class="empty-icon">account_tree</mat-icon>
+            <h3>No Workflows Found</h3>
+            <p>Create your first learning workflow to get started.</p>
+            <button mat-raised-button color="primary" (click)="showCreateForm()">
+              <mat-icon>add</mat-icon>
+              Create Workflow
+            </button>
+          </div>
+        } @else {
+          <table mat-table [dataSource]="filteredWorkflows()" class="workflows-table">
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef 
+                  (click)="onSortChange('name')" 
+                  class="sortable-header">
+                Name
+                @if (sortBy() === 'name') {
+                  <mat-icon class="sort-icon">
+                    {{ sortDirection() === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
+                  </mat-icon>
+                }
+              </th>
+              <td mat-cell *matCellDef="let workflow">
+                <div class="workflow-name">
+                  <strong>{{ workflow.name }}</strong>
+                  <p class="workflow-description">{{ workflow.description }}</p>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Difficulty Column -->
+            <ng-container matColumnDef="difficulty">
+              <th mat-header-cell *matHeaderCellDef 
+                  (click)="onSortChange('difficulty')"
+                  class="sortable-header">
+                Difficulty
+                @if (sortBy() === 'difficulty') {
+                  <mat-icon class="sort-icon">
+                    {{ sortDirection() === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
+                  </mat-icon>
+                }
+              </th>
+              <td mat-cell *matCellDef="let workflow">
+                <span class="difficulty-badge difficulty-{{ workflow.difficulty }}">
+                  {{ workflow.difficulty | titlecase }}
+                </span>
+              </td>
+            </ng-container>
+
+            <!-- Task Count Column -->
+            <ng-container matColumnDef="taskCount">
+              <th mat-header-cell *matHeaderCellDef 
+                  (click)="onSortChange('taskCount')"
+                  class="sortable-header">
+                Tasks
+                @if (sortBy() === 'taskCount') {
+                  <mat-icon class="sort-icon">
+                    {{ sortDirection() === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
+                  </mat-icon>
+                }
+              </th>
+              <td mat-cell *matCellDef="let workflow">
+                <span class="task-count">{{ workflow.taskIds.length }} tasks</span>
+                @if (workflow.taskIds.length > 0) {
+                  <p class="task-names">{{ getTaskNames(workflow.taskIds) }}</p>
+                }
+              </td>
+            </ng-container>
+
+            <!-- Estimated Time Column -->
+            <ng-container matColumnDef="estimatedTime">
+              <th mat-header-cell *matHeaderCellDef 
+                  (click)="onSortChange('estimatedTime')"
+                  class="sortable-header">
+                Time
+                @if (sortBy() === 'estimatedTime') {
+                  <mat-icon class="sort-icon">
+                    {{ sortDirection() === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
+                  </mat-icon>
+                }
+              </th>
+              <td mat-cell *matCellDef="let workflow">
+                {{ workflow.estimatedTime }} min
+              </td>
+            </ng-container>
+
+            <!-- Status Column -->
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>Status</th>
+              <td mat-cell *matCellDef="let workflow">
+                <span class="status-badge status-{{ workflow.status }}">
+                  {{ workflow.status | titlecase }}
+                </span>
+              </td>
+            </ng-container>
+
+            <!-- Category Column -->
+            <ng-container matColumnDef="category">
+              <th mat-header-cell *matHeaderCellDef>Category</th>
+              <td mat-cell *matCellDef="let workflow">
+                <span class="category-chip">{{ workflow.category }}</span>
+              </td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Actions</th>
+              <td mat-cell *matCellDef="let workflow">
+                <div class="action-buttons">
+                  <button mat-icon-button (click)="editWorkflow(workflow)" matTooltip="Edit Workflow">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button mat-icon-button (click)="duplicateWorkflow(workflow)" matTooltip="Duplicate Workflow">
+                    <mat-icon>content_copy</mat-icon>
+                  </button>
+                  <button mat-icon-button color="warn" (click)="deleteWorkflow(workflow)" matTooltip="Delete Workflow">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        }
+      </mat-card-content>
+    </mat-card>
+  }
+</div>

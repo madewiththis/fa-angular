@@ -1,0 +1,579 @@
+<div class="task-management">
+  <!-- Header -->
+  <div class="management-header">
+    <h2>Task Management</h2>
+    
+    <div class="header-actions">
+      <!-- Filter and Sort Controls -->
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Status Filter</mat-label>
+        <mat-select [value]="statusFilter()" (selectionChange)="onStatusFilterChange($event.value)">
+          <mat-option value="all">All Statuses</mat-option>
+          @for (status of statusOptions; track status) {
+            <mat-option [value]="status">{{ status | titlecase }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      
+      <button mat-raised-button color="primary" (click)="showCreateForm()">
+        <mat-icon>add</mat-icon>
+        Create Task
+      </button>
+    </div>
+  </div>
+
+  <!-- Content -->
+  @if (showForm()) {
+    <!-- Task Form -->
+    <mat-card class="form-card">
+      <mat-card-header>
+        <mat-card-title>
+          {{ isEditing() ? 'Edit Task' : 'Create New Task' }}
+        </mat-card-title>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <form [formGroup]="taskForm" class="task-form">
+          <!-- Basic Information -->
+          <div class="form-section">
+            <h3>Basic Information</h3>
+            
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Task Name</mat-label>
+                <input matInput formControlName="name" placeholder="Enter task name">
+                @if (taskForm.get('name')?.hasError('required') && taskForm.get('name')?.touched) {
+                  <mat-error>Task name is required</mat-error>
+                }
+              </mat-form-field>
+            </div>
+            
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Description</mat-label>
+                <textarea matInput formControlName="description" rows="3" 
+                         placeholder="Describe what this task teaches"></textarea>
+                @if (taskForm.get('description')?.hasError('required') && taskForm.get('description')?.touched) {
+                  <mat-error>Description is required</mat-error>
+                }
+              </mat-form-field>
+            </div>
+            
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Outcome</mat-label>
+                <textarea matInput formControlName="outcome" rows="2"
+                         placeholder="What will the user achieve by completing this task?"></textarea>
+                @if (taskForm.get('outcome')?.hasError('required') && taskForm.get('outcome')?.touched) {
+                  <mat-error>Outcome is required</mat-error>
+                }
+              </mat-form-field>
+            </div>
+            
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="third-width">
+                <mat-label>Estimated Time (minutes)</mat-label>
+                <input matInput type="number" formControlName="estimatedTime" min="1">
+              </mat-form-field>
+              
+              <mat-form-field appearance="outline" class="third-width">
+                <mat-label>Difficulty</mat-label>
+                <mat-select formControlName="difficulty">
+                  @for (difficulty of difficultyOptions; track difficulty) {
+                    <mat-option [value]="difficulty">{{ difficulty | titlecase }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+              
+              <mat-form-field appearance="outline" class="third-width">
+                <mat-label>Status</mat-label>
+                <mat-select formControlName="status">
+                  @for (status of statusOptions; track status) {
+                    <mat-option [value]="status">{{ status | titlecase }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Category</mat-label>
+                <input matInput formControlName="category" placeholder="e.g., Sales, Accounting, Setup">
+                @if (taskForm.get('category')?.hasError('required') && taskForm.get('category')?.touched) {
+                  <mat-error>Category is required</mat-error>
+                }
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- Tags -->
+          <div class="form-section">
+            <h3>Tags</h3>
+            
+            @for (tag of tagsArray.controls; track $index) {
+              <div class="form-row tag-row">
+                <mat-form-field appearance="outline" class="tag-field">
+                  <mat-label>Tag {{ $index + 1 }}</mat-label>
+                  <input matInput [formControl]="$any(tag)" placeholder="Enter tag">
+                </mat-form-field>
+                
+                <button mat-icon-button color="warn" 
+                        (click)="removeTag($index)"
+                        matTooltip="Remove tag">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            }
+            
+            <button mat-stroked-button (click)="addTag()" class="add-btn">
+              <mat-icon>add</mat-icon>
+              Add Tag
+            </button>
+          </div>
+
+          <!-- Content Attachments -->
+          <div class="form-section">
+            <h3>Content Attachments</h3>
+            
+            <!-- Video URLs -->
+            <div class="attachment-group">
+              <h4>Video URLs</h4>
+              @for (videoUrl of videoUrlsArray.controls; track $index) {
+                <div class="form-row attachment-row">
+                  <mat-form-field appearance="outline" class="attachment-field">
+                    <mat-label>Video URL {{ $index + 1 }}</mat-label>
+                    <input matInput [formControl]="$any(videoUrl)" 
+                           placeholder="https://example.com/video.mp4">
+                  </mat-form-field>
+                  
+                  <button mat-icon-button color="warn" 
+                          (click)="removeVideoUrl($index)"
+                          matTooltip="Remove video URL">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              }
+              
+              <button mat-stroked-button (click)="addVideoUrl()" class="add-attachment-btn">
+                <mat-icon>add</mat-icon>
+                Add Video URL
+              </button>
+            </div>
+
+            <!-- Article URLs -->
+            <div class="attachment-group">
+              <h4>Article URLs</h4>
+              @for (articleUrl of articleUrlsArray.controls; track $index) {
+                <div class="form-row attachment-row">
+                  <mat-form-field appearance="outline" class="attachment-field">
+                    <mat-label>Article URL {{ $index + 1 }}</mat-label>
+                    <input matInput [formControl]="$any(articleUrl)" 
+                           placeholder="https://example.com/article">
+                  </mat-form-field>
+                  
+                  <button mat-icon-button color="warn" 
+                          (click)="removeArticleUrl($index)"
+                          matTooltip="Remove article URL">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              }
+              
+              <button mat-stroked-button (click)="addArticleUrl()" class="add-attachment-btn">
+                <mat-icon>add</mat-icon>
+                Add Article URL
+              </button>
+            </div>
+
+            <!-- AI Prompts -->
+            <div class="attachment-group">
+              <h4>AI Prompts</h4>
+              @for (aiPrompt of aiPromptsArray.controls; track $index) {
+                <div class="form-row attachment-row">
+                  <mat-form-field appearance="outline" class="attachment-field">
+                    <mat-label>AI Prompt {{ $index + 1 }}</mat-label>
+                    <textarea matInput [formControl]="$any(aiPrompt)" rows="2"
+                             placeholder="AI prompt for future assistance"></textarea>
+                  </mat-form-field>
+                  
+                  <button mat-icon-button color="warn" 
+                          (click)="removeAiPrompt($index)"
+                          matTooltip="Remove AI prompt">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              }
+              
+              <button mat-stroked-button (click)="addAiPrompt()" class="add-attachment-btn">
+                <mat-icon>add</mat-icon>
+                Add AI Prompt
+              </button>
+            </div>
+
+            <!-- Attachment Notes -->
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Attachment Notes</mat-label>
+                <textarea matInput [formControl]="$any(contentAttachmentsGroup.get('attachmentNotes'))" rows="2"
+                         placeholder="General notes about these attachments"></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- Instructions -->
+          <div class="form-section">
+            <h3>Instructions</h3>
+            
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Overview</mat-label>
+                <textarea matInput [formControl]="$any(instructionsGroup.get('overview'))" rows="3"
+                         placeholder="Explain what this task accomplishes"></textarea>
+                @if (instructionsGroup.get('overview')?.hasError('required') && instructionsGroup.get('overview')?.touched) {
+                  <mat-error>Overview is required</mat-error>
+                }
+              </mat-form-field>
+            </div>
+
+            <!-- Steps -->
+            <div class="steps-section">
+              <h4>Steps</h4>
+              @for (step of stepsArray.controls; track $index) {
+                <div class="step-group" [formGroup]="$any(step)">
+                  <div class="step-header">
+                    <h5>Step {{ $index + 1 }}</h5>
+                    <button mat-icon-button color="warn" 
+                            (click)="removeStep($index)"
+                            matTooltip="Remove step">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                  
+                  <div class="form-row">
+                    <mat-form-field appearance="outline" class="half-width">
+                      <mat-label>Step Title</mat-label>
+                      <input matInput formControlName="title" placeholder="Step title">
+                    </mat-form-field>
+                    
+                    <mat-form-field appearance="outline" class="half-width">
+                      <mat-label>Action Type</mat-label>
+                      <mat-select formControlName="action">
+                        @for (actionType of actionTypes; track actionType) {
+                          <mat-option [value]="actionType">{{ actionType | titlecase }}</mat-option>
+                        }
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  
+                  <div class="form-row">
+                    <mat-form-field appearance="outline" class="full-width">
+                      <mat-label>Description</mat-label>
+                      <textarea matInput formControlName="description" rows="2"
+                               placeholder="Detailed description of this step"></textarea>
+                    </mat-form-field>
+                  </div>
+                  
+                  <div class="form-row">
+                    <mat-form-field appearance="outline" class="half-width">
+                      <mat-label>Target (optional)</mat-label>
+                      <input matInput formControlName="target" 
+                             placeholder="CSS selector or element description">
+                    </mat-form-field>
+                    
+                    <mat-form-field appearance="outline" class="half-width">
+                      <mat-label>Input Value (optional)</mat-label>
+                      <input matInput formControlName="inputValue" 
+                             placeholder="Value to input (for input actions)">
+                    </mat-form-field>
+                  </div>
+                </div>
+              }
+              
+              <button mat-stroked-button (click)="addStep()" class="add-step-btn">
+                <mat-icon>add</mat-icon>
+                Add Step
+              </button>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Expected Result</mat-label>
+                <textarea matInput [formControl]="$any(instructionsGroup.get('expectedResult'))" rows="2"
+                         placeholder="What should the user see when the task is complete?"></textarea>
+                @if (instructionsGroup.get('expectedResult')?.hasError('required') && instructionsGroup.get('expectedResult')?.touched) {
+                  <mat-error>Expected result is required</mat-error>
+                }
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- Completion Criteria -->
+          <div class="form-section">
+            <h3>Completion Criteria</h3>
+            
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Completion Type</mat-label>
+                <mat-select [formControl]="$any(completionCriteriaGroup.get('type'))">
+                  @for (type of completionTypes; track type) {
+                    <mat-option [value]="type">{{ type | titlecase }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <!-- Criteria -->
+            <div class="criteria-section">
+              <h4>Criteria</h4>
+              @for (criterion of criteriaArray.controls; track $index) {
+                <div class="criterion-group" [formGroup]="$any(criterion)">
+                  <div class="form-row">
+                    <mat-form-field appearance="outline" class="third-width">
+                      <mat-label>Field</mat-label>
+                      <input matInput formControlName="field" placeholder="Field to check">
+                    </mat-form-field>
+                    
+                    <mat-form-field appearance="outline" class="third-width">
+                      <mat-label>Operator</mat-label>
+                      <mat-select formControlName="operator">
+                        <mat-option value="equals">Equals</mat-option>
+                        <mat-option value="not_equals">Not Equals</mat-option>
+                        <mat-option value="contains">Contains</mat-option>
+                        <mat-option value="exists">Exists</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    
+                    <mat-form-field appearance="outline" class="third-width">
+                      <mat-label>Expected Value</mat-label>
+                      <input matInput formControlName="expectedValue" placeholder="Expected value">
+                    </mat-form-field>
+                    
+                    <button mat-icon-button color="warn" 
+                            (click)="removeCriterion($index)"
+                            matTooltip="Remove criterion">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              }
+              
+              <button mat-stroked-button (click)="addCriterion()" class="add-btn">
+                <mat-icon>add</mat-icon>
+                Add Criterion
+              </button>
+            </div>
+          </div>
+
+          <!-- Tips (Optional) -->
+          <div class="form-section">
+            <h3>Tips (Optional)</h3>
+            
+            @for (tip of tipsArray.controls; track $index) {
+              <div class="form-row tip-row">
+                <mat-form-field appearance="outline" class="tip-field">
+                  <mat-label>Tip {{ $index + 1 }}</mat-label>
+                  <textarea matInput [formControl]="$any(tip)" rows="2" 
+                           placeholder="Helpful tip for users"></textarea>
+                </mat-form-field>
+                
+                <button mat-icon-button color="warn" 
+                        (click)="removeTip($index)"
+                        matTooltip="Remove tip">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            }
+            
+            <button mat-stroked-button (click)="addTip()" class="add-btn">
+              <mat-icon>add</mat-icon>
+              Add Tip
+            </button>
+          </div>
+
+          <!-- Troubleshooting (Optional) -->
+          <div class="form-section">
+            <h3>Troubleshooting (Optional)</h3>
+            
+            @for (troubleshooting of troubleshootingArray.controls; track $index) {
+              <div class="troubleshooting-group" [formGroup]="$any(troubleshooting)">
+                <div class="form-row">
+                  <mat-form-field appearance="outline" class="half-width">
+                    <mat-label>Common Issue</mat-label>
+                    <textarea matInput formControlName="commonIssue" rows="2"
+                             placeholder="Describe the common issue"></textarea>
+                  </mat-form-field>
+                  
+                  <mat-form-field appearance="outline" class="half-width">
+                    <mat-label>Solution</mat-label>
+                    <textarea matInput formControlName="solution" rows="2"
+                             placeholder="How to solve this issue"></textarea>
+                  </mat-form-field>
+                  
+                  <button mat-icon-button color="warn" 
+                          (click)="removeTroubleshooting($index)"
+                          matTooltip="Remove troubleshooting">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+            }
+            
+            <button mat-stroked-button (click)="addTroubleshooting()" class="add-btn">
+              <mat-icon>add</mat-icon>
+              Add Troubleshooting
+            </button>
+          </div>
+
+          <!-- Prerequisites (Optional) -->
+          <div class="form-section">
+            <h3>Prerequisites (Optional)</h3>
+            
+            @for (prerequisite of prerequisitesArray.controls; track $index) {
+              <div class="form-row prerequisite-row">
+                <mat-form-field appearance="outline" class="prerequisite-field">
+                  <mat-label>Prerequisite {{ $index + 1 }}</mat-label>
+                  <input matInput [formControl]="$any(prerequisite)" 
+                         placeholder="Task ID or requirement">
+                </mat-form-field>
+                
+                <button mat-icon-button color="warn" 
+                        (click)="removePrerequisite($index)"
+                        matTooltip="Remove prerequisite">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            }
+            
+            <button mat-stroked-button (click)="addPrerequisite()" class="add-btn">
+              <mat-icon>add</mat-icon>
+              Add Prerequisite
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+      
+      <mat-card-actions align="end">
+        <button mat-button (click)="cancelEdit()">Cancel</button>
+        <button mat-raised-button color="primary" 
+                (click)="saveTask()" 
+                [disabled]="taskForm.invalid">
+          {{ isEditing() ? 'Update Task' : 'Create Task' }}
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  } @else {
+    <!-- Tasks Table -->
+    <mat-card class="table-card">
+      <mat-card-content>
+        @if (filteredTasks().length === 0) {
+          <div class="empty-state">
+            <mat-icon class="empty-icon">task_alt</mat-icon>
+            <h3>No Tasks Found</h3>
+            <p>Create your first learning task to get started.</p>
+            <button mat-raised-button color="primary" (click)="showCreateForm()">
+              <mat-icon>add</mat-icon>
+              Create Task
+            </button>
+          </div>
+        } @else {
+          <table mat-table [dataSource]="filteredTasks()" class="tasks-table">
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef 
+                  (click)="onSortChange('name')" 
+                  class="sortable-header">
+                Name
+                @if (sortBy() === 'name') {
+                  <mat-icon class="sort-icon">
+                    {{ sortDirection() === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
+                  </mat-icon>
+                }
+              </th>
+              <td mat-cell *matCellDef="let task">
+                <div class="task-name">
+                  <strong>{{ task.name }}</strong>
+                  <p class="task-description">{{ task.description }}</p>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Difficulty Column -->
+            <ng-container matColumnDef="difficulty">
+              <th mat-header-cell *matHeaderCellDef 
+                  (click)="onSortChange('difficulty')"
+                  class="sortable-header">
+                Difficulty
+                @if (sortBy() === 'difficulty') {
+                  <mat-icon class="sort-icon">
+                    {{ sortDirection() === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
+                  </mat-icon>
+                }
+              </th>
+              <td mat-cell *matCellDef="let task">
+                <span class="difficulty-badge difficulty-{{ task.difficulty }}">
+                  {{ task.difficulty | titlecase }}
+                </span>
+              </td>
+            </ng-container>
+
+            <!-- Estimated Time Column -->
+            <ng-container matColumnDef="estimatedTime">
+              <th mat-header-cell *matHeaderCellDef 
+                  (click)="onSortChange('estimatedTime')"
+                  class="sortable-header">
+                Time
+                @if (sortBy() === 'estimatedTime') {
+                  <mat-icon class="sort-icon">
+                    {{ sortDirection() === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
+                  </mat-icon>
+                }
+              </th>
+              <td mat-cell *matCellDef="let task">
+                {{ task.estimatedTime }} min
+              </td>
+            </ng-container>
+
+            <!-- Status Column -->
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>Status</th>
+              <td mat-cell *matCellDef="let task">
+                <span class="status-badge status-{{ task.status }}">
+                  {{ task.status | titlecase }}
+                </span>
+              </td>
+            </ng-container>
+
+            <!-- Category Column -->
+            <ng-container matColumnDef="category">
+              <th mat-header-cell *matHeaderCellDef>Category</th>
+              <td mat-cell *matCellDef="let task">
+                <span class="category-chip">{{ task.category }}</span>
+              </td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Actions</th>
+              <td mat-cell *matCellDef="let task">
+                <div class="action-buttons">
+                  <button mat-icon-button (click)="editTask(task)" matTooltip="Edit Task">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button mat-icon-button (click)="duplicateTask(task)" matTooltip="Duplicate Task">
+                    <mat-icon>content_copy</mat-icon>
+                  </button>
+                  <button mat-icon-button color="warn" (click)="deleteTask(task)" matTooltip="Delete Task">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        }
+      </mat-card-content>
+    </mat-card>
+  }
+</div>

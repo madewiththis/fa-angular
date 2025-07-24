@@ -1,0 +1,314 @@
+{
+  "features": {
+    "dashboard": {
+      "name": "Dashboard",
+      "nameTH": "แดชบอร์ด",
+      "icon": "dashboard",
+      "route": "/dashboard",
+      "subFeatures": {
+        "get-started": {
+          "name": "Get Started",
+          "nameTH": "เริ่มต้นใช้งาน",
+          "route": "/dashboard/get-started"
+        },
+        "overview": {
+          "name": "Overview",
+          "nameTH": "ภาพรวม",
+          "route": "/dashboard/overview"
+        },
+        "accounts-receivable": {
+          "name": "Accounts Receivable",
+          "nameTH": "ลูกหนี้การค้า",
+          "route": "/dashboard/accounts-receivable"
+        },
+        "accounts-payable": {
+          "name": "Accounts Payable",
+          "nameTH": "เจ้าหนี้การค้า",
+          "route": "/dashboard/accounts-payable"
+        }
+      }
+    },
+    "sell": {
+      "name": "Sell",
+      "nameTH": "ขาย",
+      "icon": "shopping_cart",
+      "route": "/sell",
+      "subFeatures": {
+        "quotation": {
+          "name": "Quotation",
+          "nameTH": "ใบเสนอราคา",
+          "route": "/sell/quotation"
+        },
+        "billing-note": {
+          "name": "Billing Note",
+          "nameTH": "ใบวางบิล/ใบแจ้งหนี้",
+          "route": "/sell/billing-note"
+        },
+        "tax-invoice": {
+          "name": "Tax Invoice",
+          "nameTH": "ใบกำกับภาษี",
+          "route": "/sell/tax-invoice"
+        },
+        "receipt": {
+          "name": "Receipt",
+          "nameTH": "ใบเสร็จรับเงิน",
+          "route": "/sell/receipt"
+        },
+        "cash-sale": {
+          "name": "Cash Sale",
+          "nameTH": "ใบเสร็จรับเงิน/ใบกำกับภาษีอย่างย่อ",
+          "route": "/sell/cash-sale"
+        },
+        "credit-note": {
+          "name": "Credit Note",
+          "nameTH": "ใบลดหนี้",
+          "route": "/sell/credit-note"
+        },
+        "debit-note": {
+          "name": "Debit Note",
+          "nameTH": "ใบเพิ่มหนี้",
+          "route": "/sell/debit-note"
+        }
+      }
+    },
+    "buy": {
+      "name": "Buy",
+      "nameTH": "ซื้อ",
+      "icon": "shopping_bag",
+      "route": "/buy",
+      "subFeatures": {
+        "purchase-order": {
+          "name": "Purchase Order",
+          "nameTH": "ใบสั่งซื้อ",
+          "route": "/buy/purchase-order"
+        },
+        "goods-receipt": {
+          "name": "Goods Receipt",
+          "nameTH": "ใบรับสินค้า",
+          "route": "/buy/goods-receipt"
+        },
+        "invoice": {
+          "name": "Purchase Invoice",
+          "nameTH": "ใบกำกับภาษีซื้อ",
+          "route": "/buy/invoice"
+        },
+        "debit-note": {
+          "name": "Debit Note",
+          "nameTH": "ใบเพิ่มหนี้",
+          "route": "/buy/debit-note"
+        },
+        "report": {
+          "name": "Purchase Report",
+          "nameTH": "รายงานการซื้อ",
+          "route": "/buy/report"
+        }
+      }
+    },
+    "expenses": {
+      "name": "Expenses",
+      "nameTH": "ค่าใช้จ่าย",
+      "icon": "receipt_long",
+      "route": "/expenses",
+      "subFeatures": {
+        "claims": {
+          "name": "Expense Claims",
+          "nameTH": "บันทึกค่าใช้จ่าย",
+          "route": "/expenses/claims"
+        },
+        "reimbursements": {
+          "name": "Reimbursements",
+          "nameTH": "เบิกค่าใช้จ่าย",
+          "route": "/expenses/reimbursements"
+        },
+        "categories": {
+          "name": "Expense Categories",
+          "nameTH": "หมวดหมู่ค่าใช้จ่าย",
+          "route": "/expenses/categories"
+        },
+        "reports": {
+          "name": "Expense Reports",
+          "nameTH": "รายงานค่าใช้จ่าย",
+          "route": "/expenses/reports"
+        }
+      }
+    },
+    "products": {
+      "name": "Products",
+      "nameTH": "สินค้า",
+      "icon": "inventory_2",
+      "route": "/products",
+      "subFeatures": {
+        "list": {
+          "name": "Product List",
+          "nameTH": "รายการสินค้า",
+          "route": "/products/list"
+        },
+        "categories": {
+          "name": "Categories",
+          "nameTH": "หมวดหมู่สินค้า",
+          "route": "/products/categories"
+        },
+        "inventory": {
+          "name": "Inventory",
+          "nameTH": "คลังสินค้า",
+          "route": "/products/inventory"
+        },
+        "stock-movement": {
+          "name": "Stock Movement",
+          "nameTH": "การเคลื่อนไหวสินค้า",
+          "route": "/products/stock-movement"
+        },
+        "price-list": {
+          "name": "Price List",
+          "nameTH": "ราคาสินค้า",
+          "route": "/products/price-list"
+        }
+      }
+    },
+    "contacts": {
+      "name": "Contacts",
+      "nameTH": "ผู้ติดต่อ",
+      "icon": "people",
+      "route": "/contacts",
+      "subFeatures": {
+        "customers": {
+          "name": "Customers",
+          "nameTH": "ลูกค้า",
+          "route": "/contacts/customers"
+        },
+        "suppliers": {
+          "name": "Suppliers",
+          "nameTH": "ผู้ขาย",
+          "route": "/contacts/suppliers"
+        },
+        "employees": {
+          "name": "Employees",
+          "nameTH": "พนักงาน",
+          "route": "/contacts/employees"
+        },
+        "groups": {
+          "name": "Contact Groups",
+          "nameTH": "กลุ่มผู้ติดต่อ",
+          "route": "/contacts/groups"
+        }
+      }
+    },
+    "reports": {
+      "name": "Reports",
+      "nameTH": "รายงาน",
+      "icon": "analytics",
+      "route": "/reports",
+      "subFeatures": {
+        "profit-loss": {
+          "name": "Profit & Loss",
+          "nameTH": "กำไรขาดทุน",
+          "route": "/reports/profit-loss"
+        },
+        "balance-sheet": {
+          "name": "Balance Sheet",
+          "nameTH": "งบดุล",
+          "route": "/reports/balance-sheet"
+        },
+        "cash-flow": {
+          "name": "Cash Flow",
+          "nameTH": "กระแสเงินสด",
+          "route": "/reports/cash-flow"
+        },
+        "trial-balance": {
+          "name": "Trial Balance",
+          "nameTH": "งบทดลอง",
+          "route": "/reports/trial-balance"
+        },
+        "aged-receivable": {
+          "name": "Aged Receivable",
+          "nameTH": "อายุลูกหนี้",
+          "route": "/reports/aged-receivable"
+        }
+      }
+    },
+    "accounting": {
+      "name": "Accounting",
+      "nameTH": "บัญชี",
+      "icon": "account_balance",
+      "route": "/accounting",
+      "subFeatures": {
+        "journal": {
+          "name": "Journal Entry",
+          "nameTH": "บันทึกรายการบัญชี",
+          "route": "/accounting/journal"
+        },
+        "chart": {
+          "name": "Chart of Accounts",
+          "nameTH": "ผังบัญชี",
+          "route": "/accounting/chart"
+        },
+        "bank": {
+          "name": "Bank Reconciliation",
+          "nameTH": "กระทบยอดธนาคาร",
+          "route": "/accounting/bank"
+        },
+        "assets": {
+          "name": "Asset Management",
+          "nameTH": "จัดการสินทรัพย์",
+          "route": "/accounting/assets"
+        },
+        "closing": {
+          "name": "Closing Period",
+          "nameTH": "ปิดงวดบัญชี",
+          "route": "/accounting/closing"
+        }
+      }
+    },
+    "settings": {
+      "name": "Settings",
+      "nameTH": "ตั้งค่า",
+      "icon": "settings",
+      "route": "/settings",
+      "subFeatures": {
+        "company": {
+          "name": "Company Information",
+          "nameTH": "ข้อมูลบริษัท",
+          "route": "/settings/company"
+        },
+        "document": {
+          "name": "Document Settings",
+          "nameTH": "ตั้งค่าเอกสาร",
+          "route": "/settings/document"
+        },
+        "accounting": {
+          "name": "Accounting Settings",
+          "nameTH": "ตั้งค่าบัญชี",
+          "route": "/settings/accounting"
+        },
+        "users": {
+          "name": "User Management",
+          "nameTH": "จัดการผู้ใช้",
+          "route": "/settings/users"
+        },
+        "bank-accounts": {
+          "name": "Bank Accounts",
+          "nameTH": "บัญชีธนาคาร",
+          "route": "/settings/bank-accounts"
+        }
+      }
+    },
+    "mobile": {
+      "name": "Mobile App",
+      "nameTH": "แอปมือถือ",
+      "icon": "smartphone",
+      "route": "mobile-app",
+      "subFeatures": {
+        "all": {
+          "name": "All Features",
+          "nameTH": "ทุกฟีเจอร์",
+          "route": "mobile-app"
+        }
+      }
+    }
+  },
+  "metadata": {
+    "version": "1.0",
+    "lastUpdated": "2025-01-24",
+    "description": "Complete feature mapping for FlowAccount application to link learning tasks to specific features"
+  }
+}

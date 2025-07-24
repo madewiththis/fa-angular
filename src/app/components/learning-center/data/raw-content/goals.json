@@ -1,0 +1,68 @@
+[
+  {
+    "id": "goal_1737722400_001",
+    "name": "Improve Cash Flow",
+    "description": "Increase revenue collection speed and reduce unnecessary expenses to strengthen your financial position",
+    "businessValue": "Typically improve monthly cash position by 20-25% through better quote conversion and expense control",
+    "priority": 1,
+    "workflowIds": ["workflow_1737722400_001", "workflow_1737722400_002"],
+    "requiredWorkflows": ["workflow_1737722400_001"],
+    "optionalWorkflows": ["workflow_1737722400_002"],
+    "applicableRoles": ["owner", "administrator", "accountant"],
+    "applicableBusinessTypes": ["service", "product", "mixed", "freelance", "e_commerce", "retail"],
+    "successMetrics": [
+      "Quote acceptance rate increase of 15-30%",
+      "Average payment collection time reduced by 1 week",
+      "Monthly expense variance reduced by 10-15%"
+    ],
+    "estimatedTotalTime": 30,
+    "expectedOutcome": "Significant improvement in monthly cash flow and financial stability",
+    "version": 1,
+    "status": "published",
+    "lastUpdated": "2025-01-24"
+  },
+  {
+    "id": "goal_1737722400_002",
+    "name": "Ensure Tax Compliance",
+    "description": "Maintain accurate tax records and automate tax reporting to avoid penalties",
+    "businessValue": "Eliminate tax penalties and reduce tax preparation time by 80% through automation",
+    "priority": 2,
+    "workflowIds": ["workflow_1737722400_003"],
+    "requiredWorkflows": ["workflow_1737722400_003"],
+    "optionalWorkflows": [],
+    "applicableRoles": ["owner", "accountant", "administrator"],
+    "applicableBusinessTypes": ["service", "product", "mixed", "freelance", "e_commerce", "retail", "restaurant"],
+    "successMetrics": [
+      "100% tax compliance with automatic e-Tax submission",
+      "Zero manual tax calculation errors",
+      "Monthly tax reporting time reduced from 8 hours to 30 minutes"
+    ],
+    "estimatedTotalTime": 10,
+    "expectedOutcome": "Complete tax compliance with automated processes",
+    "version": 1,
+    "status": "published",
+    "lastUpdated": "2025-01-24"
+  },
+  {
+    "id": "goal_1737722400_003",
+    "name": "Improve Team Productivity",
+    "description": "Streamline team workflows and enable collaboration while maintaining proper controls",
+    "businessValue": "Reduce team training time by 70% and ensure consistent professional output across all team members",
+    "priority": 3,
+    "workflowIds": ["workflow_1737722400_004"],
+    "requiredWorkflows": ["workflow_1737722400_004"],
+    "optionalWorkflows": [],
+    "applicableRoles": ["owner", "administrator"],
+    "applicableBusinessTypes": ["service", "product", "mixed", "e_commerce", "retail", "consulting"],
+    "successMetrics": [
+      "Team member onboarding time reduced by 70%",
+      "Consistent document formatting across all team output",
+      "Proper access controls protecting sensitive financial data"
+    ],
+    "estimatedTotalTime": 15,
+    "expectedOutcome": "Efficient team collaboration with proper security controls",
+    "version": 1,
+    "status": "published",
+    "lastUpdated": "2025-01-24"
+  }
+]

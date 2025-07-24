@@ -1,0 +1,384 @@
+<div class="goal-management">
+  <!-- Header -->
+  <div class="management-header">
+    <h2>Goal Management</h2>
+    
+    <div class="header-actions">
+      <!-- Filter and Sort Controls -->
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Status Filter</mat-label>
+        <mat-select [value]="statusFilter()" (selectionChange)="onStatusFilterChange($event.value)">
+          <mat-option value="all">All Statuses</mat-option>
+          @for (status of statusOptions; track status) {
+            <mat-option [value]="status">{{ status | titlecase }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      
+      <button mat-raised-button color="primary" (click)="showCreateForm()">
+        <mat-icon>add</mat-icon>
+        Create Goal
+      </button>
+    </div>
+  </div>
+
+  <!-- Content -->
+  @if (showForm()) {
+    <!-- Goal Form -->
+    <mat-card class="form-card">
+      <mat-card-header>
+        <mat-card-title>
+          {{ isEditing() ? 'Edit Goal' : 'Create New Goal' }}
+        </mat-card-title>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <form [formGroup]="goalForm" class="goal-form">
+          <!-- Basic Information -->
+          <div class="form-section">
+            <h3>Basic Information</h3>
+            
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Goal Name</mat-label>
+                <input matInput formControlName="name" placeholder="Enter goal name">
+                @if (goalForm.get('name')?.hasError('required') && goalForm.get('name')?.touched) {
+                  <mat-error>Goal name is required</mat-error>
+                }
+                @if (goalForm.get('name')?.hasError('minlength') && goalForm.get('name')?.touched) {
+                  <mat-error>Goal name must be at least 3 characters</mat-error>
+                }
+              </mat-form-field>
+            </div>
+            
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Description</mat-label>
+                <textarea matInput formControlName="description" rows="3" 
+                         placeholder="Describe what this goal helps users achieve"></textarea>
+                @if (goalForm.get('description')?.hasError('required') && goalForm.get('description')?.touched) {
+                  <mat-error>Description is required</mat-error>
+                }
+              </mat-form-field>
+            </div>
+            
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Business Value</mat-label>
+                <textarea matInput formControlName="businessValue" rows="2"
+                         placeholder="Explain the business impact of achieving this goal"></textarea>
+                @if (goalForm.get('businessValue')?.hasError('required') && goalForm.get('businessValue')?.touched) {
+                  <mat-error>Business value is required</mat-error>
+                }
+              </mat-form-field>
+            </div>
+            
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Priority (1-10)</mat-label>
+                <input matInput type="number" formControlName="priority" min="1" max="10">
+                @if (goalForm.get('priority')?.hasError('required') && goalForm.get('priority')?.touched) {
+                  <mat-error>Priority is required</mat-error>
+                }
+              </mat-form-field>
+              
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Status</mat-label>
+                <mat-select formControlName="status">
+                  @for (status of statusOptions; track status) {
+                    <mat-option [value]="status">{{ status | titlecase }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- Target Audience -->
+          <div class="form-section">
+            <h3>Target Audience</h3>
+            
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Applicable User Roles</mat-label>
+                <mat-select formControlName="applicableRoles" multiple>
+                  @for (role of userRoles; track role) {
+                    <mat-option [value]="role">{{ role | titlecase }}</mat-option>
+                  }
+                </mat-select>
+                @if (goalForm.get('applicableRoles')?.hasError('required') && goalForm.get('applicableRoles')?.touched) {
+                  <mat-error>At least one user role is required</mat-error>
+                }
+              </mat-form-field>
+              
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Applicable Business Types</mat-label>
+                <mat-select formControlName="applicableBusinessTypes" multiple>
+                  @for (type of businessTypes; track type) {
+                    <mat-option [value]="type">{{ type | titlecase }}</mat-option>
+                  }
+                </mat-select>
+                @if (goalForm.get('applicableBusinessTypes')?.hasError('required') && goalForm.get('applicableBusinessTypes')?.touched) {
+                  <mat-error>At least one business type is required</mat-error>
+                }
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- Success Metrics -->
+          <div class="form-section">
+            <h3>Success Metrics</h3>
+            
+            @for (metric of successMetricsArray.controls; track $index) {
+              <div class="form-row metric-row">
+                <mat-form-field appearance="outline" class="metric-field">
+                  <mat-label>Success Metric {{ $index + 1 }}</mat-label>
+                  <input matInput [formControl]="$any(metric)" 
+                         placeholder="How will you measure success?">
+                </mat-form-field>
+                
+                <button mat-icon-button color="warn" 
+                        (click)="removeSuccessMetric($index)"
+                        matTooltip="Remove metric">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            }
+            
+            <button mat-stroked-button (click)="addSuccessMetric()" class="add-metric-btn">
+              <mat-icon>add</mat-icon>
+              Add Success Metric
+            </button>
+          </div>
+
+          <!-- Content Attachments (MVP) -->
+          <div class="form-section">
+            <h3>Content Attachments</h3>
+            
+            <!-- Video URLs -->
+            <div class="attachment-group">
+              <h4>Video URLs</h4>
+              @for (videoUrl of videoUrlsArray.controls; track $index) {
+                <div class="form-row attachment-row">
+                  <mat-form-field appearance="outline" class="attachment-field">
+                    <mat-label>Video URL {{ $index + 1 }}</mat-label>
+                    <input matInput [formControl]="$any(videoUrl)" 
+                           placeholder="https://example.com/video.mp4">
+                  </mat-form-field>
+                  
+                  <button mat-icon-button color="warn" 
+                          (click)="removeVideoUrl($index)"
+                          matTooltip="Remove video URL">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              }
+              
+              <button mat-stroked-button (click)="addVideoUrl()" class="add-attachment-btn">
+                <mat-icon>add</mat-icon>
+                Add Video URL
+              </button>
+            </div>
+
+            <!-- Article URLs -->
+            <div class="attachment-group">
+              <h4>Article URLs</h4>
+              @for (articleUrl of articleUrlsArray.controls; track $index) {
+                <div class="form-row attachment-row">
+                  <mat-form-field appearance="outline" class="attachment-field">
+                    <mat-label>Article URL {{ $index + 1 }}</mat-label>
+                    <input matInput [formControl]="$any(articleUrl)" 
+                           placeholder="https://example.com/article">
+                  </mat-form-field>
+                  
+                  <button mat-icon-button color="warn" 
+                          (click)="removeArticleUrl($index)"
+                          matTooltip="Remove article URL">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              }
+              
+              <button mat-stroked-button (click)="addArticleUrl()" class="add-attachment-btn">
+                <mat-icon>add</mat-icon>
+                Add Article URL
+              </button>
+            </div>
+
+            <!-- AI Prompts -->
+            <div class="attachment-group">
+              <h4>AI Prompts</h4>
+              @for (aiPrompt of aiPromptsArray.controls; track $index) {
+                <div class="form-row attachment-row">
+                  <mat-form-field appearance="outline" class="attachment-field">
+                    <mat-label>AI Prompt {{ $index + 1 }}</mat-label>
+                    <textarea matInput [formControl]="$any(aiPrompt)" rows="2"
+                             placeholder="AI prompt for future assistance"></textarea>
+                  </mat-form-field>
+                  
+                  <button mat-icon-button color="warn" 
+                          (click)="removeAiPrompt($index)"
+                          matTooltip="Remove AI prompt">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              }
+              
+              <button mat-stroked-button (click)="addAiPrompt()" class="add-attachment-btn">
+                <mat-icon>add</mat-icon>
+                Add AI Prompt
+              </button>
+            </div>
+
+            <!-- Attachment Notes -->
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Attachment Notes</mat-label>
+                <textarea matInput [formControl]="$any(contentAttachmentsGroup.get('attachmentNotes'))" rows="2"
+                         placeholder="General notes about these attachments"></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- Expected Outcome -->
+          <div class="form-section">
+            <h3>Expected Outcome</h3>
+            
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Expected Outcome</mat-label>
+                <textarea matInput formControlName="expectedOutcome" rows="3"
+                         placeholder="What specific outcome should users expect after completing this goal?"></textarea>
+                @if (goalForm.get('expectedOutcome')?.hasError('required') && goalForm.get('expectedOutcome')?.touched) {
+                  <mat-error>Expected outcome is required</mat-error>
+                }
+              </mat-form-field>
+            </div>
+          </div>
+        </form>
+      </mat-card-content>
+      
+      <mat-card-actions align="end">
+        <button mat-button (click)="cancelEdit()">Cancel</button>
+        <button mat-raised-button color="primary" 
+                (click)="saveGoal()" 
+                [disabled]="goalForm.invalid">
+          {{ isEditing() ? 'Update Goal' : 'Create Goal' }}
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  } @else {
+    <!-- Goals Table -->
+    <mat-card class="table-card">
+      <mat-card-content>
+        @if (filteredGoals().length === 0) {
+          <div class="empty-state">
+            <mat-icon class="empty-icon">flag</mat-icon>
+            <h3>No Goals Found</h3>
+            <p>Create your first learning goal to get started.</p>
+            <button mat-raised-button color="primary" (click)="showCreateForm()">
+              <mat-icon>add</mat-icon>
+              Create Goal
+            </button>
+          </div>
+        } @else {
+          <table mat-table [dataSource]="filteredGoals()" class="goals-table">
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef 
+                  (click)="onSortChange('name')" 
+                  class="sortable-header">
+                Name
+                @if (sortBy() === 'name') {
+                  <mat-icon class="sort-icon">
+                    {{ sortDirection() === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
+                  </mat-icon>
+                }
+              </th>
+              <td mat-cell *matCellDef="let goal">
+                <div class="goal-name">
+                  <strong>{{ goal.name }}</strong>
+                  <p class="goal-description">{{ goal.description }}</p>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Priority Column -->
+            <ng-container matColumnDef="priority">
+              <th mat-header-cell *matHeaderCellDef 
+                  (click)="onSortChange('priority')"
+                  class="sortable-header">
+                Priority
+                @if (sortBy() === 'priority') {
+                  <mat-icon class="sort-icon">
+                    {{ sortDirection() === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
+                  </mat-icon>
+                }
+              </th>
+              <td mat-cell *matCellDef="let goal">
+                <span class="priority-badge priority-{{ goal.priority }}">
+                  {{ goal.priority }}
+                </span>
+              </td>
+            </ng-container>
+
+            <!-- Status Column -->
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>Status</th>
+              <td mat-cell *matCellDef="let goal">
+                <span class="status-badge status-{{ goal.status }}">
+                  {{ goal.status | titlecase }}
+                </span>
+              </td>
+            </ng-container>
+
+            <!-- Workflows Column -->
+            <ng-container matColumnDef="workflows">
+              <th mat-header-cell *matHeaderCellDef>Workflows</th>
+              <td mat-cell *matCellDef="let goal">
+                <span class="workflow-count">
+                  {{ goal.workflowIds.length }} workflows
+                </span>
+                @if (goal.workflowIds.length > 0) {
+                  <p class="workflow-names">{{ getWorkflowNames(goal.workflowIds) }}</p>
+                }
+              </td>
+            </ng-container>
+
+            <!-- Roles Column -->
+            <ng-container matColumnDef="roles">
+              <th mat-header-cell *matHeaderCellDef>Target Roles</th>
+              <td mat-cell *matCellDef="let goal">
+                <div class="role-chips">
+                  @for (role of goal.applicableRoles; track role) {
+                    <span class="role-chip">{{ role }}</span>
+                  }
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Actions</th>
+              <td mat-cell *matCellDef="let goal">
+                <div class="action-buttons">
+                  <button mat-icon-button (click)="editGoal(goal)" matTooltip="Edit Goal">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button mat-icon-button (click)="duplicateGoal(goal)" matTooltip="Duplicate Goal">
+                    <mat-icon>content_copy</mat-icon>
+                  </button>
+                  <button mat-icon-button color="warn" (click)="deleteGoal(goal)" matTooltip="Delete Goal">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        }
+      </mat-card-content>
+    </mat-card>
+  }
+</div>

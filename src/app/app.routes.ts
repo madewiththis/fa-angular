@@ -8,6 +8,13 @@ export const routes: Routes = [
     component: PasswordProtectionComponent,
   },
   {
+    path: 'learningcenter/admin',
+    loadComponent: () =>
+      import('./components/learning-center/admin-ui/admin-dashboard/admin-dashboard.component').then(
+        (m) => m.AdminDashboardComponent
+      ),
+  },
+  {
     path: '',
     canActivate: [authGuard],
     children: [
