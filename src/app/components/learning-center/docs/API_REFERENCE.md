@@ -1,8 +1,12 @@
 # Learning Center API Reference
 
+> **📚 Documentation Navigation**: [README](README.md) | [Overview](OVERVIEW.md) | [Panel Docs](PANEL_DOCUMENTATION.md) | [Panel Integration](PANEL_CONTENT_INTEGRATION.md) | **API Reference** | [Integration Guide](INTEGRATION_GUIDE.md) | [UI Wireframe](UI_WIREFRAME.md) | [Dashboard Integration](LEARNING_CENTER_INTEGRATION.md)
+
 ## LearningContentService
 
-The main service for accessing and managing learning content throughout the FlowAccount application.
+The main service for accessing and managing learning content throughout the FlowAccount application. This service provides reactive data access for both the content management system and the Learning Center Panel interface.
+
+> **🎯 Panel Integration**: See [Panel Documentation](PANEL_DOCUMENTATION.md) for how the panel component uses this service to display contextual content.
 
 ### Service Injection
 ```typescript

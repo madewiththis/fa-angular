@@ -1,8 +1,12 @@
 # Learning Center Integration with Get Started Dashboard
 
+> **📚 Documentation Navigation**: [README](README.md) | [Overview](OVERVIEW.md) | [Panel Docs](PANEL_DOCUMENTATION.md) | [Panel Integration](PANEL_CONTENT_INTEGRATION.md) | [API Reference](API_REFERENCE.md) | [Integration Guide](INTEGRATION_GUIDE.md) | [UI Wireframe](UI_WIREFRAME.md) | **Dashboard Integration**
+
 ## Overview
 
-The FlowAccount Get Started dashboard now integrates with the Learning Center system to provide dynamic, curated learning content. This allows admins to manage what learning experiences appear on the Get Started page through the Learning Center admin interface.
+The FlowAccount Get Started dashboard integrates with the Learning Center system to provide dynamic, curated learning content. This allows admins to manage what learning experiences appear on the Get Started page through the Learning Center admin interface. This is one example of how the Learning Center content management system can be integrated throughout the application.
+
+> **🎯 Complete Integration Examples**: See [Integration Guide](INTEGRATION_GUIDE.md) for additional integration patterns, including the Learning Center Panel interface.
 
 ## How It Works
 

@@ -1,8 +1,12 @@
 # Learning Center Integration Guide
 
+> **📚 Documentation Navigation**: [README](README.md) | [Overview](OVERVIEW.md) | [Panel Docs](PANEL_DOCUMENTATION.md) | [Panel Integration](PANEL_CONTENT_INTEGRATION.md) | [API Reference](API_REFERENCE.md) | **Integration Guide** | [UI Wireframe](UI_WIREFRAME.md) | [Dashboard Integration](LEARNING_CENTER_INTEGRATION.md)
+
 ## Overview
 
-The Learning Center serves as the central repository for all learning content in FlowAccount. Other system components can easily integrate with it to provide contextual help, guided experiences, and structured learning paths.
+The Learning Center serves as the central repository for all learning content in FlowAccount. Other system components can easily integrate with it to provide contextual help, guided experiences, and structured learning paths. This guide covers integration patterns for both the content management system and the Learning Center Panel interface.
+
+> **🎯 Complete System**: The Learning Center includes both content management ([Overview](OVERVIEW.md)) and a slide-out panel interface ([Panel Documentation](PANEL_DOCUMENTATION.md)).
 
 ## Integration Patterns
 
@@ -28,20 +32,37 @@ quickActions = computed(() => {
 });
 ```
 
-### 2. Help Panel Integration 🚧 (Next Implementation)
+### 2. Learning Center Panel Integration ✅ 
+**Location**: `src/app/components/learning-center/learning-center-panel/`
+
+**Pattern**: Slide-out contextual help interface
+```typescript
+// Panel component integration
+@Component({
+  selector: 'app-learning-center-panel',
+  // ... component setup
+})
+export class LearningCenterPanelComponent {
+  protected learningPanel = inject(LearningPanelService);
+  
+  // Get relevant tasks for current page/feature
+  getCurrentContextTasks(featureArea: string): LearningTask[] {
+    return this.learningContentService.tasks()
+      .filter(task => 
+        task.featureLink?.mainFeature === featureArea && 
+        task.status === 'published'
+      );
+  }
+}
+```
+
+> **📋 Complete Panel Documentation**: See [PANEL_DOCUMENTATION.md](PANEL_DOCUMENTATION.md) for comprehensive UI specifications, behavior, and implementation details.
+
+### 3. Help Panel Integration 🚧 (Future Implementation)
 **Location**: Help panel right sidebar
 
-**Pattern**: Context-aware task instructions
+**Pattern**: Context-aware task instructions (similar to panel but embedded)
 ```typescript
-// Get relevant tasks for current page/feature
-getCurrentContextTasks(featureArea: string): LearningTask[] {
-  return this.learningContentService.tasks()
-    .filter(task => 
-      task.featureLink?.mainFeature === featureArea && 
-      task.status === 'published'
-    );
-}
-
 // Get step-by-step instructions
 getTaskInstructions(taskId: string): TaskInstructions | null {
   const task = this.learningContentService.getTask(taskId);

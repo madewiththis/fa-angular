@@ -1,0 +1,63 @@
+<!-- Get Started Integration Component -->
+<div class="get-started-container">
+  <header class="section-header">
+    <h2>Get Started with FlowAccount</h2>
+    <p>Quick actions to help you set up your account and start managing your business</p>
+  </header>
+  
+  <!-- Quick Action Cards -->
+  <div class="quick-actions-grid">
+    <mat-card 
+      *ngFor="let action of quickActions()" 
+      class="quick-action-card"
+      (click)="openLearningContent(action.contentId)">
+      
+      <mat-card-header>
+        <div mat-card-avatar class="action-icon">
+          <mat-icon>{{ action.icon }}</mat-icon>
+        </div>
+        <mat-card-title>{{ action.title }}</mat-card-title>
+        <mat-card-subtitle>
+          <span class="difficulty-badge" [attr.data-difficulty]="action.difficulty">
+            {{ action.difficulty | titlecase }}
+          </span>
+          <span class="estimated-time">
+            <mat-icon>schedule</mat-icon>
+            {{ formatTime(action.estimatedTime) }}
+          </span>
+        </mat-card-subtitle>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <p>{{ action.description }}</p>
+      </mat-card-content>
+      
+      <mat-card-actions align="end">
+        <button mat-button [color]="getDifficultyColor(action.difficulty)">
+          Start Learning
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+  
+  <!-- Learning Center Access -->
+  <div class="learning-center-access">
+    <mat-card class="access-card">
+      <mat-card-content>
+        <div class="access-content">
+          <div class="access-info">
+            <h3>Need More Help?</h3>
+            <p>Access our complete Learning Center with step-by-step guides, workflows, and expert tips.</p>
+          </div>
+          <div class="access-actions">
+            <button mat-raised-button color="primary">
+              <mat-icon>school</mat-icon>
+              Open Learning Center
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

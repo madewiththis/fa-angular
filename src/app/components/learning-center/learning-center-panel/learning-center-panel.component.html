@@ -1,0 +1,299 @@
+<!-- Learning Center Panel Overlay -->
+<div 
+  class="learning-panel-overlay" 
+  [class.open]="learningPanel.isOpen"
+  (click)="closePanel()"
+>
+  <!-- Learning Center Panel -->
+  <div 
+    class="learning-center-panel" 
+    (click)="$event.stopPropagation()"
+    [class.open]="learningPanel.isOpen"
+  >
+    <!-- Combined Header & CTA Section -->
+    <div class="panel-header-combined">
+      <div class="header-row">
+        <div class="panel-title">Learning Center</div>
+        <button 
+          mat-icon-button 
+          class="close-panel-button" 
+          (click)="closePanel()"
+          aria-label="Close learning center"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <div class="cta-row">
+        <button 
+          mat-button 
+          class="cta-button explore-button" 
+          (click)="openNavModal()"
+        >
+          <mat-icon>lightbulb</mat-icon>
+          More Guides
+        </button>
+        <button 
+          mat-button 
+          class="cta-button support-button" 
+          (click)="toggleSupportDropdown()"
+          [class.menu-open]="showSupportDropdown"
+        >
+          <mat-icon>support_agent</mat-icon>
+          Ask a human
+        </button>
+        
+        <!-- Support Dropdown -->
+        <div class="support-popup" [class.show]="showSupportDropdown" (click)="$event.stopPropagation()">
+          <div class="support-option" (click)="selectSupportOption('call')">
+            <mat-icon>call</mat-icon> Call support
+          </div>
+          <div class="support-option" (click)="selectSupportOption('callback')">
+            <mat-icon>phone_callback</mat-icon> Request call back
+          </div>
+          <div class="support-option" (click)="selectSupportOption('chat')">
+            <mat-icon>chat</mat-icon> Chat now
+          </div>
+          <div class="support-option" (click)="selectSupportOption('workshops')">
+            <mat-icon>school</mat-icon> 
+            <span class="option-text">Workshops</span>
+            <mat-icon class="external-link-icon">open_in_new</mat-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content View Section -->
+    <div [ngClass]="contentViewClasses" id="content-view">
+      <div class="content-view-header" (click)="toggleContentView()">
+        <span>{{ contentHeaderText }}</span>
+        <button 
+          *ngIf="showBackButton"
+          mat-button 
+          class="back-to-page-button-inline" 
+          (click)="$event.stopPropagation(); backToCurrentPage();"
+        >
+          <mat-icon>arrow_back</mat-icon> {{ backButtonText }}
+        </button>
+        <mat-icon class="view-toggle-arrow">
+          {{ isContentPrimary ? 'expand_less' : 'expand_more' }}
+        </mat-icon>
+      </div>
+      
+      <div 
+        *ngIf="isChatPrimary" 
+        class="continue-content-hint" 
+        (click)="toggleContentView()"
+      >
+        Back to guides?
+      </div>
+      
+      <div class="content-view-body">
+        <!-- Call Support Overlay -->
+        <div *ngIf="showCallSupportOverlay" class="support-overlay call-support-overlay">
+          <div class="overlay-header">
+            <h3>Call Support</h3>
+            <button mat-icon-button (click)="closeCallSupportOverlay()" class="overlay-close">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+          
+          <div class="overlay-content">
+            <div class="phone-display">
+              <mat-icon class="phone-icon">phone</mat-icon>
+              <div class="phone-number">{{ phoneNumber }}</div>
+            </div>
+            
+            <div class="copy-status" [class.show]="showCopyMessage">
+              <mat-icon class="check-icon">check_circle</mat-icon>
+              <span>Phone number copied to clipboard!</span>
+            </div>
+            
+            <p class="instruction">
+              Click the button below to copy our support number to your clipboard.
+            </p>
+            
+            <div class="support-hours">
+              <h4>Support Hours</h4>
+              <p>Monday - Friday: 9:00 AM - 6:00 PM (GMT+7)</p>
+              <p>Saturday: 9:00 AM - 1:00 PM (GMT+7)</p>
+            </div>
+          </div>
+          
+          <div class="overlay-actions">
+            <button mat-raised-button color="primary" (click)="copyPhoneNumber()">
+              <mat-icon>content_copy</mat-icon>
+              Copy Phone Number
+            </button>
+            <button mat-button (click)="closeCallSupportOverlay()">Close</button>
+          </div>
+        </div>
+        
+        <!-- Request Callback Overlay -->
+        <div *ngIf="showCallbackOverlay" class="support-overlay callback-overlay">
+          <div class="overlay-header">
+            <h3>Request Callback</h3>
+            <button mat-icon-button (click)="closeCallbackOverlay()" class="overlay-close">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+          
+          <div class="overlay-content">
+            <p class="description">
+              We'll call you back to help with your FlowAccount questions. 
+              This is a simplified demo version.
+            </p>
+            
+            <div class="callback-demo">
+              <div class="demo-field">
+                <strong>Phone:</strong> +66-81-234-5678
+              </div>
+              <div class="demo-field">
+                <strong>Timing:</strong> Call me now
+              </div>
+              <div class="demo-field">
+                <strong>Topic:</strong> Help with quotations
+              </div>
+            </div>
+            
+            <div class="demo-success">
+              <mat-icon class="success-icon">check_circle</mat-icon>
+              <p>Callback request submitted successfully! You can expect a call from <strong>{{ phoneNumber }}</strong> within 30 minutes during business hours.</p>
+            </div>
+          </div>
+          
+          <div class="overlay-actions">
+            <button mat-raised-button color="primary" (click)="closeCallbackOverlay()">
+              Got it, thanks!
+            </button>
+          </div>
+        </div>
+        
+        <!-- Normal Content (when overlays are not shown) -->
+        <div *ngIf="!showCallSupportOverlay && !showCallbackOverlay">
+          <!-- Highlighted Content -->
+          <div class="highlighted-content">
+            <div class="highlighted-content-title">How to Create a Quotation</div>
+            <div class="highlighted-content-subtitle">
+              Most relevant for your current page
+            </div>
+            <div class="content-formats">
+              <button mat-stroked-button class="format-button">
+                <mat-icon>play_circle</mat-icon> Video (3 min)
+              </button>
+              <button mat-stroked-button class="format-button">
+                <mat-icon>description</mat-icon> Guide
+              </button>
+              <button mat-stroked-button class="format-button">
+                <mat-icon>format_list_numbered</mat-icon> Quick Steps
+              </button>
+            </div>
+          </div>
+          
+          <!-- Additional Content -->
+          <div class="related-content">
+            <h4>Related Guides</h4>
+            <div class="content-list">
+              <div class="content-item">
+                <mat-icon>article</mat-icon>
+                <span>Converting Quotations to Invoices</span>
+              </div>
+              <div class="content-item">
+                <mat-icon>article</mat-icon>
+                <span>Setting Up Quotation Templates</span>
+              </div>
+              <div class="content-item">
+                <mat-icon>article</mat-icon>
+                <span>Managing Quotation Status</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat View Section -->
+    <div [ngClass]="chatViewClasses" id="chat-view">
+      <div class="chat-view-header" (click)="toggleChatView()">
+        <span>AI Assistant</span>
+        <mat-icon class="view-toggle-arrow">
+          {{ isChatPrimary ? 'expand_less' : 'expand_more' }}
+        </mat-icon>
+      </div>
+      
+      <div 
+        *ngIf="isContentPrimary" 
+        class="continue-chat-hint" 
+        (click)="toggleChatView()"
+      >
+        Back to chat?
+      </div>
+      
+      <div class="chat-messages">
+        <div class="chat-message">
+          <div class="bot-message">
+            👋 Hi! I'm here to help you with quotations. I can answer questions, guide you through processes, or help you find the right content. What would you like to know?
+          </div>
+        </div>
+      </div>
+      
+      <div class="chat-input-area">
+        <button mat-icon-button class="input-icon-button" title="Capture screenshot">
+          <mat-icon>screenshot</mat-icon>
+        </button>
+        <input 
+          type="text" 
+          class="chat-input" 
+          placeholder="Ask me anything about quotations..."
+          (focus)="onChatInputFocus()"
+        >
+        <button mat-icon-button class="send-button" title="Send message">
+          <mat-icon>send</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Simple Navigation Modal -->
+<div class="nav-modal-overlay" [class.show]="isNavModalOpen" (click)="closeNavModal()">
+  <div class="nav-modal" (click)="$event.stopPropagation()">
+    <div class="nav-modal-header">
+      <div class="nav-modal-title">Learning Center Navigation</div>
+      <button mat-icon-button class="nav-modal-close" (click)="closeNavModal()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    
+    <div class="nav-modal-body">
+      <button 
+        *ngIf="showBackButton"
+        mat-button 
+        class="back-to-page-button" 
+        (click)="backToCurrentPage()"
+      >
+        <mat-icon>arrow_back</mat-icon> Back to help for {{ previousPageContext }}
+      </button>
+
+      <!-- Simple Placeholder Content -->
+      <div class="nav-section">
+        <div class="nav-section-title">Quick Navigation</div>
+        <div class="nav-grid">
+          <div class="nav-card" (click)="selectNavContent('placeholder1')">
+            <div class="nav-card-title">Placeholder Topic 1</div>
+            <div class="nav-card-description">This is a placeholder for future content</div>
+          </div>
+          <div class="nav-card" (click)="selectNavContent('placeholder2')">
+            <div class="nav-card-title">Placeholder Topic 2</div>
+            <div class="nav-card-description">This is a placeholder for future content</div>
+          </div>
+          <div class="nav-card" (click)="selectNavContent('placeholder3')">
+            <div class="nav-card-title">Placeholder Topic 3</div>
+            <div class="nav-card-description">This is a placeholder for future content</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Temporarily removed backdrop for debugging -->

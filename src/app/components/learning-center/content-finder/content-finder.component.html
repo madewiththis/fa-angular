@@ -1,0 +1,218 @@
+<!-- Content Finder Modal -->
+<div class="content-finder-overlay" [class.show]="isOpen()" (click)="close()">
+  <div class="content-finder-modal" (click)="$event.stopPropagation()">
+    
+    <!-- Header -->
+    <div class="modal-header">
+      <div class="modal-title">Learning Center Content Finder</div>
+      <button mat-icon-button class="close-button" (click)="close()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    
+    <!-- Search Bar -->
+    <div class="search-section">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Search for help content...</mat-label>
+        <input matInput 
+               [(ngModel)]="searchQuery" 
+               (input)="onSearch()"
+               placeholder="e.g., create invoice, quotation process">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+      
+      <div class="quick-filters">
+        <mat-chip-listbox [value]="selectedContentTypes()" (valueChange)="selectedContentTypes.set($event)">
+          <mat-chip-option value="goal">
+            <mat-icon>flag</mat-icon> Goals
+          </mat-chip-option>
+          <mat-chip-option value="workflow">
+            <mat-icon>account_tree</mat-icon> Workflows
+          </mat-chip-option>
+          <mat-chip-option value="task">
+            <mat-icon>assignment</mat-icon> Tasks
+          </mat-chip-option>
+        </mat-chip-listbox>
+      </div>
+    </div>
+    
+    <!-- Back Button (if viewing different context) -->
+    <div *ngIf="showBackButton()" class="back-section">
+      <button mat-button class="back-button" (click)="backToCurrentPage()">
+        <mat-icon>arrow_back</mat-icon>
+        Back to {{ previousPageContext() }}
+      </button>
+    </div>
+    
+    <!-- Content Area -->
+    <div class="content-area">
+      
+      <!-- Sidebar Filters -->
+      <div class="sidebar">
+        <div class="filter-section">
+          <h4>Filter by Category</h4>
+          <div class="category-list">
+            <button *ngFor="let group of contentByCategory()" 
+                    mat-button 
+                    class="category-button"
+                    [class.selected]="selectedCategory() === group.category"
+                    (click)="selectCategory(group.category)">
+              {{ group.category }} ({{ group.items.length }})
+            </button>
+          </div>
+        </div>
+        
+        <div class="filter-section">
+          <h4>Difficulty Level</h4>
+          <mat-form-field appearance="outline">
+            <mat-label>Select levels</mat-label>
+            <mat-select [value]="selectedDifficulty()" 
+                        (valueChange)="selectedDifficulty.set($event)" 
+                        multiple>
+              <mat-option value="beginner">Beginner</mat-option>
+              <mat-option value="intermediate">Intermediate</mat-option>
+              <mat-option value="advanced">Advanced</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        
+        <button mat-button class="clear-filters-button" (click)="clearFilters()">
+          <mat-icon>clear</mat-icon> Clear Filters
+        </button>
+      </div>
+      
+      <!-- Main Content Results -->
+      <div class="results-area">
+        
+        <!-- Search Results or Browse Content -->
+        <div class="content-grid">
+          <div *ngFor="let result of searchResults()" 
+               class="content-card"
+               (click)="selectContent(result.content)">
+            
+            <div class="content-header">
+              <mat-icon [class]="'content-type-icon ' + result.content.type">
+                {{ getContentTypeIcon(result.content.type) }}
+              </mat-icon>
+              <div class="content-meta">
+                <span class="content-type">{{ result.content.type | titlecase }}</span>
+                <span class="content-difficulty" 
+                      [attr.data-difficulty]="result.content.difficulty">
+                  {{ result.content.difficulty | titlecase }}
+                </span>
+              </div>
+            </div>
+            
+            <div class="content-body">
+              <h3 class="content-title">{{ result.content.name }}</h3>
+              <p class="content-description">{{ result.content.description }}</p>
+              
+              <div class="content-details">
+                <span class="estimated-time">
+                  <mat-icon>schedule</mat-icon>
+                  {{ formatEstimatedTime(result.content.estimatedTime || 5) }}
+                </span>
+                
+                <span *ngIf="result.content.category" class="category">
+                  <mat-icon>folder</mat-icon>
+                  {{ result.content.category }}
+                </span>
+              </div>
+            </div>
+            
+            <div class="content-actions">
+              <button mat-icon-button 
+                      class="preview-button"
+                      (click)="$event.stopPropagation(); previewContent(result.content)"
+                      title="Preview content">
+                <mat-icon>visibility</mat-icon>
+              </button>
+              
+              <div class="relevance-score" *ngIf="result.relevanceScore > 0">
+                {{ (result.relevanceScore * 100) | number:'1.0-0' }}% match
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Empty State -->
+        <div *ngIf="searchResults().length === 0" class="empty-state">
+          <mat-icon class="empty-icon">search_off</mat-icon>
+          <h3>No content found</h3>
+          <p>Try adjusting your search terms or filters to find relevant content.</p>
+          <button mat-raised-button color="primary" (click)="clearFilters()">
+            Clear All Filters
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Footer Actions -->
+    <div class="modal-footer">
+      <div class="results-info">
+        {{ searchResults().length }} results found
+      </div>
+      <div class="footer-actions">
+        <button mat-button (click)="close()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Content Preview Panel -->
+<div *ngIf="showPreviewPanel()" class="preview-overlay" (click)="closePreview()">
+  <div class="preview-panel" (click)="$event.stopPropagation()">
+    <div class="preview-header">
+      <h3>{{ selectedPreview()?.name }}</h3>
+      <button mat-icon-button (click)="closePreview()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    
+    <div class="preview-content">
+      <div class="preview-meta">
+        <span class="content-type">
+          <mat-icon>{{ getContentTypeIcon(selectedPreview()?.type || 'task') }}</mat-icon>
+          {{ selectedPreview()?.type | titlecase }}
+        </span>
+        <span class="estimated-time">
+          <mat-icon>schedule</mat-icon>
+          {{ formatEstimatedTime(selectedPreview()?.estimatedTime || 5) }}
+        </span>
+        <span class="difficulty">
+          <mat-icon>bar_chart</mat-icon>
+          {{ selectedPreview()?.difficulty | titlecase }}
+        </span>
+      </div>
+      
+      <p class="preview-description">{{ selectedPreview()?.description }}</p>
+      
+      <!-- Additional preview content based on type -->
+      <div *ngIf="selectedPreview()?.type === 'task'" class="task-preview">
+        <h4>What you'll learn:</h4>
+        <p>{{ selectedPreview()?.outcome }}</p>
+      </div>
+      
+      <div *ngIf="selectedPreview()?.type === 'workflow'" class="workflow-preview">
+        <h4>Business value:</h4>
+        <p>{{ (selectedPreview() as any)?.businessValue }}</p>
+      </div>
+      
+      <div *ngIf="selectedPreview()?.type === 'goal'" class="goal-preview">
+        <h4>Expected outcome:</h4>
+        <p>{{ (selectedPreview() as any)?.expectedOutcome }}</p>
+      </div>
+    </div>
+    
+    <div class="preview-actions">
+      <button mat-raised-button 
+              color="primary" 
+              (click)="selectContent(selectedPreview()!)">
+        Select This Content
+      </button>
+      <button mat-button (click)="closePreview()">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>

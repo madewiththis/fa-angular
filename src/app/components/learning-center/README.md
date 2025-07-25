@@ -2,177 +2,115 @@
 
 ## Overview
 
-The Learning Center is a completely self-contained module that implements the Goals → Workflows → Tasks learning system for FlowAccount. It's designed to be easily portable to any Angular application with minimal integration requirements.
+The Learning Center is a complete help and guidance system for FlowAccount that combines content management, contextual assistance, and AI-powered support. It includes both a content management system and a slide-out panel interface for delivering help to users.
 
-## Architecture
+## 📚 **Complete Documentation**
+
+**All comprehensive documentation is located in the [`docs/`](docs/) folder:**
+
+👉 **[START HERE: Complete Documentation](docs/README.md)**
+
+### Five Core Components
+1. **[Admin UI](docs/OVERVIEW.md#content-management-system)** - Content management system
+2. **[Learning Center Panel](docs/PANEL_DOCUMENTATION.md)** - Contextual help interface  
+3. **[Content Finder](docs/CONTENT_FINDER.md)** - Content discovery and exploration
+4. **[AI Assistant](docs/AI_ASSISTANT.md)** - Intelligent conversational help
+5. **[Get Started Integration](docs/GET_STARTED_INTEGRATION.md)** - Dashboard onboarding gateway
+
+### Technical Documentation
+- **[System Overview](docs/OVERVIEW.md)** - Architecture and core concepts
+- **[API Reference](docs/API_REFERENCE.md)** - Service methods and data types
+- **[Integration Guide](docs/INTEGRATION_GUIDE.md)** - How to integrate with other components
+- **[Panel Content Integration](docs/PANEL_CONTENT_INTEGRATION.md)** - How panel connects to content system
+- **[UI Wireframe](docs/UI_WIREFRAME.md)** - Design specifications
+
+## 🚀 **Quick Start**
+
+### For Developers
+```typescript
+// Import the service
+import { LearningContentService } from './components/learning-center/services/learning-content.service';
+
+// Use in your component  
+@Component({...})
+export class YourComponent {
+  private learningService = inject(LearningContentService);
+  
+  readonly availableTasks = computed(() => 
+    this.learningService.tasks().filter(task => task.status === 'published')
+  );
+}
+```
+
+### For Content Managers
+1. Access the Learning Center admin interface
+2. Create Goals, Workflows, and Tasks
+3. Content automatically appears throughout the application
+
+### For Integration
+```html
+<!-- Display the Learning Center Panel -->
+<app-learning-center-panel *ngIf="showLearningCenter"></app-learning-center-panel>
+```
+
+## 🎯 **Key Features**
+
+- **5 Core Components**: Admin UI, Panel, Content Finder, AI Assistant, Get Started Integration
+- **Content Management System**: Goals → Workflows → Tasks hierarchy with admin interface
+- **Content Discovery**: Advanced content finder with search and filtering
+- **Intelligent Help**: AI assistant with conversational interface and screenshot analysis
+- **Dashboard Integration**: Dynamic onboarding experience with learning paths
+- **Contextual Help**: Content relevant to current page/feature across all components
+- **Support Integration**: Call, chat, callback, and seminars with seamless escalation
+- **Progress Tracking**: User learning progress and completion across learning journeys
+
+## 🏗️ **System Components**
 
 ```
 learning-center/
-├── README.md                    # This documentation
-├── index.ts                     # Public API exports
-├── models/                      # TypeScript interfaces
-│   └── learning-content.types.ts
-├── services/                    # Business logic services
-│   └── learning-content.service.ts
-├── data/                        # Content storage
-│   └── learning-content-library.ts
-├── components/                  # UI components
-│   ├── learning-center-main/    # Main container component
-│   ├── goal-selector/           # Goal selection interface
-│   ├── workflow-display/        # Workflow presentation
-│   ├── task-guidance/           # Individual task guidance
-│   └── progress-tracker/        # Progress visualization
-└── adapters/                    # Integration utilities
-    ├── quick-start.adapter.ts   # For dashboard quick actions
-    ├── goal-evaluation.adapter.ts # For goal-based onboarding
-    └── walkthrough.adapter.ts   # For guided tours
+├── docs/                          # 📚 Complete documentation (8 comprehensive files)
+├── admin-ui/                      # 1️⃣ Content Management System  
+├── learning-center-panel/         # 2️⃣ Contextual Help Interface
+├── content-finder/                # 3️⃣ Content Discovery & Exploration (planned)
+├── ai-assistant/                  # 4️⃣ Intelligent Conversational Help (planned)
+├── get-started-integration/       # 5️⃣ Dashboard Onboarding Gateway (planned)
+├── services/                      # Shared business logic
+├── models/                        # TypeScript interfaces  
+├── data/                          # Content storage
+└── ui-wireframe/                  # Design specifications
 ```
 
-## Core Concepts
+## 📋 **Implementation Status**
 
-### Goals → Workflows → Tasks Hierarchy
-- **Goals**: High-level business objectives (e.g., "Improve Cash Flow")
-- **Workflows**: Process-based sequences that achieve goals (e.g., "Quotation Follow-Up Process")
-- **Tasks**: Atomic learning units with step-by-step instructions
+### ✅ **Completed Components**
+1. **Admin UI** - Complete content management interface ✅
+2. **Learning Center Panel** - Complete UI component with support integration ✅
 
-### Content Management
-- All content stored in JSON format for easy updates
-- Versioning system for content evolution
-- Status management (draft, published, archived)
-- Progress tracking with local storage persistence
+### 📋 **Ready for Implementation** 
+3. **Content Finder** - Complete documentation and technical specifications
+4. **AI Assistant** - Complete documentation and technical specifications  
+5. **Get Started Integration** - Complete documentation and integration patterns
 
-### Adaptive Presentation
-- Same content can be presented in different formats:
-  - Quick Start actions (dashboard integration)
-  - Goal-based evaluation (onboarding flow)
-  - Detailed walkthroughs (learning center)
-  - Progress-driven recommendations
+### 🔄 **Next Phase**
+- **Component Implementation**: Convert documentation to Angular components
+- **Folder Restructuring**: Organize into 5 core component folders
+- **Contextual Content Loading**: Connect all components with content service  
 
-## Integration Guide
+## 🔗 **Dependencies**
 
-### 1. Installation
-Copy the entire `learning-center/` folder to your Angular application's components directory.
+- **Angular 17+** with standalone components
+- **Angular Material** (optional, with fallbacks)
+- **RxJS** for reactive patterns
+- **TypeScript** strict mode
 
-### 2. Import Module
-```typescript
-import { LearningCenterModule } from './components/learning-center';
-```
+## 📖 **Next Steps**
 
-### 3. Basic Usage
-```typescript
-// In your component
-import { LearningContentService } from './components/learning-center';
-
-@Component({...})
-export class YourComponent {
-  constructor(private learningService: LearningContentService) {}
-  
-  // Get recommended goals for user
-  getRecommendations() {
-    return this.learningService.getRecommendations({
-      userRole: 'owner',
-      businessType: 'service'
-    });
-  }
-}
-```
-
-### 4. Adapter Usage
-```typescript
-// For quick start integration
-import { QuickStartAdapter } from './components/learning-center/adapters';
-
-const quickStart = new QuickStartAdapter(learningService);
-const actions = quickStart.getPopularActions();
-```
-
-## Dependencies
-
-### Required Angular Features
-- Angular 17+ (for control flow syntax)
-- Standalone components
-- Angular Signals (optional, for reactive state)
-
-### External Dependencies
-- RxJS (for reactive patterns)
-- No additional external libraries required
-
-### Material Design (Optional)
-- If using Angular Material, components will automatically integrate
-- Pure CSS fallbacks provided for non-Material environments
-
-## Configuration
-
-### Content Updates
-Update content by modifying `data/learning-content-library.ts`. No code changes required for:
-- Adding new tasks, workflows, or goals
-- Updating instructions or descriptions
-- Changing difficulty levels or time estimates
-- Modifying user targeting criteria
-
-### Customization
-- Override SCSS variables for theming
-- Replace adapter implementations for different presentation styles
-- Extend interfaces for additional metadata fields
-
-## Production Considerations
-
-### Performance
-- Lazy loading supported for large content libraries
-- Local storage for progress persistence
-- Minimal runtime overhead
-
-### Scalability
-- Content library designed to handle 1000+ learning items
-- Efficient search and filtering algorithms
-- Progress tracking optimized for frequent updates
-
-### Maintenance
-- Content validation utilities prevent broken references
-- Version control system for content evolution
-- Clear separation between content and presentation logic
-
-## API Reference
-
-### Core Service Methods
-```typescript
-// Content retrieval
-getGoal(goalId: string): LearningGoal | null
-getWorkflowsForGoal(goalId: string): LearningWorkflow[]
-getTasksForWorkflow(workflowId: string): LearningTask[]
-
-// Progress tracking
-startGoal(goalId: string, workflowIds: string[]): void
-completeTask(taskId: string, workflowId: string, goalId: string): void
-getGoalProgress(goalId: string): ProgressSummary
-
-// Search and recommendations
-searchContent(query: ContentSearchQuery): ContentSearchResult[]
-getRecommendations(context: RecommendationContext): LearningRecommendation[]
-```
-
-### Adapter Interfaces
-```typescript
-interface PresentationAdapter {
-  name: string;
-  getContent(params: any): Promise<any>;
-  transformContent(content: LearningContent): any;
-  trackProgress(progressData: any): void;
-}
-```
-
-## Support
-
-### Troubleshooting
-- Check browser console for validation errors
-- Verify content integrity with built-in validation
-- Review localStorage for progress persistence issues
-
-### Extending the System
-- Add new content types by extending base interfaces
-- Create custom adapters for specific presentation needs
-- Implement custom progress tracking for advanced analytics
+1. **Read the complete documentation**: [`docs/README.md`](docs/README.md)
+2. **Understand the architecture**: [`docs/OVERVIEW.md`](docs/OVERVIEW.md)  
+3. **Review integration patterns**: [`docs/INTEGRATION_GUIDE.md`](docs/INTEGRATION_GUIDE.md)
+4. **Implement contextual content loading**
+5. **Connect AI assistant backend**
 
 ---
 
-*This module was developed as part of the FlowAccount onboarding strategy to provide flexible, maintainable learning experiences that can adapt to different user needs and presentation contexts.*
+**For complete technical specifications, implementation details, and integration examples, see the [`docs/`](docs/) folder.**
