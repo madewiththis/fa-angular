@@ -2,7 +2,7 @@
   "tasks": [
     {
       "id": "task_dashboard_001",
-      "name": "ข้อมูลในกราฟแดชบอร์ดมาจากไหนบ้าง",
+      "name": "Where does the dashboard graph data come from?",
       "englishName": "Where does the dashboard graph data come from?",
       "description": "เรียนรู้วิธีการที่ FlowAccount รวบรวมและแสดงข้อมูลในกราฟแดชบอร์ด เข้าใจแหล่งที่มาของข้อมูลแต่ละประเภท",
       "category": "Dashboard",
@@ -70,7 +70,7 @@
     },
     {
       "id": "task_dashboard_002",
-      "name": "สอนใช้งานโปรแกรมบัญชีออนไลน์ FlowAccount เต็มรูปแบบ",
+      "name": "Full tutorial for using FlowAccount online accounting software",
       "englishName": "Full tutorial for using FlowAccount online accounting software",
       "description": "คู่มือการใช้งาน FlowAccount แบบครบวงจร ตั้งแต่เริ่มต้นจนถึงการใช้งานขั้นสูง",
       "category": "Dashboard",
@@ -132,7 +132,7 @@
     },
     {
       "id": "task_dashboard_003",
-      "name": "ก่อนเริ่มใช้งาน FlowAccount ต้องตั้งค่าอะไรบ้าง",
+      "name": "What needs to be set up before using FlowAccount?",
       "englishName": "What needs to be set up before using FlowAccount?",
       "description": "เรียนรู้การตั้งค่าพื้นฐานที่จำเป็นก่อนเริ่มใช้งาน FlowAccount",
       "category": "Dashboard",
@@ -198,7 +198,7 @@
     },
     {
       "id": "task_quotation_001",
-      "name": "ขายของต้องออกเอกสารอะไรใน FlowAccount",
+      "name": "What documents do you need to issue when selling in FlowAccount?",
       "englishName": "What documents do you need to issue when selling in FlowAccount?",
       "description": "เรียนรู้ประเภทเอกสารขายทั้งหมดใน FlowAccount และการเลือกใช้ให้เหมาะสม",
       "category": "Sales",
@@ -261,7 +261,7 @@
     },
     {
       "id": "task_quotation_002",
-      "name": "วิธีออกใบมัดจำ",
+      "name": "How to issue a deposit document",
       "englishName": "How to issue a deposit document",
       "description": "เรียนรู้วิธีการออกใบมัดจำและการจัดการเงินมัดจำในระบบ",
       "category": "Sales",
@@ -346,7 +346,7 @@
     },
     {
       "id": "task_billingnote_001",
-      "name": "ออกเอกสารขาย จัดการรายได้ ครบจบในคลิปเดียว",
+      "name": "Issue sales documents and manage income—all in one video",
       "englishName": "Issue sales documents and manage income—all in one video",
       "description": "คู่มือครบวงจรการออกเอกสารขายและการจัดการรายได้ใน FlowAccount",
       "category": "Sales",
@@ -407,7 +407,7 @@
     },
     {
       "id": "task_taxinvoice_001",
-      "name": "เชื่อมต่อ e-Tax invoice by Time Stamp",
+      "name": "Connect and send e-Tax invoice by Time Stamp",
       "englishName": "Connect and send e-Tax invoice by Time Stamp",
       "description": "เรียนรู้การเชื่อมต่อและส่งใบกำกับภาษีอิเล็กทรอนิกส์ผ่านระบบ Time Stamp",
       "category": "Sales",
@@ -479,7 +479,7 @@
     },
     {
       "id": "task_mobile_001",
-      "name": "ใครถนัดใช้แอปมือถือมากกว่า มาดูวิธีใช้งานที่วิดีโอนี้",
+      "name": "For those who prefer mobile apps, see how to use it in this video",
       "englishName": "For those who prefer mobile apps, see how to use it in this video",
       "description": "คู่มือการใช้งาน FlowAccount บนแอปพลิเคชันมือถือ",
       "category": "Mobile",

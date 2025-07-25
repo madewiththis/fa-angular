@@ -1,13 +1,13 @@
 import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { LearningPanelService } from '../../../services/learning-panel.service';
-import { LearningPanelComponent } from '../../learning-panel/learning-panel.component';
+import { LearningCenterPanelComponent } from '../../learning-center/learning-center-panel/learning-center-panel.component';
+import { LearningPanelService } from '../../learning-center/services/learning-panel.service';
 
 @Component({
   selector: 'app-help-centre',
   standalone: true,
-  imports: [MatButtonModule, MatIconModule, LearningPanelComponent],
+  imports: [MatButtonModule, MatIconModule, LearningCenterPanelComponent],
   template: `
     <button 
       mat-icon-button 
@@ -20,8 +20,8 @@ import { LearningPanelComponent } from '../../learning-panel/learning-panel.comp
       <mat-icon>{{ learningPanel.isOpen ? 'close' : 'school' }}</mat-icon>
     </button>
     
-    <!-- Full-height Learning Panel -->
-    <app-learning-panel></app-learning-panel>
+    <!-- Full-height Learning Center Panel -->
+    <app-learning-center-panel></app-learning-center-panel>
   `,
   styles: [`
     button[mat-icon-button] {

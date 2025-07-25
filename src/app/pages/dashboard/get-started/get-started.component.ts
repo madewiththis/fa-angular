@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { UserProfileTestingService } from '../../../services/user-profile-testing.service';
-import { LearningPanelService } from '../../../services/learning-panel.service';
+import { LearningPanelService } from '../../../components/learning-center/services/learning-panel.service';
 import { CompanySetupService } from '../../../services/company-setup.service';
 import { LearningContentService } from '../../../components/learning-center/services/learning-content.service';
 import { BusinessGoal } from '../../../models/goal-system.interfaces';

@@ -154,9 +154,10 @@ export class AdminDashboardComponent {
     }
   }
 
-  resetContent(): void {
+  async resetContent(): Promise<void> {
     if (confirm('Are you sure you want to reset all content? This action cannot be undone.')) {
       this.learningContentService.resetAll();
+      await this.learningContentService.loadContent();
       this.validateContent();
     }
   }
