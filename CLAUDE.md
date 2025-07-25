@@ -499,6 +499,9 @@ The project automatically deploys to flowaccount.vercel.com when changes are pus
 │   ├── active/                # Currently in progress
 │   ├── completed/             # Finished tasks (reference)
 │   └── abandoned/             # Stopped tasks with lessons
+├── test-hypotheses/           # A/B test hypothesis documents
+│   ├── README.md              # Test hypothesis building instructions
+│   └── {test-name}.md         # Individual test hypotheses
 ```
 
 **🚀 IMPORTANT FOR AI INSTANCES**: Always start by reading `/dev_files/tasks/_task_index.md` to understand current project state and active tasks.
@@ -707,6 +710,28 @@ Detailed description of the business problem and user need
 3. **Document Behavioral Specifications**: Use live demonstrations to show exactly how features should adapt
 4. **Generate Stakeholder Presentations**: Use preset personas for consistent demos
 5. **Provide Development Recommendations**: Clear conditional logic that production team can implement
+
+### Building Test Hypotheses for Growth Book A/B Testing
+**IMPORTANT**: When the user says "build a test hypothesis" or "create a test hypothesis", this means:
+1. **Use the Test Context Template** located at `/dev_files/deliverables/output-document-templates/_TEST_CONTEXT_TEMPLATE.md`
+2. **Create the hypothesis document** in `/dev_files/test-hypotheses/` folder
+3. **Follow the IF/THEN/BECAUSE format** for hypothesis statements
+4. **Include all required metadata** for Growth Book configuration
+
+**Quick Command Reference**:
+- "Build a test hypothesis" → Create new test hypothesis document using template
+- "Work on test hypothesis" → Continue editing existing test hypothesis
+- "Show test status" → Display the test hypothesis index with all stages
+- "Update test status" → Move a test hypothesis to a different stage
+
+**Test Hypothesis Components**:
+- **Observation**: Current user experience pain point with data
+- **Impact**: How this affects user/business goals
+- **Hypothesis**: IF [change] THEN [metric improvement] BECAUSE [theory]
+- **Solution**: Detailed description of new UX to test
+- **Metadata**: Device targeting, conversion phase, metrics, priority, segments
+
+See `/dev_files/test-hypotheses/README.md` for detailed instructions.
 
 ## Known Issues & Limitations
 

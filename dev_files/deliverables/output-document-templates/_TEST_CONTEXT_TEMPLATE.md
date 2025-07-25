@@ -62,6 +62,7 @@
 - Be specific about the change being tested
 - Include quantified expected impact (% improvement)
 - Reference established UX/conversion principles
+- **Remember**: All metrics should efficiently answer whether this hypothesis is true
 
 **Hypothesis Statement:**
 IF [specific UX change or new feature implementation]
@@ -69,7 +70,7 @@ THEN [specific metric will improve by X%]
 BECAUSE [psychological/UX principle or user behavior theory]
 
 **Expected Results:**
-- Primary metric: [Metric name] will improve from [current %] to [target %]
+- Goal metric: [Metric name] will improve from [current %] to [target %]
 - Secondary metrics: [List 2-3 supporting metrics and expected changes]
 - Timeline: Results expected within [X weeks/months]
 
@@ -114,23 +115,53 @@ BECAUSE [psychological/UX principle or user behavior theory]
 ## 📊 Conversion Metrics
 **Select ALL metrics this test is designed to impact:**
 
-### Primary Metrics (select 1-2):
-- [ ] **Sign up initiations** - Users who start the signup process
-- [ ] **Sign up completions** - Users who complete account creation
-- [ ] **Value realization** - Users who achieve first meaningful outcome
-- [ ] **Upgrade initiations** - Users who start upgrade flow
-- [ ] **Package selections** - Users who choose a paid package
-- [ ] **Checkout completions** - Users who complete payment process
+> 📖 **See Metrics Guide**: For detailed guidance on choosing metrics, refer to `/dev_files/test-hypotheses/METRICS_GUIDE.md`
+
+### Goal Metrics (select 1-2):
+> 📊 **Choose from the 12 core conversion metrics (see Metrics Guide). Listed by distance from revenue:**
+
+- [ ] **Complete Checkout** (#1) - Finalizes checkout with payment
+- [ ] **Start Checkout** (#2) - Initiates checkout process
+- [ ] **View Checkout Page** (#3) - Lands on checkout page
+- [ ] **Select Package** (#4) - Chooses a package option
+- [ ] **View Package Page** (#5) - Views package selection
+- [ ] **Upgrade Button Click** (#6) - Clicks upgrade in app
+- [ ] **Engage Key Features** (#7) - Uses conversion-correlated features
+- [ ] **Complete Onboarding** (#8) - Finishes onboarding flow
+- [ ] **Complete Email Verification** (#9) - Verifies email
+- [ ] **Complete First Sign Up Step** (#10) - Starts signup
+- [ ] **Land on Sign Up Page** (#11) - Reaches signup page
+- [ ] **Click Sign Up CTA** (#12) - Clicks signup on landing
 
 ### Secondary Metrics (select additional as relevant):
+> ⚠️ **Only choose metrics that clearly indicate progress toward conversion. Avoid ambiguous metrics like "total clicks" or "time in app"**
+
 - [ ] **Time to value** - Speed of first meaningful interaction
-- [ ] **Feature adoption** - Usage of key product features
-- [ ] **Session engagement** - Time on site, pages per session
-- [ ] **Return visits** - Users who come back within 7 days
+- [ ] **Feature adoption** - Usage of key product features  
+- [ ] **Form error rate** - Friction indicators in conversion flow
+- [ ] **Path efficiency** - Steps taken to reach conversion
 - [ ] **Support tickets** - Customer service interaction reduction
 
-**Primary Selected**: [List primary metrics]  
-**Secondary Selected**: [List secondary metrics]
+### Guardrail Metrics (monitor for protection):
+> 💡 **Metrics to ensure no negative impacts. Not trying to improve these, just monitoring.**
+
+- [ ] **Page load time** - Ensure performance doesn't degrade
+- [ ] **Error rates** - Technical stability maintained
+- [ ] **Existing user metrics** - Current users not negatively impacted
+- [ ] **Complete checkout** (if testing early funnel) - Ultimate conversion protected
+
+### Activation Metric (if needed):
+> 🎯 **Users must complete this action to be included in the test analysis**
+
+- [ ] **Viewed test variation** - Saw the changed element
+- [ ] **Reached test page** - Arrived at the page being tested
+- [ ] **Completed prior step** - Finished preceding funnel step
+- [ ] **Qualified segment action** - Performed qualifying behavior
+
+**Goal Metrics Selected**: [List goal metrics]  
+**Secondary Metrics Selected**: [List secondary metrics]
+**Guardrail Metrics Selected**: [List guardrail metrics]
+**Activation Metric Selected**: [If applicable]
 
 ---
 
@@ -222,7 +253,7 @@ Based on priority and metrics selected:
 
 ### Measurement Timeline
 - **Early indicators** (Week 1): [Leading metrics to watch]
-- **Primary results** (Week 2-4): [Main conversion metrics]
+- **Goal metric results** (Week 2-4): [Main conversion metrics]
 - **Long-term impact** (Month 1-3): [Retention and LTV effects]
 
 ---
@@ -251,6 +282,8 @@ Before launching test, confirm:
 - [ ] **Priority justified**: Business impact supports priority assignment
 - [ ] **Success criteria clear**: Team aligned on what constitutes success
 - [ ] **Rollback plan ready**: Clear process if test performs negatively
+- [ ] **Metric story clear**: Can explain hypothesis → result → why in 3 sentences
+- [ ] **No vanity metrics**: All metrics directly relate to proving/disproving hypothesis
 
 ---
 
